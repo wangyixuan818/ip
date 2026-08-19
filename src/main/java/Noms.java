@@ -58,6 +58,29 @@ public class Noms {
                     System.out.println(" Please provide a valid task number.");
                 }
                 System.out.println("____________________________________________________________");
+            } else if (command.equals("unmark") || command.startsWith("unmark ")) {
+                String[] parts = command.split("\\s+");
+
+                if (parts.length != 2) {
+                    System.out.println(" Please provide a task number to mark as not done.");
+                    System.out.println("____________________________________________________________");
+                    continue;
+                }
+
+                try {
+                    int taskNumber = Integer.parseInt(parts[1]);
+                    if (taskNumber < 1 || taskNumber > taskCount) {
+                        System.out.println(" Please provide a valid task number.");
+                    } else {
+                        int taskIndex = taskNumber - 1;
+                        taskDone[taskIndex] = false;
+                        System.out.println(" OK, I've marked this task as not done yet:");
+                        System.out.println("   [ ] " + tasks[taskIndex]);
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println(" Please provide a valid task number.");
+                }
+                System.out.println("____________________________________________________________");
             } else {
                 tasks[taskCount] = command;
                 taskCount++;
