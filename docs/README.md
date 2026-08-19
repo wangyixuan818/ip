@@ -1,4 +1,4 @@
-# Duke User Guide
+# Noms User Guide
 
 // Update the title above to match the actual product name
 
