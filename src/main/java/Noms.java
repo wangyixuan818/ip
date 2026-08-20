@@ -37,51 +37,25 @@ public class Noms {
                 }
                 System.out.println("____________________________________________________________");
             } else if (command.equals("mark") || command.startsWith("mark ")) {
-                String[] parts = command.split("\\s+");
-
-                if (parts.length != 2) {
-                    System.out.println(" Please provide a task number to mark as done.");
-                    System.out.println("____________________________________________________________");
-                    continue;
-                }
-
                 try {
-                    int taskNumber = Integer.parseInt(parts[1]);
-                    if (taskNumber < 1 || taskNumber > taskCount) {
-                        System.out.println(" Please provide a valid task number.");
-                    } else {
-                        int taskIndex = taskNumber - 1;
-                        tasks[taskIndex].markAsDone();
-                        System.out.println(" Nice! I've marked this task as done:");
-                        System.out.println("   " + tasks[taskIndex]);
-                    }
-                } catch (NumberFormatException e) {
-                    System.out.println(" Please provide a valid task number.");
+                    int taskNumber = parseTaskNumber(command, "mark", taskCount);
+                    int taskIndex = taskNumber - 1;
+                    tasks[taskIndex].markAsDone();
+                    System.out.println(" Nice! I've marked this task as done:");
+                    System.out.println("   " + tasks[taskIndex]);
+                } catch (NomsException e) {
+                    printError(e.getMessage());
                 }
-                System.out.println("____________________________________________________________");
             } else if (command.equals("unmark") || command.startsWith("unmark ")) {
-                String[] parts = command.split("\\s+");
-
-                if (parts.length != 2) {
-                    System.out.println(" Please provide a task number to mark as not done.");
-                    System.out.println("____________________________________________________________");
-                    continue;
-                }
-
                 try {
-                    int taskNumber = Integer.parseInt(parts[1]);
-                    if (taskNumber < 1 || taskNumber > taskCount) {
-                        System.out.println(" Please provide a valid task number.");
-                    } else {
-                        int taskIndex = taskNumber - 1;
-                        tasks[taskIndex].markAsNotDone();
-                        System.out.println(" OK, I've marked this task as not done yet:");
-                        System.out.println("   " + tasks[taskIndex]);
-                    }
-                } catch (NumberFormatException e) {
-                    System.out.println(" Please provide a valid task number.");
+                    int taskNumber = parseTaskNumber(command, "unmark", taskCount);
+                    int taskIndex = taskNumber - 1;
+                    tasks[taskIndex].markAsNotDone();
+                    System.out.println(" OK, I've marked this task as not done yet:");
+                    System.out.println("   " + tasks[taskIndex]);
+                } catch (NomsException e) {
+                    printError(e.getMessage());
                 }
-                System.out.println("____________________________________________________________");
             } else if (taskCount >= tasks.length) {
                 System.out.println(" The task list is full.");
                 System.out.println("____________________________________________________________");
@@ -93,14 +67,6 @@ public class Noms {
                     printError(e.getMessage());
                     continue;
                 }
-                if (task == null) {
-                    System.out.println(" I couldn't understand that task command.");
-                    System.out.println(" Use todo <description>, deadline <description> /by <date/time>, or"
-                            + " event <description> /from <date/time> /to <date/time>.");
-                    System.out.println("____________________________________________________________");
-                    continue;
-                }
-
                 tasks[taskCount] = task;
                 taskCount++;
 
@@ -169,6 +135,28 @@ public class Noms {
         }
 
         throw new UnknownCommandException();
+    }
+
+    private static int parseTaskNumber(String command, String action, int taskCount)
+            throws InvalidTaskNumberException {
+        String[] parts = command.split("\\s+");
+        if (parts.length != 2) {
+            throw new InvalidTaskNumberException(
+                    "Noms needs a task number to " + action + ".\nTry: " + action + " 1");
+        }
+
+        try {
+            int taskNumber = Integer.parseInt(parts[1]);
+            if (taskNumber < 1 || taskNumber > taskCount) {
+                throw new InvalidTaskNumberException(
+                        "That task number is off the menu.\n"
+                                + "Choose a number from your task list.");
+            }
+            return taskNumber;
+        } catch (NumberFormatException e) {
+            throw new InvalidTaskNumberException(
+                    "Noms only understands task numbers here.\nTry: " + action + " 1");
+        }
     }
 
     private static void printError(String message) {

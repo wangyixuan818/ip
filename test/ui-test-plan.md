@@ -170,4 +170,30 @@ Each malformed event produces:
 Noms then accepts `bye` normally.
 ```
 
+### TC-007: Reject invalid mark and unmark task numbers
+
+**Aim:**
+
+Verify that missing, non-numeric, and out-of-range task numbers are handled
+without terminating Noms.
+
+**Inputs:**
+
+```text
+mark
+mark abc
+mark 0
+unmark
+unmark xyz
+unmark 99
+bye
+```
+
+**Expected output:**
+
+```text
+Each invalid command produces a helpful Noms-style error and Noms then accepts
+the next command normally.
+```
+
 <!-- Copy the structure above for each additional test case. -->
