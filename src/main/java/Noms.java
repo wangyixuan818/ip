@@ -130,14 +130,17 @@ public class Noms {
             String remainder = command.substring(9);
             int byIndex = remainder.indexOf(" /by ");
             if (byIndex < 1) {
-                return null;
+                throw new InvalidDeadlineException(DEADLINE_FORMAT);
             }
             String description = remainder.substring(0, byIndex).trim();
             String by = remainder.substring(byIndex + 5).trim();
             if (description.isEmpty()) {
                 throw new EmptyDescriptionException("deadline", DEADLINE_FORMAT);
             }
-            return by.isEmpty() ? null : new Deadline(description, by);
+            if (by.isEmpty()) {
+                throw new InvalidDeadlineException(DEADLINE_FORMAT);
+            }
+            return new Deadline(description, by);
         }
 
         if (command.equals("event") || command.startsWith("event ")) {

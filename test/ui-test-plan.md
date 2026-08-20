@@ -117,4 +117,30 @@ The `blah` command produces:
 followed by a list of valid commands. Noms then accepts `bye` normally.
 ```
 
+### TC-005: Reject malformed deadlines
+
+**Aim:**
+
+Verify that deadlines without a valid `/by` section are rejected with a helpful
+format explanation.
+
+**Inputs:**
+
+```text
+deadline return book
+deadline return book /by
+bye
+```
+
+**Expected output:**
+
+```text
+Each malformed deadline produces:
+
+`OOPS! This deadline recipe is incomplete.`
+`Try: deadline <description> /by <date/time>`
+
+Noms then accepts `bye` normally.
+```
+
 <!-- Copy the structure above for each additional test case. -->
