@@ -143,4 +143,31 @@ Each malformed deadline produces:
 Noms then accepts `bye` normally.
 ```
 
+### TC-006: Reject malformed events
+
+**Aim:**
+
+Verify that events without valid `/from` and `/to` sections are rejected with a
+helpful format explanation.
+
+**Inputs:**
+
+```text
+event meeting
+event meeting /from 2pm
+event meeting /from /to 4pm
+bye
+```
+
+**Expected output:**
+
+```text
+Each malformed event produces:
+
+`OOPS! This event recipe needs more ingredients.`
+`Try: event <description> /from <date/time> /to <date/time>`
+
+Noms then accepts `bye` normally.
+```
+
 <!-- Copy the structure above for each additional test case. -->

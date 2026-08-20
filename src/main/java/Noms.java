@@ -150,11 +150,11 @@ public class Noms {
             String remainder = command.substring(6);
             int fromIndex = remainder.indexOf(" /from ");
             if (fromIndex < 1) {
-                return null;
+                throw new InvalidEventException(EVENT_FORMAT);
             }
             int toIndex = remainder.indexOf(" /to ", fromIndex + 7);
             if (toIndex < 0) {
-                return null;
+                throw new InvalidEventException(EVENT_FORMAT);
             }
             String description = remainder.substring(0, fromIndex).trim();
             String from = remainder.substring(fromIndex + 7, toIndex).trim();
@@ -162,7 +162,10 @@ public class Noms {
             if (description.isEmpty()) {
                 throw new EmptyDescriptionException("event", EVENT_FORMAT);
             }
-            return from.isEmpty() || to.isEmpty() ? null : new Event(description, from, to);
+            if (from.isEmpty() || to.isEmpty()) {
+                throw new InvalidEventException(EVENT_FORMAT);
+            }
+            return new Event(description, from, to);
         }
 
         throw new UnknownCommandException();
