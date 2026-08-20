@@ -1,6 +1,12 @@
 import java.util.Scanner;
 
 public class Noms {
+    private static final String TODO_FORMAT = "todo <description>";
+    private static final String DEADLINE_FORMAT =
+            "deadline <description> /by <date/time>";
+    private static final String EVENT_FORMAT =
+            "event <description> /from <date/time> /to <date/time>";
+
     public static void main(String[] args) {
         String banner = "____________________________________________________________\n"
                 + " _   _  ___  __  __  ____\n"
@@ -20,9 +26,6 @@ public class Noms {
 
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
-
-            System.out.println(" " + command);
-            System.out.println("____________________________________________________________");
 
             if (command.equals("bye")) {
                 System.out.println("Bye~ Hope to see you again soon!");
@@ -83,7 +86,13 @@ public class Noms {
                 System.out.println(" The task list is full.");
                 System.out.println("____________________________________________________________");
             } else {
-                Task task = parseTask(command);
+                Task task;
+                try {
+                    task = parseTask(command);
+                } catch (NomsException e) {
+                    printError(e.getMessage());
+                    continue;
+                }
                 if (task == null) {
                     System.out.println(" I couldn't understand that task command.");
                     System.out.println(" Use todo <description>, deadline <description> /by <date/time>, or"
@@ -105,13 +114,19 @@ public class Noms {
         scanner.close();
     }
 
-    private static Task parseTask(String command) {
-        if (command.startsWith("todo ")) {
-            String description = command.substring(5).trim();
-            return description.isEmpty() ? null : new ToDo(description);
+    private static Task parseTask(String command) throws NomsException {
+        if (command.equals("todo") || command.startsWith("todo ")) {
+            String description = command.substring(4).trim();
+            if (description.isEmpty()) {
+                throw new EmptyDescriptionException("todo", TODO_FORMAT);
+            }
+            return new ToDo(description);
         }
 
-        if (command.startsWith("deadline ")) {
+        if (command.equals("deadline") || command.startsWith("deadline ")) {
+            if (command.equals("deadline")) {
+                throw new EmptyDescriptionException("deadline", DEADLINE_FORMAT);
+            }
             String remainder = command.substring(9);
             int byIndex = remainder.indexOf(" /by ");
             if (byIndex < 1) {
@@ -119,10 +134,16 @@ public class Noms {
             }
             String description = remainder.substring(0, byIndex).trim();
             String by = remainder.substring(byIndex + 5).trim();
-            return description.isEmpty() || by.isEmpty() ? null : new Deadline(description, by);
+            if (description.isEmpty()) {
+                throw new EmptyDescriptionException("deadline", DEADLINE_FORMAT);
+            }
+            return by.isEmpty() ? null : new Deadline(description, by);
         }
 
-        if (command.startsWith("event ")) {
+        if (command.equals("event") || command.startsWith("event ")) {
+            if (command.equals("event")) {
+                throw new EmptyDescriptionException("event", EVENT_FORMAT);
+            }
             String remainder = command.substring(6);
             int fromIndex = remainder.indexOf(" /from ");
             if (fromIndex < 1) {
@@ -135,10 +156,17 @@ public class Noms {
             String description = remainder.substring(0, fromIndex).trim();
             String from = remainder.substring(fromIndex + 7, toIndex).trim();
             String to = remainder.substring(toIndex + 5).trim();
-            return description.isEmpty() || from.isEmpty() || to.isEmpty()
-                    ? null : new Event(description, from, to);
+            if (description.isEmpty()) {
+                throw new EmptyDescriptionException("event", EVENT_FORMAT);
+            }
+            return from.isEmpty() || to.isEmpty() ? null : new Event(description, from, to);
         }
 
         return null;
+    }
+
+    private static void printError(String message) {
+        System.out.println(" OOPS! " + message);
+        System.out.println("____________________________________________________________");
     }
 }

@@ -8,6 +8,7 @@ Record manual or automated console UI tests here. The `test-ui` skill executes c
 - Working directory: `<repository root or other directory>`
 - Output comparison: exact, except for line-ending differences
 - Shared process: no, unless a test case explicitly says otherwise
+- User input is not echoed by the application; test output contains Noms' responses only.
 
 ## Test cases
 
@@ -83,6 +84,12 @@ bye
 
 ```text
 Each malformed command is rejected, and `list` shows no tasks.
+For the empty-description cases, the error messages include:
+
+- `OOPS! This todo is missing its main ingredient: a description.`
+- `OOPS! This deadline is missing its main ingredient: a description.`
+- `OOPS! This event is missing its main ingredient: a description.`
+- Each message also includes the corresponding valid command format.
 ```
 ```
 

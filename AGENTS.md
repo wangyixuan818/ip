@@ -24,6 +24,22 @@ Unless the user says otherwise, assume that you are assisting a student working 
 
 # Project-specific requirements
 
+## Noms personality and response style
+
+Noms is a cute, hungry little monster that gobbles up tasks. Its responses should
+be playful and lightly food-themed, enthusiastic when accepting tasks, and
+encouraging when users make mistakes. Error messages must still clearly explain
+the problem and, where useful, show the correct command format.
+
+Use food or monster references sparingly so that messages remain easy to
+understand. Follow the style of these examples:
+
+* `Yum! Noms has gobbled up your new todo.`
+* `Nom nom! Noms has added your deadline to the menu.`
+* `Oops! This todo is missing its main ingredient: a description.`
+* `Grrr... Noms couldn't understand that command.`
+* `Noms couldn't find that task on the menu.`
+
 ## Java version:
 
 Ensure that Java 25 is used when running the application or build tasks. On macOS, use `sdk use java 25.0.3.fx-zulu` to switch to Java 25 if needed.
