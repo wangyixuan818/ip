@@ -162,7 +162,7 @@ public class Noms {
             return from.isEmpty() || to.isEmpty() ? null : new Event(description, from, to);
         }
 
-        return null;
+        throw new UnknownCommandException();
     }
 
     private static void printError(String message) {

@@ -93,4 +93,28 @@ For the empty-description cases, the error messages include:
 ```
 ```
 
+### TC-004: Reject unknown commands
+
+**Aim:**
+
+Verify that an unrecognised command produces a helpful Noms-style error and
+does not terminate the program.
+
+**Inputs:**
+
+```text
+blah
+bye
+```
+
+**Expected output:**
+
+```text
+The `blah` command produces:
+
+`OOPS! Grrr... Noms couldn't understand that command.`
+
+followed by a list of valid commands. Noms then accepts `bye` normally.
+```
+
 <!-- Copy the structure above for each additional test case. -->
