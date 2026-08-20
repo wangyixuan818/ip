@@ -18,7 +18,7 @@ public class Noms {
         Task[] tasks = new Task[100];
         int taskCount = 0;
 
-        while (true) {
+        while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
 
             System.out.println(" " + command);
@@ -30,8 +30,7 @@ public class Noms {
                 break;
             } else if (command.equals("list")) {
                 for (int i = 0; i < taskCount; i++) {
-                    System.out.println(" " + (i + 1) + ".[" + tasks[i].getStatusIcon() + "] "
-                            + tasks[i].getDescription());
+                    System.out.println(" " + (i + 1) + "." + tasks[i]);
                 }
                 System.out.println("____________________________________________________________");
             } else if (command.equals("mark") || command.startsWith("mark ")) {
@@ -51,7 +50,7 @@ public class Noms {
                         int taskIndex = taskNumber - 1;
                         tasks[taskIndex].markAsDone();
                         System.out.println(" Nice! I've marked this task as done:");
-                        System.out.println("   [X] " + tasks[taskIndex].getDescription());
+                        System.out.println("   " + tasks[taskIndex]);
                     }
                 } catch (NumberFormatException e) {
                     System.out.println(" Please provide a valid task number.");
@@ -74,21 +73,72 @@ public class Noms {
                         int taskIndex = taskNumber - 1;
                         tasks[taskIndex].markAsNotDone();
                         System.out.println(" OK, I've marked this task as not done yet:");
-                        System.out.println("   [ ] " + tasks[taskIndex].getDescription());
+                        System.out.println("   " + tasks[taskIndex]);
                     }
                 } catch (NumberFormatException e) {
                     System.out.println(" Please provide a valid task number.");
                 }
                 System.out.println("____________________________________________________________");
+            } else if (taskCount >= tasks.length) {
+                System.out.println(" The task list is full.");
+                System.out.println("____________________________________________________________");
             } else {
-                tasks[taskCount] = new Task(command);
+                Task task = parseTask(command);
+                if (task == null) {
+                    System.out.println(" I couldn't understand that task command.");
+                    System.out.println(" Use todo <description>, deadline <description> /by <date/time>, or"
+                            + " event <description> /from <date/time> /to <date/time>.");
+                    System.out.println("____________________________________________________________");
+                    continue;
+                }
+
+                tasks[taskCount] = task;
                 taskCount++;
 
-                System.out.println(" added: " + command);
+                System.out.println(" Got it. I've added this task:");
+                System.out.println("   " + task);
+                System.out.println(" Now you have " + taskCount + " tasks in the list.");
                 System.out.println("____________________________________________________________");
             }
         }
 
         scanner.close();
+    }
+
+    private static Task parseTask(String command) {
+        if (command.startsWith("todo ")) {
+            String description = command.substring(5).trim();
+            return description.isEmpty() ? null : new ToDo(description);
+        }
+
+        if (command.startsWith("deadline ")) {
+            String remainder = command.substring(9);
+            int byIndex = remainder.indexOf(" /by ");
+            if (byIndex < 1) {
+                return null;
+            }
+            String description = remainder.substring(0, byIndex).trim();
+            String by = remainder.substring(byIndex + 5).trim();
+            return description.isEmpty() || by.isEmpty() ? null : new Deadline(description, by);
+        }
+
+        if (command.startsWith("event ")) {
+            String remainder = command.substring(6);
+            int fromIndex = remainder.indexOf(" /from ");
+            if (fromIndex < 1) {
+                return null;
+            }
+            int toIndex = remainder.indexOf(" /to ", fromIndex + 7);
+            if (toIndex < 0) {
+                return null;
+            }
+            String description = remainder.substring(0, fromIndex).trim();
+            String from = remainder.substring(fromIndex + 7, toIndex).trim();
+            String to = remainder.substring(toIndex + 5).trim();
+            return description.isEmpty() || from.isEmpty() || to.isEmpty()
+                    ? null : new Event(description, from, to);
+        }
+
+        return null;
     }
 }
