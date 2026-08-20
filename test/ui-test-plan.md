@@ -196,4 +196,27 @@ Each invalid command produces a helpful Noms-style error and Noms then accepts
 the next command normally.
 ```
 
+### TC-008: Reject tasks when the task list is full
+
+**Aim:**
+
+Verify that adding a task after the 100-task capacity is reached produces a
+helpful error and does not terminate Noms.
+
+**Inputs:**
+
+```text
+Add 100 valid todo tasks, then enter:
+todo one task too many
+bye
+```
+
+**Expected output:**
+
+```text
+`OOPS! Noms is full! There is no room for another task.`
+
+Noms then accepts `bye` normally.
+```
+
 <!-- Copy the structure above for each additional test case. -->

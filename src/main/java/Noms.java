@@ -56,12 +56,10 @@ public class Noms {
                 } catch (NomsException e) {
                     printError(e.getMessage());
                 }
-            } else if (taskCount >= tasks.length) {
-                System.out.println(" The task list is full.");
-                System.out.println("____________________________________________________________");
             } else {
                 Task task;
                 try {
+                    ensureCapacity(taskCount, tasks.length);
                     task = parseTask(command);
                 } catch (NomsException e) {
                     printError(e.getMessage());
@@ -156,6 +154,13 @@ public class Noms {
         } catch (NumberFormatException e) {
             throw new InvalidTaskNumberException(
                     "Noms only understands task numbers here.\nTry: " + action + " 1");
+        }
+    }
+
+    private static void ensureCapacity(int taskCount, int capacity)
+            throws TaskListFullException {
+        if (taskCount >= capacity) {
+            throw new TaskListFullException();
         }
     }
 
