@@ -196,27 +196,83 @@ Each invalid command produces a helpful Noms-style error and Noms then accepts
 the next command normally.
 ```
 
-### TC-008: Reject tasks when the task list is full
+### TC-008: Add more than 100 tasks
 
 **Aim:**
 
-Verify that adding a task after the 100-task capacity is reached produces a
-helpful error and does not terminate Noms.
+Verify that the task list uses a dynamically sized Java collection and can
+continue accepting tasks beyond the old fixed capacity.
 
 **Inputs:**
 
 ```text
 Add 100 valid todo tasks, then enter:
-todo one task too many
+todo task 101
+list
 bye
 ```
 
 **Expected output:**
 
 ```text
-`OOPS! Noms is full! There is no room for another task.`
+The `list` output includes `task 101`, and Noms then accepts `bye` normally.
+```
 
-Noms then accepts `bye` normally.
+### TC-009: Delete a task and renumber the list
+
+**Aim:**
+
+Verify that deleting a task removes it, displays the deleted task, and
+renumbers the remaining tasks.
+
+**Inputs:**
+
+```text
+todo read book
+deadline return book /by June 6th
+event project meeting /from Aug 6th 2pm /to 4pm
+delete 2
+list
+bye
+```
+
+**Expected output:**
+
+```text
+The deletion confirmation includes:
+
+`Noted. Noms has taken this task off the menu:`
+`[D][ ] return book (by: June 6th)`
+`Now you have 2 tasks in the list.`
+
+The subsequent list contains `read book` as task 1 and `project meeting` as
+task 2. The deleted deadline does not appear.
+```
+
+### TC-010: Reject invalid delete task numbers
+
+**Aim:**
+
+Verify that malformed or out-of-range delete commands do not terminate Noms or
+change the task list.
+
+**Inputs:**
+
+```text
+todo buy milk
+delete
+delete abc
+delete 0
+delete 2
+list
+bye
+```
+
+**Expected output:**
+
+```text
+Each invalid delete command produces a helpful Noms-style error. The task list
+still contains `buy milk` as task 1.
 ```
 
 <!-- Copy the structure above for each additional test case. -->

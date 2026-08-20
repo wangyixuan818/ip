@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Noms {
@@ -21,8 +23,7 @@ public class Noms {
         System.out.println("____________________________________________________________");
 
         Scanner scanner = new Scanner(System.in);
-        Task[] tasks = new Task[100];
-        int taskCount = 0;
+        List<Task> tasks = new ArrayList<>();
 
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
@@ -32,45 +33,54 @@ public class Noms {
                 System.out.println("____________________________________________________________");
                 break;
             } else if (command.equals("list")) {
-                for (int i = 0; i < taskCount; i++) {
-                    System.out.println(" " + (i + 1) + "." + tasks[i]);
+                for (int i = 0; i < tasks.size(); i++) {
+                    System.out.println(" " + (i + 1) + "." + tasks.get(i));
                 }
                 System.out.println("____________________________________________________________");
             } else if (command.equals("mark") || command.startsWith("mark ")) {
                 try {
-                    int taskNumber = parseTaskNumber(command, "mark", taskCount);
+                    int taskNumber = parseTaskNumber(command, "mark", tasks.size());
                     int taskIndex = taskNumber - 1;
-                    tasks[taskIndex].markAsDone();
+                    tasks.get(taskIndex).markAsDone();
                     System.out.println(" Nice! I've marked this task as done:");
-                    System.out.println("   " + tasks[taskIndex]);
+                    System.out.println("   " + tasks.get(taskIndex));
                 } catch (NomsException e) {
                     printError(e.getMessage());
                 }
             } else if (command.equals("unmark") || command.startsWith("unmark ")) {
                 try {
-                    int taskNumber = parseTaskNumber(command, "unmark", taskCount);
+                    int taskNumber = parseTaskNumber(command, "unmark", tasks.size());
                     int taskIndex = taskNumber - 1;
-                    tasks[taskIndex].markAsNotDone();
+                    tasks.get(taskIndex).markAsNotDone();
                     System.out.println(" OK, I've marked this task as not done yet:");
-                    System.out.println("   " + tasks[taskIndex]);
+                    System.out.println("   " + tasks.get(taskIndex));
+                } catch (NomsException e) {
+                    printError(e.getMessage());
+                }
+            } else if (command.equals("delete") || command.startsWith("delete ")) {
+                try {
+                    int taskNumber = parseTaskNumber(command, "delete", tasks.size());
+                    Task deletedTask = tasks.remove(taskNumber - 1);
+                    System.out.println(" Noted. Noms has taken this task off the menu:");
+                    System.out.println("   " + deletedTask);
+                    System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
+                    System.out.println("____________________________________________________________");
                 } catch (NomsException e) {
                     printError(e.getMessage());
                 }
             } else {
                 Task task;
                 try {
-                    ensureCapacity(taskCount, tasks.length);
                     task = parseTask(command);
                 } catch (NomsException e) {
                     printError(e.getMessage());
                     continue;
                 }
-                tasks[taskCount] = task;
-                taskCount++;
+                tasks.add(task);
 
                 System.out.println(" Got it. I've added this task:");
                 System.out.println("   " + task);
-                System.out.println(" Now you have " + taskCount + " tasks in the list.");
+                System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
                 System.out.println("____________________________________________________________");
             }
         }
@@ -154,13 +164,6 @@ public class Noms {
         } catch (NumberFormatException e) {
             throw new InvalidTaskNumberException(
                     "Noms only understands task numbers here.\nTry: " + action + " 1");
-        }
-    }
-
-    private static void ensureCapacity(int taskCount, int capacity)
-            throws TaskListFullException {
-        if (taskCount >= capacity) {
-            throw new TaskListFullException();
         }
     }
 
