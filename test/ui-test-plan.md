@@ -275,4 +275,28 @@ Each invalid delete command produces a helpful Noms-style error. The task list
 still contains `buy milk` as task 1.
 ```
 
+### TC-011: Reject an empty command
+
+**Aim:**
+
+Verify that an empty input is rejected with a specific message and that Noms
+continues accepting commands afterwards.
+
+**Inputs:**
+
+```text
+
+list
+bye
+```
+
+**Expected output:**
+
+```text
+`OOPS! Noms needs a command. Try feeding me a todo, deadline, event, list, mark, unmark, delete, or bye.`
+
+The empty command does not add a task, `list` shows an empty task list, and
+Noms then accepts `bye` normally.
+```
+
 <!-- Copy the structure above for each additional test case. -->

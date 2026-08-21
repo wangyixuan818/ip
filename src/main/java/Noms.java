@@ -28,16 +28,24 @@ public class Noms {
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
 
-            if (command.equals("bye")) {
+            CommandType commandType;
+            try {
+                commandType = getCommandType(command);
+            } catch (NomsException e) {
+                printError(e.getMessage());
+                continue;
+            }
+
+            if (commandType == CommandType.BYE) {
                 System.out.println("Bye~ Hope to see you again soon!");
                 System.out.println("____________________________________________________________");
                 break;
-            } else if (command.equals("list")) {
+            } else if (commandType == CommandType.LIST) {
                 for (int i = 0; i < tasks.size(); i++) {
                     System.out.println(" " + (i + 1) + "." + tasks.get(i));
                 }
                 System.out.println("____________________________________________________________");
-            } else if (command.equals("mark") || command.startsWith("mark ")) {
+            } else if (commandType == CommandType.MARK) {
                 try {
                     int taskNumber = parseTaskNumber(command, "mark", tasks.size());
                     int taskIndex = taskNumber - 1;
@@ -47,7 +55,7 @@ public class Noms {
                 } catch (NomsException e) {
                     printError(e.getMessage());
                 }
-            } else if (command.equals("unmark") || command.startsWith("unmark ")) {
+            } else if (commandType == CommandType.UNMARK) {
                 try {
                     int taskNumber = parseTaskNumber(command, "unmark", tasks.size());
                     int taskIndex = taskNumber - 1;
@@ -57,7 +65,7 @@ public class Noms {
                 } catch (NomsException e) {
                     printError(e.getMessage());
                 }
-            } else if (command.equals("delete") || command.startsWith("delete ")) {
+            } else if (commandType == CommandType.DELETE) {
                 try {
                     int taskNumber = parseTaskNumber(command, "delete", tasks.size());
                     Task deletedTask = tasks.remove(taskNumber - 1);
@@ -89,7 +97,9 @@ public class Noms {
     }
 
     private static Task parseTask(String command) throws NomsException {
-        if (command.equals("todo") || command.startsWith("todo ")) {
+        CommandType commandType = getCommandType(command);
+
+        if (commandType == CommandType.TODO) {
             String description = command.substring(4).trim();
             if (description.isEmpty()) {
                 throw new EmptyDescriptionException("todo", TODO_FORMAT);
@@ -97,7 +107,7 @@ public class Noms {
             return new ToDo(description);
         }
 
-        if (command.equals("deadline") || command.startsWith("deadline ")) {
+        if (commandType == CommandType.DEADLINE) {
             if (command.equals("deadline")) {
                 throw new EmptyDescriptionException("deadline", DEADLINE_FORMAT);
             }
@@ -117,7 +127,7 @@ public class Noms {
             return new Deadline(description, by);
         }
 
-        if (command.equals("event") || command.startsWith("event ")) {
+        if (commandType == CommandType.EVENT) {
             if (command.equals("event")) {
                 throw new EmptyDescriptionException("event", EVENT_FORMAT);
             }
@@ -143,6 +153,20 @@ public class Noms {
         }
 
         throw new UnknownCommandException();
+    }
+
+    private static CommandType getCommandType(String command) throws EmptyCommandException {
+        String trimmedCommand = command.trim();
+        if (trimmedCommand.isEmpty()) {
+            throw new EmptyCommandException();
+        }
+
+        String commandWord = trimmedCommand.split("\\s+")[0];
+        try {
+            return CommandType.valueOf(commandWord.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 
     private static int parseTaskNumber(String command, String action, int taskCount)
