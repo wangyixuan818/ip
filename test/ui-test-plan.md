@@ -64,7 +64,6 @@ ____________________________________________________________
 Bye~ Hope to see you again soon!
 ____________________________________________________________
 ```
-
 ### TC-002: Mark and unmark a typed task
 
 **Aim:**
@@ -1087,6 +1086,356 @@ NomNom, have you eaten? What can I do for you?
 ____________________________________________________________
  OOPS! Noms needs a command. Try feeding me a todo, deadline, event, list, mark, unmark, delete, or bye.
 ____________________________________________________________
+____________________________________________________________
+Bye~ Hope to see you again soon!
+____________________________________________________________
+```
+### TC-012: Preserve task numbering after malformed additions
+
+**Aim:**
+
+Verify that malformed deadline and event commands interleaved with valid additions do not create hidden tasks or disturb task numbering.
+
+**Inputs:**
+
+```text
+todo buy groceries
+deadline submit report
+ deadline ignored
+deadline submit report /by Friday
+event study session /from 2pm
+event study session /from 2pm /to 4pm
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ _   _  ___  __  __  ____
+| \ | |/ _ \|  \/  |/ ___|
+|  \| | | | | |\/| | \___ \
+| |\  | |_| | |  | |  ___) |
+|_| \_|\___/|_|  |_| |____/
+____________________________________________________________
+Hello! I'm Noms.
+NomNom, have you eaten? What can I do for you?
+____________________________________________________________
+ Got it. I've added this task:
+   [T][ ] buy groceries
+ Now you have 1 tasks in the list.
+____________________________________________________________
+ OOPS! This deadline recipe is incomplete.
+Try: deadline <description> /by <date/time>
+____________________________________________________________
+ OOPS! This deadline recipe is incomplete.
+Try: deadline <description> /by <date/time>
+____________________________________________________________
+ Got it. I've added this task:
+   [D][ ] submit report (by: Friday)
+ Now you have 2 tasks in the list.
+____________________________________________________________
+ OOPS! This event recipe needs more ingredients.
+Try: event <description> /from <date/time> /to <date/time>
+____________________________________________________________
+ Got it. I've added this task:
+   [E][ ] study session (from: 2pm to: 4pm)
+ Now you have 3 tasks in the list.
+____________________________________________________________
+ 1.[T][ ] buy groceries
+ 2.[D][ ] submit report (by: Friday)
+ 3.[E][ ] study session (from: 2pm to: 4pm)
+____________________________________________________________
+Bye~ Hope to see you again soon!
+____________________________________________________________
+```
+
+### TC-013: Preserve completion state after invalid mark operations
+
+**Aim:**
+
+Verify that invalid mark and unmark commands interleaved with valid state changes do not modify another task or corrupt completion state.
+
+**Inputs:**
+
+```text
+todo wash dishes
+deadline pay bills /by Monday
+mark 1
+mark 3
+unmark abc
+unmark 1
+mark 2
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ _   _  ___  __  __  ____
+| \ | |/ _ \|  \/  |/ ___|
+|  \| | | | | |\/| | \___ \
+| |\  | |_| | |  | |  ___) |
+|_| \_|\___/|_|  |_| |____/
+____________________________________________________________
+Hello! I'm Noms.
+NomNom, have you eaten? What can I do for you?
+____________________________________________________________
+ Got it. I've added this task:
+   [T][ ] wash dishes
+ Now you have 1 tasks in the list.
+____________________________________________________________
+ Got it. I've added this task:
+   [D][ ] pay bills (by: Monday)
+ Now you have 2 tasks in the list.
+____________________________________________________________
+ Nice! I've marked this task as done:
+   [T][X] wash dishes
+ OOPS! That task number is off the menu.
+Choose a number from your task list.
+____________________________________________________________
+ OOPS! Noms only understands task numbers here.
+Try: unmark 1
+____________________________________________________________
+ OK, I've marked this task as not done yet:
+   [T][ ] wash dishes
+ Nice! I've marked this task as done:
+   [D][X] pay bills (by: Monday)
+ 1.[T][ ] wash dishes
+ 2.[D][X] pay bills (by: Monday)
+____________________________________________________________
+Bye~ Hope to see you again soon!
+____________________________________________________________
+```
+
+### TC-014: Preserve deletion state after invalid delete operations
+
+**Aim:**
+
+Verify that invalid deletions interleaved with a valid deletion and a later addition preserve the correct tasks and contiguous numbering.
+
+**Inputs:**
+
+```text
+todo alpha
+todo beta
+todo gamma
+delete abc
+delete 2
+delete 3
+todo delta
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ _   _  ___  __  __  ____
+| \ | |/ _ \|  \/  |/ ___|
+|  \| | | | | |\/| | \___ \
+| |\  | |_| | |  | |  ___) |
+|_| \_|\___/|_|  |_| |____/
+____________________________________________________________
+Hello! I'm Noms.
+NomNom, have you eaten? What can I do for you?
+____________________________________________________________
+ Got it. I've added this task:
+   [T][ ] alpha
+ Now you have 1 tasks in the list.
+____________________________________________________________
+ Got it. I've added this task:
+   [T][ ] beta
+ Now you have 2 tasks in the list.
+____________________________________________________________
+ Got it. I've added this task:
+   [T][ ] gamma
+ Now you have 3 tasks in the list.
+____________________________________________________________
+ OOPS! Noms only understands task numbers here.
+Try: delete 1
+____________________________________________________________
+ Noted. Noms has taken this task off the menu:
+   [T][ ] beta
+ Now you have 2 tasks in the list.
+____________________________________________________________
+ OOPS! That task number is off the menu.
+Choose a number from your task list.
+____________________________________________________________
+ Got it. I've added this task:
+   [T][ ] delta
+ Now you have 3 tasks in the list.
+____________________________________________________________
+ 1.[T][ ] alpha
+ 2.[T][ ] gamma
+ 3.[T][ ] delta
+____________________________________________________________
+Bye~ Hope to see you again soon!
+____________________________________________________________
+```
+
+### TC-015: Continue correctly after empty and unknown commands
+
+**Aim:**
+
+Verify that empty and unknown commands interleaved with valid additions do not terminate Noms or change the task list.
+
+**Inputs:**
+
+```text
+todo first
+
+blah
+deadline second /by tomorrow
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ _   _  ___  __  __  ____
+| \ | |/ _ \|  \/  |/ ___|
+|  \| | | | | |\/| | \___ \
+| |\  | |_| | |  | |  ___) |
+|_| \_|\___/|_|  |_| |____/
+____________________________________________________________
+Hello! I'm Noms.
+NomNom, have you eaten? What can I do for you?
+____________________________________________________________
+ Got it. I've added this task:
+   [T][ ] first
+ Now you have 1 tasks in the list.
+____________________________________________________________
+ OOPS! Noms needs a command. Try feeding me a todo, deadline, event, list, mark, unmark, delete, or bye.
+____________________________________________________________
+ OOPS! Grrr... Noms couldn't understand that command.
+Try feeding me a todo, deadline, event, list, mark, unmark, delete, or bye.
+____________________________________________________________
+ Got it. I've added this task:
+   [D][ ] second (by: tomorrow)
+ Now you have 2 tasks in the list.
+____________________________________________________________
+ 1.[T][ ] first
+ 2.[D][ ] second (by: tomorrow)
+____________________________________________________________
+Bye~ Hope to see you again soon!
+____________________________________________________________
+```
+
+### TC-016: Reject extra task-number arguments without changing state
+
+**Aim:**
+
+Verify that mark, unmark, and delete commands with extra arguments are rejected while valid neighbouring commands still update the intended task.
+
+**Inputs:**
+
+```text
+todo one
+todo two
+mark 1 2
+mark 1
+delete 2 extra
+unmark 1
+delete 2
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ _   _  ___  __  __  ____
+| \ | |/ _ \|  \/  |/ ___|
+|  \| | | | | |\/| | \___ \
+| |\  | |_| | |  | |  ___) |
+|_| \_|\___/|_|  |_| |____/
+____________________________________________________________
+Hello! I'm Noms.
+NomNom, have you eaten? What can I do for you?
+____________________________________________________________
+ Got it. I've added this task:
+   [T][ ] one
+ Now you have 1 tasks in the list.
+____________________________________________________________
+ Got it. I've added this task:
+   [T][ ] two
+ Now you have 2 tasks in the list.
+____________________________________________________________
+ OOPS! Noms needs a task number to mark.
+Try: mark 1
+____________________________________________________________
+ Nice! I've marked this task as done:
+   [T][X] one
+ OOPS! Noms needs a task number to delete.
+Try: delete 1
+____________________________________________________________
+ OK, I've marked this task as not done yet:
+   [T][ ] one
+ Noted. Noms has taken this task off the menu:
+   [T][ ] two
+ Now you have 1 tasks in the list.
+____________________________________________________________
+ 1.[T][ ] one
+____________________________________________________________
+Bye~ Hope to see you again soon!
+____________________________________________________________
+```
+
+### TC-017: Recover from invalid operations on an empty list
+
+**Aim:**
+
+Verify that invalid task operations on an empty list do not prevent a later valid task from being added, marked, and listed.
+
+**Inputs:**
+
+```text
+mark 1
+delete 1
+unmark 1
+todo recovered task
+mark 1
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ _   _  ___  __  __  ____
+| \ | |/ _ \|  \/  |/ ___|
+|  \| | | | | |\/| | \___ \
+| |\  | |_| | |  | |  ___) |
+|_| \_|\___/|_|  |_| |____/
+____________________________________________________________
+Hello! I'm Noms.
+NomNom, have you eaten? What can I do for you?
+____________________________________________________________
+ OOPS! That task number is off the menu.
+Choose a number from your task list.
+____________________________________________________________
+ OOPS! That task number is off the menu.
+Choose a number from your task list.
+____________________________________________________________
+ OOPS! That task number is off the menu.
+Choose a number from your task list.
+____________________________________________________________
+ Got it. I've added this task:
+   [T][ ] recovered task
+ Now you have 1 tasks in the list.
+____________________________________________________________
+ Nice! I've marked this task as done:
+   [T][X] recovered task
+ 1.[T][X] recovered task
 ____________________________________________________________
 Bye~ Hope to see you again soon!
 ____________________________________________________________
