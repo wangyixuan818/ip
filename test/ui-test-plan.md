@@ -99,8 +99,10 @@ ____________________________________________________________
 ____________________________________________________________
  Nice! I've marked this task as done:
    [D][X] submit report (by: 11/10/2019 5pm)
+____________________________________________________________
  OK, I've marked this task as not done yet:
    [D][ ] submit report (by: 11/10/2019 5pm)
+____________________________________________________________
  1.[D][ ] submit report (by: 11/10/2019 5pm)
 ____________________________________________________________
 Bye~ Hope to see you again soon!
@@ -270,12 +272,15 @@ Verify that missing, non-numeric, and out-of-range task numbers are handled with
 **Inputs:**
 
 ```text
+todo anchor task
 mark
 mark abc
 mark 0
+mark 999999999999
 unmark
-unmark xyz
+unmark 1.5
 unmark 99
+list
 bye
 ```
 
@@ -292,23 +297,32 @@ ____________________________________________________________
 Hello! I'm Noms.
 NomNom, have you eaten? What can I do for you?
 ____________________________________________________________
- OOPS! Noms needs a task number to mark.
+ Got it. I've added this task:
+   [T][ ] anchor task
+ Now you have 1 tasks in the list.
+____________________________________________________________
+ OOPS! Noms needs to know which task to mark.
+Try: mark <task number>
+____________________________________________________________
+ OOPS! The task number must be a whole number.
 Try: mark 1
 ____________________________________________________________
- OOPS! Noms only understands task numbers here.
-Try: mark 1
+ OOPS! Task number 0 is out of range.
+Choose a task number from 1 to 1.
 ____________________________________________________________
- OOPS! That task number is off the menu.
-Choose a number from your task list.
+ OOPS! That task number is too large for Noms.
+Choose a task number from 1 to 1.
 ____________________________________________________________
- OOPS! Noms needs a task number to unmark.
+ OOPS! Noms needs to know which task to unmark.
+Try: unmark <task number>
+____________________________________________________________
+ OOPS! The task number must be a whole number.
 Try: unmark 1
 ____________________________________________________________
- OOPS! Noms only understands task numbers here.
-Try: unmark 1
+ OOPS! Task number 99 is out of range.
+Choose a task number from 1 to 1.
 ____________________________________________________________
- OOPS! That task number is off the menu.
-Choose a number from your task list.
+ 1.[T][ ] anchor task
 ____________________________________________________________
 Bye~ Hope to see you again soon!
 ____________________________________________________________
@@ -1039,17 +1053,17 @@ ____________________________________________________________
    [T][ ] buy milk
  Now you have 1 tasks in the list.
 ____________________________________________________________
- OOPS! Noms needs a task number to delete.
+ OOPS! Noms needs to know which task to delete.
+Try: delete <task number>
+____________________________________________________________
+ OOPS! The task number must be a whole number.
 Try: delete 1
 ____________________________________________________________
- OOPS! Noms only understands task numbers here.
-Try: delete 1
+ OOPS! Task number 0 is out of range.
+Choose a task number from 1 to 1.
 ____________________________________________________________
- OOPS! That task number is off the menu.
-Choose a number from your task list.
-____________________________________________________________
- OOPS! That task number is off the menu.
-Choose a number from your task list.
+ OOPS! Task number 2 is out of range.
+Choose a task number from 1 to 1.
 ____________________________________________________________
  1.[T][ ] buy milk
 ____________________________________________________________
@@ -1194,16 +1208,19 @@ ____________________________________________________________
 ____________________________________________________________
  Nice! I've marked this task as done:
    [T][X] wash dishes
- OOPS! That task number is off the menu.
-Choose a number from your task list.
 ____________________________________________________________
- OOPS! Noms only understands task numbers here.
+ OOPS! Task number 3 is out of range.
+Choose a task number from 1 to 2.
+____________________________________________________________
+ OOPS! The task number must be a whole number.
 Try: unmark 1
 ____________________________________________________________
  OK, I've marked this task as not done yet:
    [T][ ] wash dishes
+____________________________________________________________
  Nice! I've marked this task as done:
    [D][X] pay bills (by: Monday)
+____________________________________________________________
  1.[T][ ] wash dishes
  2.[D][X] pay bills (by: Monday)
 ____________________________________________________________
@@ -1256,15 +1273,15 @@ ____________________________________________________________
    [T][ ] gamma
  Now you have 3 tasks in the list.
 ____________________________________________________________
- OOPS! Noms only understands task numbers here.
+ OOPS! The task number must be a whole number.
 Try: delete 1
 ____________________________________________________________
  Noted. Noms has taken this task off the menu:
    [T][ ] beta
  Now you have 2 tasks in the list.
 ____________________________________________________________
- OOPS! That task number is off the menu.
-Choose a number from your task list.
+ OOPS! Task number 3 is out of range.
+Choose a task number from 1 to 2.
 ____________________________________________________________
  Got it. I've added this task:
    [T][ ] delta
@@ -1369,16 +1386,18 @@ ____________________________________________________________
    [T][ ] two
  Now you have 2 tasks in the list.
 ____________________________________________________________
- OOPS! Noms needs a task number to mark.
-Try: mark 1
+ OOPS! Noms can only mark one task at a time.
+Try: mark <task number>
 ____________________________________________________________
  Nice! I've marked this task as done:
    [T][X] one
- OOPS! Noms needs a task number to delete.
-Try: delete 1
+____________________________________________________________
+ OOPS! Noms can only delete one task at a time.
+Try: delete <task number>
 ____________________________________________________________
  OK, I've marked this task as not done yet:
    [T][ ] one
+____________________________________________________________
  Noted. Noms has taken this task off the menu:
    [T][ ] two
  Now you have 1 tasks in the list.
@@ -1420,14 +1439,14 @@ ____________________________________________________________
 Hello! I'm Noms.
 NomNom, have you eaten? What can I do for you?
 ____________________________________________________________
- OOPS! That task number is off the menu.
-Choose a number from your task list.
+ OOPS! Noms has no tasks to mark yet.
+Add a task first, then try again.
 ____________________________________________________________
- OOPS! That task number is off the menu.
-Choose a number from your task list.
+ OOPS! Noms has no tasks to delete yet.
+Add a task first, then try again.
 ____________________________________________________________
- OOPS! That task number is off the menu.
-Choose a number from your task list.
+ OOPS! Noms has no tasks to unmark yet.
+Add a task first, then try again.
 ____________________________________________________________
  Got it. I've added this task:
    [T][ ] recovered task
@@ -1435,6 +1454,7 @@ ____________________________________________________________
 ____________________________________________________________
  Nice! I've marked this task as done:
    [T][X] recovered task
+____________________________________________________________
  1.[T][X] recovered task
 ____________________________________________________________
 Bye~ Hope to see you again soon!

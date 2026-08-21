@@ -52,6 +52,7 @@ public class Noms {
                     tasks.get(taskIndex).markAsDone();
                     System.out.println(" Nice! I've marked this task as done:");
                     System.out.println("   " + tasks.get(taskIndex));
+                    System.out.println("____________________________________________________________");
                 } catch (NomsException e) {
                     printError(e.getMessage());
                 }
@@ -62,6 +63,7 @@ public class Noms {
                     tasks.get(taskIndex).markAsNotDone();
                     System.out.println(" OK, I've marked this task as not done yet:");
                     System.out.println("   " + tasks.get(taskIndex));
+                    System.out.println("____________________________________________________________");
                 } catch (NomsException e) {
                     printError(e.getMessage());
                 }
@@ -171,23 +173,44 @@ public class Noms {
 
     private static int parseTaskNumber(String command, String action, int taskCount)
             throws InvalidTaskNumberException {
-        String[] parts = command.split("\\s+");
-        if (parts.length != 2) {
+        String[] parts = command.trim().split("\\s+");
+
+        if (taskCount == 0) {
             throw new InvalidTaskNumberException(
-                    "Noms needs a task number to " + action + ".\nTry: " + action + " 1");
+                    "Noms has no tasks to " + action + " yet.\n"
+                            + "Add a task first, then try again.");
+        }
+
+        if (parts.length == 1) {
+            throw new InvalidTaskNumberException(
+                    "Noms needs to know which task to " + action + ".\n"
+                            + "Try: " + action + " <task number>");
+        }
+
+        if (parts.length > 2) {
+            throw new InvalidTaskNumberException(
+                    "Noms can only " + action + " one task at a time.\n"
+                            + "Try: " + action + " <task number>");
+        }
+
+        String taskNumberText = parts[1];
+        if (!taskNumberText.matches("-?\\d+")) {
+            throw new InvalidTaskNumberException(
+                    "The task number must be a whole number.\nTry: " + action + " 1");
         }
 
         try {
-            int taskNumber = Integer.parseInt(parts[1]);
+            int taskNumber = Integer.parseInt(taskNumberText);
             if (taskNumber < 1 || taskNumber > taskCount) {
                 throw new InvalidTaskNumberException(
-                        "That task number is off the menu.\n"
-                                + "Choose a number from your task list.");
+                        "Task number " + taskNumber + " is out of range.\n"
+                                + "Choose a task number from 1 to " + taskCount + ".");
             }
             return taskNumber;
         } catch (NumberFormatException e) {
             throw new InvalidTaskNumberException(
-                    "Noms only understands task numbers here.\nTry: " + action + " 1");
+                    "That task number is too large for Noms.\n"
+                            + "Choose a task number from 1 to " + taskCount + ".");
         }
     }
 
