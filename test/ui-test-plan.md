@@ -9,7 +9,8 @@ The `test-ui` skill executes these cases in order and stops at the first failure
 - Run command: `java -cp /tmp/noms-ui-test-out Noms`
 - Working directory: repository root
 - Output comparison: exact, except for line-ending differences
-- Shared process: no; every test case starts a fresh process with an empty task list
+- Shared process: no; every test case starts a fresh process with an empty task list, **except TC-018 which explicitly tests persistence across two processes**
+- Before every test case (including TC-018's first run), delete `./data/noms.txt` if it exists. Noms now loads any saved tasks from that file at startup, so a file left over from a previous case would make that case start with a non-empty list instead of the documented one.
 - User input is not echoed by the application
 - Inputs are supplied exactly as shown, including blank lines
 - Expected output includes the complete startup banner, responses, separators, and goodbye output
@@ -1456,6 +1457,89 @@ ____________________________________________________________
    [T][X] recovered task
 ____________________________________________________________
  1.[T][X] recovered task
+____________________________________________________________
+Bye~ Hope to see you again soon!
+____________________________________________________________
+```
+
+### TC-018: Tasks persist across a restart
+
+**Aim:**
+
+Verify that tasks saved by one run of Noms are loaded back in and shown
+correctly when Noms is started again against the same save file.
+
+**Note:** unlike every other case in this plan, this test case runs the
+program **twice** in sequence against the same working directory, so that
+the second run's `list` reflects what the first run saved. Delete
+`./data/noms.txt` before the *first* run only; leave it in place between the
+first and second run.
+
+**First run — inputs:**
+
+```text
+todo read book
+deadline return book /by June 6th
+event project meeting /from Aug 6th /to 2-4pm
+mark 2
+bye
+```
+
+**First run — expected output:**
+
+```text
+____________________________________________________________
+ _   _  ___  __  __  ____
+| \ | |/ _ \|  \/  |/ ___|
+|  \| | | | | |\/| | \___ \
+| |\  | |_| | |  | |  ___) |
+|_| \_|\___/|_|  |_| |____/
+____________________________________________________________
+Hello! I'm Noms.
+NomNom, have you eaten? What can I do for you?
+____________________________________________________________
+ Got it. I've added this task:
+   [T][ ] read book
+ Now you have 1 tasks in the list.
+____________________________________________________________
+ Got it. I've added this task:
+   [D][ ] return book (by: June 6th)
+ Now you have 2 tasks in the list.
+____________________________________________________________
+ Got it. I've added this task:
+   [E][ ] project meeting (from: Aug 6th to: 2-4pm)
+ Now you have 3 tasks in the list.
+____________________________________________________________
+ Nice! I've marked this task as done:
+   [D][X] return book (by: June 6th)
+____________________________________________________________
+Bye~ Hope to see you again soon!
+____________________________________________________________
+```
+
+**Second run — inputs:**
+
+```text
+list
+bye
+```
+
+**Second run — expected output:**
+
+```text
+____________________________________________________________
+ _   _  ___  __  __  ____
+| \ | |/ _ \|  \/  |/ ___|
+|  \| | | | | |\/| | \___ \
+| |\  | |_| | |  | |  ___) |
+|_| \_|\___/|_|  |_| |____/
+____________________________________________________________
+Hello! I'm Noms.
+NomNom, have you eaten? What can I do for you?
+____________________________________________________________
+ 1.[T][ ] read book
+ 2.[D][X] return book (by: June 6th)
+ 3.[E][ ] project meeting (from: Aug 6th to: 2-4pm)
 ____________________________________________________________
 Bye~ Hope to see you again soon!
 ____________________________________________________________

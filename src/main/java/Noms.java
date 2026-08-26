@@ -9,7 +9,8 @@ public class Noms {
             "deadline <description> /by <date/time>";
     private static final String EVENT_FORMAT =
             "event <description> /from <date/time> /to <date/time>";
-    private static final String SAVE_FILE_PATH = "./data/noms.txt";
+    private static final String SAVE_DIRECTORY = "data";
+    private static final String SAVE_FILE_NAME = "noms.txt";
 
     public static void main(String[] args) {
         String banner = "____________________________________________________________\n"
@@ -25,8 +26,14 @@ public class Noms {
         System.out.println("____________________________________________________________");
 
         Scanner scanner = new Scanner(System.in);
-        List<Task> tasks = new ArrayList<>();
-        Storage storage = new Storage(SAVE_FILE_PATH);
+        Storage storage = new Storage(SAVE_DIRECTORY, SAVE_FILE_NAME);
+        List<Task> tasks;
+        try {
+            tasks = storage.load();
+        } catch (IOException e) {
+            tasks = new ArrayList<>();
+            printError("Noms couldn't load the saved menu, starting with an empty plate: " + e.getMessage());
+        }
 
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
