@@ -50,4 +50,18 @@ public class Task {
     public String toString() {
         return "[" + getStatusIcon() + "] " + description;
     }
+
+    /**
+     * Returns this task's representation for saving to disk, as a
+     * pipe-separated line: {@code <done flag> | <description>}.
+     *
+     * Subclasses prepend their type letter and append any extra fields
+     * (e.g. a deadline's date or an event's start/end times), mirroring
+     * how {@link #toString()} is built up via {@code super.toString()}.
+     *
+     * @return the save-file line for this task, without its type marker
+     */
+    public String toFileFormat() {
+        return (isDone ? "1" : "0") + " | " + description;
+    }
 }
