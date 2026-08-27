@@ -44,6 +44,10 @@ understand. Follow the style of these examples:
 
 Ensure that Java 25 is used when running the application or build tasks. On macOS, use `sdk use java 25.0.3.fx-zulu` to switch to Java 25 if needed.
 
+## Code style
+
+@docs/style-guide.md
+
 ## Git
 
 Use lightweight tags unless the user requests an annotated tag.
