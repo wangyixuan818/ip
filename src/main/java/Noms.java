@@ -32,6 +32,9 @@ public class Noms {
         TaskList loaded;
         try {
             loaded = new TaskList(storage.load());
+            for (String spoiledLine : storage.getSkippedLines()) {
+                ui.showError("Noms found a spoiled entry in the save file and skipped it: " + spoiledLine);
+            }
         } catch (IOException e) {
             loaded = new TaskList();
             ui.showError("Noms couldn't load the saved menu, starting with an empty plate: " + e.getMessage());

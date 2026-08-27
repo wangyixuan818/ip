@@ -9,8 +9,8 @@ The `test-ui` skill executes these cases in order and stops at the first failure
 - Run command: `java -cp /tmp/noms-ui-test-out Noms`
 - Working directory: repository root
 - Output comparison: exact, except for line-ending differences
-- Shared process: no; every test case starts a fresh process with an empty task list, **except TC-018 and TC-019, which explicitly test persistence across two processes**
-- Before every test case (including TC-018's first run), delete `./data/noms.txt` if it exists. Noms now loads any saved tasks from that file at startup, so a file left over from a previous case would make that case start with a non-empty list instead of the documented one.
+- Shared process: no; every test case starts a fresh process with an empty task list, **except TC-017 and TC-018, which explicitly test persistence across two processes**
+- Before every test case (including TC-017's first run), delete `./data/noms.txt` if it exists. Noms now loads any saved tasks from that file at startup, so a file left over from a previous case would make that case start with a non-empty list instead of the documented one. **TC-019 is the exception: it pre-seeds `./data/noms.txt` with specific contents before running, as described in that case.**
 - User input is not echoed by the application
 - Inputs are supplied exactly as shown, including blank lines
 - Expected output includes the complete startup banner, responses, separators, and goodbye output
@@ -939,6 +939,58 @@ NomNom, have you eaten? What can I do for you?
 ____________________________________________________________
  1.[T][ ] buy milk | bread
  2.[D][ ] audit C:\logs\a\|b (by: Nov 08 2019)
+____________________________________________________________
+Bye~ Hope to see you again soon!
+____________________________________________________________
+```
+
+### TC-019: Skip a spoiled line in the save file
+
+**Aim:**
+
+Verify that a save file containing an unparseable line is loaded without
+crashing: the good tasks still load, the bad line is skipped, and Noms
+reports it with the standard error message. This exercises the path where
+`Storage.load()` records skipped lines and Noms reports them through the
+`Ui`, so that no console output originates outside `Ui`.
+
+**Note:** unlike the other cases, this case **pre-seeds** `./data/noms.txt`
+before the run instead of deleting it. Create `./data/noms.txt` with
+exactly these three lines, then start Noms:
+
+```text
+T | 0 | good task
+GARBAGE LINE
+D | 1 | pay rent | 2019-12-15
+```
+
+The skipped-entry warning is printed while the file is loaded (during
+construction), so it appears **before** the welcome banner.
+
+**Inputs:**
+
+```text
+list
+bye
+```
+
+**Expected output:**
+
+```text
+ OOPS! Noms found a spoiled entry in the save file and skipped it: GARBAGE LINE
+____________________________________________________________
+____________________________________________________________
+ _   _  ___  __  __  ____
+| \ | |/ _ \|  \/  |/ ___|
+|  \| | | | | |\/| | \___ \
+| |\  | |_| | |  | |  ___) |
+|_| \_|\___/|_|  |_| |____/
+____________________________________________________________
+Hello! I'm Noms.
+NomNom, have you eaten? What can I do for you?
+____________________________________________________________
+ 1.[T][ ] good task
+ 2.[D][X] pay rent (by: Dec 15 2019)
 ____________________________________________________________
 Bye~ Hope to see you again soon!
 ____________________________________________________________

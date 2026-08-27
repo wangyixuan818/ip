@@ -11,6 +11,7 @@ import java.util.List;
  */
 public class Storage {
     private final Path filePath;
+    private final List<String> skippedLines = new ArrayList<>();
 
     /**
      * Creates a storage that reads from and writes to a file in the given
@@ -54,13 +55,17 @@ public class Storage {
      * normal situation the first time Noms is run on a computer — this
      * simply returns an empty list rather than treating it as an error.
      * Any line that cannot be parsed (e.g. from a hand-edited or corrupted
-     * save file) is skipped with a warning, instead of aborting the load.
+     * save file) is skipped instead of aborting the load, and recorded so
+     * the caller can report it through the {@link Ui}; see
+     * {@link #getSkippedLines()}. Storage itself never writes to the
+     * console, keeping all user-facing output in one place.
      *
      * @return the tasks read from the save file, or an empty list if there is none yet
      * @throws IOException if the save file exists but cannot be read
      */
     public List<Task> load() throws IOException {
         List<Task> tasks = new ArrayList<>();
+        skippedLines.clear();
 
         if (!Files.exists(filePath)) {
             return tasks;
@@ -74,12 +79,22 @@ public class Storage {
             try {
                 tasks.add(parseLine(line));
             } catch (RuntimeException e) {
-                System.out.println(" OOPS! Noms found a spoiled entry in the save file and skipped it: " + line);
-                System.out.println("____________________________________________________________");
+                skippedLines.add(line);
             }
         }
 
         return tasks;
+    }
+
+    /**
+     * Returns the raw save-file lines skipped during the most recent
+     * {@link #load()} because they could not be parsed, in the order they
+     * appeared. The list is empty if every line loaded successfully.
+     *
+     * @return a copy of the skipped lines, so callers cannot alter this Storage
+     */
+    public List<String> getSkippedLines() {
+        return new ArrayList<>(skippedLines);
     }
 
     /**
