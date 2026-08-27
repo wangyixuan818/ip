@@ -9,7 +9,7 @@ The `test-ui` skill executes these cases in order and stops at the first failure
 - Run command: `java -cp /tmp/noms-ui-test-out Noms`
 - Working directory: repository root
 - Output comparison: exact, except for line-ending differences
-- Shared process: no; every test case starts a fresh process with an empty task list, **except TC-018 which explicitly tests persistence across two processes**
+- Shared process: no; every test case starts a fresh process with an empty task list, **except TC-018 and TC-019, which explicitly test persistence across two processes**
 - Before every test case (including TC-018's first run), delete `./data/noms.txt` if it exists. Noms now loads any saved tasks from that file at startup, so a file left over from a previous case would make that case start with a non-empty list instead of the documented one.
 - User input is not echoed by the application
 - Inputs are supplied exactly as shown, including blank lines
@@ -1540,6 +1540,77 @@ ____________________________________________________________
  1.[T][ ] read book
  2.[D][X] return book (by: June 6th)
  3.[E][ ] project meeting (from: Aug 6th to: 2-4pm)
+____________________________________________________________
+Bye~ Hope to see you again soon!
+____________________________________________________________
+```
+
+### TC-019: Descriptions with `|` and `\` survive a restart
+
+**Aim:**
+
+Verify that a `|` or `\` typed as part of a task's own text does not get
+misread as a save-file field separator, and round-trips correctly across a
+restart instead of being corrupted or truncated.
+
+**Note:** like TC-018, this runs the program twice against the same working
+directory. Delete `./data/noms.txt` before the *first* run only.
+
+**First run — inputs:**
+
+```text
+todo buy milk | bread
+deadline audit C:\logs\a\|b /by Friday
+bye
+```
+
+**First run — expected output:**
+
+```text
+____________________________________________________________
+ _   _  ___  __  __  ____
+| \ | |/ _ \|  \/  |/ ___|
+|  \| | | | | |\/| | \___ \
+| |\  | |_| | |  | |  ___) |
+|_| \_|\___/|_|  |_| |____/
+____________________________________________________________
+Hello! I'm Noms.
+NomNom, have you eaten? What can I do for you?
+____________________________________________________________
+ Got it. I've added this task:
+   [T][ ] buy milk | bread
+ Now you have 1 tasks in the list.
+____________________________________________________________
+ Got it. I've added this task:
+   [D][ ] audit C:\logs\a\|b (by: Friday)
+ Now you have 2 tasks in the list.
+____________________________________________________________
+Bye~ Hope to see you again soon!
+____________________________________________________________
+```
+
+**Second run — inputs:**
+
+```text
+list
+bye
+```
+
+**Second run — expected output:**
+
+```text
+____________________________________________________________
+ _   _  ___  __  __  ____
+| \ | |/ _ \|  \/  |/ ___|
+|  \| | | | | |\/| | \___ \
+| |\  | |_| | |  | |  ___) |
+|_| \_|\___/|_|  |_| |____/
+____________________________________________________________
+Hello! I'm Noms.
+NomNom, have you eaten? What can I do for you?
+____________________________________________________________
+ 1.[T][ ] buy milk | bread
+ 2.[D][ ] audit C:\logs\a\|b (by: Friday)
 ____________________________________________________________
 Bye~ Hope to see you again soon!
 ____________________________________________________________

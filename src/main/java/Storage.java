@@ -91,7 +91,7 @@ public class Storage {
         String[] fields = line.split(" \\| ");
         String type = fields[0];
         boolean isDone = fields[1].equals("1");
-        String description = fields[2];
+        String description = Task.unescape(fields[2]);
 
         Task task;
         switch (type) {
@@ -99,10 +99,10 @@ public class Storage {
             task = new ToDo(description);
             break;
         case "D":
-            task = new Deadline(description, fields[3]);
+            task = new Deadline(description, Task.unescape(fields[3]));
             break;
         case "E":
-            task = new Event(description, fields[3], fields[4]);
+            task = new Event(description, Task.unescape(fields[3]), Task.unescape(fields[4]));
             break;
         default:
             throw new IllegalArgumentException("Unknown task type: " + type);
