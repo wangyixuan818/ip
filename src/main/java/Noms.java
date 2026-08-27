@@ -1,5 +1,4 @@
 import java.io.IOException;
-import java.time.LocalDate;
 
 /**
  * Entry point and top-level coordinator for the Noms task manager.
@@ -42,91 +41,26 @@ public class Noms {
 
     /**
      * Runs the main loop: greets the user, then repeatedly reads a command,
-     * carries it out, and prints the response, until the user says bye or
-     * the input ends.
+     * turns it into a {@link Command}, executes it, and continues until an
+     * exit command runs or the input ends. Any command error is reported
+     * and the loop keeps going.
      */
     public void run() {
         ui.showWelcome();
 
-        while (ui.hasNextCommand()) {
-            String command = ui.readCommand();
-
-            CommandType commandType;
+        boolean isExit = false;
+        while (!isExit && ui.hasNextCommand()) {
+            String fullCommand = ui.readCommand();
             try {
-                commandType = Parser.getCommandType(command);
+                Command command = Parser.parse(fullCommand);
+                command.execute(tasks, ui, storage);
+                isExit = command.isExit();
             } catch (NomsException e) {
                 ui.showError(e.getMessage());
-                continue;
-            }
-
-            if (commandType == CommandType.BYE) {
-                ui.showGoodbye();
-                break;
-            } else if (commandType == CommandType.LIST) {
-                ui.showTaskList(tasks.asList());
-            } else if (commandType == CommandType.MARK) {
-                try {
-                    int taskNumber = Parser.parseTaskNumber(command, "mark", tasks.size());
-                    Task task = tasks.get(taskNumber - 1);
-                    task.markAsDone();
-                    saveTasks();
-                    ui.showTaskMarked(task);
-                } catch (NomsException e) {
-                    ui.showError(e.getMessage());
-                }
-            } else if (commandType == CommandType.UNMARK) {
-                try {
-                    int taskNumber = Parser.parseTaskNumber(command, "unmark", tasks.size());
-                    Task task = tasks.get(taskNumber - 1);
-                    task.markAsNotDone();
-                    saveTasks();
-                    ui.showTaskUnmarked(task);
-                } catch (NomsException e) {
-                    ui.showError(e.getMessage());
-                }
-            } else if (commandType == CommandType.DELETE) {
-                try {
-                    int taskNumber = Parser.parseTaskNumber(command, "delete", tasks.size());
-                    Task deletedTask = tasks.delete(taskNumber - 1);
-                    saveTasks();
-                    ui.showTaskDeleted(deletedTask, tasks.size());
-                } catch (NomsException e) {
-                    ui.showError(e.getMessage());
-                }
-            } else if (commandType == CommandType.ON) {
-                try {
-                    LocalDate date = Parser.parseOnDate(command);
-                    ui.showTasksOn(date, tasks.tasksOn(date));
-                } catch (NomsException e) {
-                    ui.showError(e.getMessage());
-                }
-            } else {
-                Task task;
-                try {
-                    task = Parser.parseTask(command);
-                } catch (NomsException e) {
-                    ui.showError(e.getMessage());
-                    continue;
-                }
-                tasks.add(task);
-                saveTasks();
-                ui.showTaskAdded(task, tasks.size());
             }
         }
 
         ui.close();
-    }
-
-    /**
-     * Saves the current task list to disk, reporting a Noms-style error
-     * if the save fails instead of crashing the program.
-     */
-    private void saveTasks() {
-        try {
-            storage.save(tasks.asList());
-        } catch (IOException e) {
-            ui.showError("Noms couldn't save the menu to disk: " + e.getMessage());
-        }
     }
 
     public static void main(String[] args) {

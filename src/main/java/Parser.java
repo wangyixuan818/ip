@@ -18,6 +18,44 @@ public class Parser {
             "event <description> /from yyyy-mm-dd /to yyyy-mm-dd";
 
     /**
+     * Turns a full command line into the {@link Command} that carries it
+     * out. Parsing that needs no task list (task descriptions, dates) is
+     * done here; validation that depends on the current list size (task
+     * numbers) is deferred to the command's {@code execute}.
+     *
+     * @param fullCommand the raw line typed by the user
+     * @return the command to execute
+     * @throws NomsException if the command is blank, unrecognised, or malformed
+     */
+    public static Command parse(String fullCommand) throws NomsException {
+        CommandType commandType = getCommandType(fullCommand);
+        if (commandType == null) {
+            throw new UnknownCommandException();
+        }
+
+        switch (commandType) {
+        case BYE:
+            return new ExitCommand();
+        case LIST:
+            return new ListCommand();
+        case MARK:
+            return new MarkCommand(fullCommand);
+        case UNMARK:
+            return new UnmarkCommand(fullCommand);
+        case DELETE:
+            return new DeleteCommand(fullCommand);
+        case ON:
+            return new OnCommand(parseOnDate(fullCommand));
+        case TODO:
+        case DEADLINE:
+        case EVENT:
+            return new AddCommand(parseTask(fullCommand));
+        default:
+            throw new UnknownCommandException();
+        }
+    }
+
+    /**
      * Returns the command type named by the first word of the command, or
      * {@code null} if that word is not a recognised command.
      *
