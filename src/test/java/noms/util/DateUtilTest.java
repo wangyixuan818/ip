@@ -10,13 +10,16 @@ import org.junit.jupiter.api.Test;
 import noms.exception.InvalidDateException;
 
 /**
- * Tests {@link DateUtil}, focusing on {@link DateUtil#parse(String)}.
+ * Tests {@link DateUtil}, covering both of its public methods:
+ * {@link DateUtil#parse(String)} and {@link DateUtil#format(LocalDate)}.
  *
- * {@code parse} is a good JUnit target because it is a pure static method
- * with deterministic output and a well-defined failure mode: valid ISO dates
- * return a {@link LocalDate}, and anything else throws
- * {@link InvalidDateException}. The tests cover both the accepted format and
- * the main ways input can be rejected.
+ * Both are good JUnit targets because they are pure static methods with
+ * deterministic output. {@code parse} has a well-defined failure mode (valid
+ * ISO dates return a {@link LocalDate}, anything else throws
+ * {@link InvalidDateException}), while {@code format} performs non-trivial
+ * rendering (two-digit day padding and a month abbreviation) that is worth
+ * pinning down. The tests cover the accepted format and the main rejection
+ * paths for {@code parse}, and the notable rendering cases for {@code format}.
  */
 public class DateUtilTest {
 
@@ -76,5 +79,35 @@ public class DateUtilTest {
     @Test
     public void parse_emptyString_throwsInvalidDateException() {
         assertThrows(InvalidDateException.class, () -> DateUtil.parse(""));
+    }
+
+    // --- format: renders a date in the display pattern "MMM dd yyyy" ---
+
+    @Test
+    public void format_typicalDate_returnsFriendlyPattern() {
+        assertEquals("Oct 15 2019", DateUtil.format(LocalDate.of(2019, 10, 15)));
+    }
+
+    @Test
+    public void format_singleDigitDay_padsDayToTwoDigits() {
+        // "dd" always renders two digits, so the 5th becomes "05", not "5".
+        assertEquals("Jan 05 2019", DateUtil.format(LocalDate.of(2019, 1, 5)));
+    }
+
+    @Test
+    public void format_endOfYear_returnsFriendlyPattern() {
+        assertEquals("Dec 31 2019", DateUtil.format(LocalDate.of(2019, 12, 31)));
+    }
+
+    @Test
+    public void format_september_usesFourLetterAbbreviation() {
+        // September's short form in the JDK's date data is "Sept", not "Sep".
+        assertEquals("Sept 01 2019", DateUtil.format(LocalDate.of(2019, 9, 1)));
+    }
+
+    @Test
+    public void format_parsedDate_roundTripsToInputComponents() throws InvalidDateException {
+        // parse then format keeps the same calendar date, in the display form.
+        assertEquals("Jun 06 2019", DateUtil.format(DateUtil.parse("2019-06-06")));
     }
 }
