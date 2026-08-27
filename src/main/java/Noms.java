@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -8,6 +9,8 @@ public class Noms {
             "deadline <description> /by <date/time>";
     private static final String EVENT_FORMAT =
             "event <description> /from <date/time> /to <date/time>";
+    private static final String SAVE_DIRECTORY = "data";
+    private static final String SAVE_FILE_NAME = "noms.txt";
 
     public static void main(String[] args) {
         String banner = "____________________________________________________________\n"
@@ -23,7 +26,14 @@ public class Noms {
         System.out.println("____________________________________________________________");
 
         Scanner scanner = new Scanner(System.in);
-        List<Task> tasks = new ArrayList<>();
+        Storage storage = new Storage(SAVE_DIRECTORY, SAVE_FILE_NAME);
+        List<Task> tasks;
+        try {
+            tasks = storage.load();
+        } catch (IOException e) {
+            tasks = new ArrayList<>();
+            printError("Noms couldn't load the saved menu, starting with an empty plate: " + e.getMessage());
+        }
 
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
@@ -50,6 +60,7 @@ public class Noms {
                     int taskNumber = parseTaskNumber(command, "mark", tasks.size());
                     int taskIndex = taskNumber - 1;
                     tasks.get(taskIndex).markAsDone();
+                    saveTasks(storage, tasks);
                     System.out.println(" Nice! I've marked this task as done:");
                     System.out.println("   " + tasks.get(taskIndex));
                     System.out.println("____________________________________________________________");
@@ -61,6 +72,7 @@ public class Noms {
                     int taskNumber = parseTaskNumber(command, "unmark", tasks.size());
                     int taskIndex = taskNumber - 1;
                     tasks.get(taskIndex).markAsNotDone();
+                    saveTasks(storage, tasks);
                     System.out.println(" OK, I've marked this task as not done yet:");
                     System.out.println("   " + tasks.get(taskIndex));
                     System.out.println("____________________________________________________________");
@@ -71,6 +83,7 @@ public class Noms {
                 try {
                     int taskNumber = parseTaskNumber(command, "delete", tasks.size());
                     Task deletedTask = tasks.remove(taskNumber - 1);
+                    saveTasks(storage, tasks);
                     System.out.println(" Noted. Noms has taken this task off the menu:");
                     System.out.println("   " + deletedTask);
                     System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
@@ -87,6 +100,7 @@ public class Noms {
                     continue;
                 }
                 tasks.add(task);
+                saveTasks(storage, tasks);
 
                 System.out.println(" Got it. I've added this task:");
                 System.out.println("   " + task);
@@ -211,6 +225,18 @@ public class Noms {
             throw new InvalidTaskNumberException(
                     "That task number is too large for Noms.\n"
                             + "Choose a task number from 1 to " + taskCount + ".");
+        }
+    }
+
+    /**
+     * Saves the current task list to disk, reporting a Noms-style error
+     * if the save fails instead of crashing the program.
+     */
+    private static void saveTasks(Storage storage, List<Task> tasks) {
+        try {
+            storage.save(tasks);
+        } catch (IOException e) {
+            printError("Noms couldn't save the menu to disk: " + e.getMessage());
         }
     }
 

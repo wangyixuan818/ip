@@ -50,4 +50,59 @@ public class Task {
     public String toString() {
         return "[" + getStatusIcon() + "] " + description;
     }
+
+    /**
+     * Returns this task's representation for saving to disk, as a
+     * pipe-separated line: {@code <done flag> | <description>}.
+     *
+     * Subclasses prepend their type letter and append any extra fields
+     * (e.g. a deadline's date or an event's start/end times), mirroring
+     * how {@link #toString()} is built up via {@code super.toString()}.
+     *
+     * @return the save-file line for this task, without its type marker
+     */
+    public String toFileFormat() {
+        return (isDone ? "1" : "0") + " | " + escape(description);
+    }
+
+    /**
+     * Escapes a field's text before it is embedded in a save-file line, so
+     * that a {@code |} the user actually typed can never be mistaken for
+     * the {@code " | "} separator between fields. Every backslash is
+     * doubled first, then every {@code |} is prefixed with a backslash;
+     * doing backslashes first stops the pipe-escaping step from being
+     * escaped a second time.
+     *
+     * @param text the raw field text (e.g. a description or date)
+     * @return the text with {@code \} and {@code |} escaped
+     */
+    public static String escape(String text) {
+        return text.replace("\\", "\\\\").replace("|", "\\|");
+    }
+
+    /**
+     * Reverses {@link #escape(String)}, restoring a save-file field to the
+     * original text the user typed.
+     *
+     * @param text an escaped field read from the save file
+     * @return the original, unescaped text
+     * @throws IllegalArgumentException if the text has a trailing or otherwise malformed escape sequence
+     */
+    public static String unescape(String text) {
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < text.length(); i++) {
+            char c = text.charAt(i);
+            if (c != '\\') {
+                result.append(c);
+                continue;
+            }
+
+            if (i + 1 >= text.length() || (text.charAt(i + 1) != '\\' && text.charAt(i + 1) != '|')) {
+                throw new IllegalArgumentException("Malformed escape sequence in: " + text);
+            }
+            result.append(text.charAt(i + 1));
+            i++;
+        }
+        return result.toString();
+    }
 }

@@ -13,4 +13,9 @@ public class Event extends Task {
     public String toString() {
         return "[E]" + super.toString() + " (from: " + from + " to: " + to + ")";
     }
+
+    @Override
+    public String toFileFormat() {
+        return "E | " + super.toFileFormat() + " | " + escape(from) + " | " + escape(to);
+    }
 }
