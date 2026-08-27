@@ -2,7 +2,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class Noms {
     private static final String TODO_FORMAT = "todo <description>";
@@ -14,109 +13,85 @@ public class Noms {
     private static final String SAVE_FILE_NAME = "noms.txt";
 
     public static void main(String[] args) {
-        String banner = "____________________________________________________________\n"
-                + " _   _  ___  __  __  ____\n"
-                + "| \\ | |/ _ \\|  \\/  |/ ___|\n"
-                + "|  \\| | | | | |\\/| | \\___ \\\n"
-                + "| |\\  | |_| | |  | |  ___) |\n"
-                + "|_| \\_|\\___/|_|  |_| |____/\n"
-                + "____________________________________________________________";
-        System.out.println(banner);
-        System.out.println("Hello! I'm Noms.");
-        System.out.println("NomNom, have you eaten? What can I do for you?");
-        System.out.println("____________________________________________________________");
+        Ui ui = new Ui();
+        ui.showWelcome();
 
-        Scanner scanner = new Scanner(System.in);
         Storage storage = new Storage(SAVE_DIRECTORY, SAVE_FILE_NAME);
         List<Task> tasks;
         try {
             tasks = storage.load();
         } catch (IOException e) {
             tasks = new ArrayList<>();
-            printError("Noms couldn't load the saved menu, starting with an empty plate: " + e.getMessage());
+            ui.showError("Noms couldn't load the saved menu, starting with an empty plate: " + e.getMessage());
         }
 
-        while (scanner.hasNextLine()) {
-            String command = scanner.nextLine();
+        while (ui.hasNextCommand()) {
+            String command = ui.readCommand();
 
             CommandType commandType;
             try {
                 commandType = getCommandType(command);
             } catch (NomsException e) {
-                printError(e.getMessage());
+                ui.showError(e.getMessage());
                 continue;
             }
 
             if (commandType == CommandType.BYE) {
-                System.out.println("Bye~ Hope to see you again soon!");
-                System.out.println("____________________________________________________________");
+                ui.showGoodbye();
                 break;
             } else if (commandType == CommandType.LIST) {
-                for (int i = 0; i < tasks.size(); i++) {
-                    System.out.println(" " + (i + 1) + "." + tasks.get(i));
-                }
-                System.out.println("____________________________________________________________");
+                ui.showTaskList(tasks);
             } else if (commandType == CommandType.MARK) {
                 try {
                     int taskNumber = parseTaskNumber(command, "mark", tasks.size());
-                    int taskIndex = taskNumber - 1;
-                    tasks.get(taskIndex).markAsDone();
-                    saveTasks(storage, tasks);
-                    System.out.println(" Nice! I've marked this task as done:");
-                    System.out.println("   " + tasks.get(taskIndex));
-                    System.out.println("____________________________________________________________");
+                    Task task = tasks.get(taskNumber - 1);
+                    task.markAsDone();
+                    saveTasks(storage, tasks, ui);
+                    ui.showTaskMarked(task);
                 } catch (NomsException e) {
-                    printError(e.getMessage());
+                    ui.showError(e.getMessage());
                 }
             } else if (commandType == CommandType.UNMARK) {
                 try {
                     int taskNumber = parseTaskNumber(command, "unmark", tasks.size());
-                    int taskIndex = taskNumber - 1;
-                    tasks.get(taskIndex).markAsNotDone();
-                    saveTasks(storage, tasks);
-                    System.out.println(" OK, I've marked this task as not done yet:");
-                    System.out.println("   " + tasks.get(taskIndex));
-                    System.out.println("____________________________________________________________");
+                    Task task = tasks.get(taskNumber - 1);
+                    task.markAsNotDone();
+                    saveTasks(storage, tasks, ui);
+                    ui.showTaskUnmarked(task);
                 } catch (NomsException e) {
-                    printError(e.getMessage());
+                    ui.showError(e.getMessage());
                 }
             } else if (commandType == CommandType.DELETE) {
                 try {
                     int taskNumber = parseTaskNumber(command, "delete", tasks.size());
                     Task deletedTask = tasks.remove(taskNumber - 1);
-                    saveTasks(storage, tasks);
-                    System.out.println(" Noted. Noms has taken this task off the menu:");
-                    System.out.println("   " + deletedTask);
-                    System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
-                    System.out.println("____________________________________________________________");
+                    saveTasks(storage, tasks, ui);
+                    ui.showTaskDeleted(deletedTask, tasks.size());
                 } catch (NomsException e) {
-                    printError(e.getMessage());
+                    ui.showError(e.getMessage());
                 }
             } else if (commandType == CommandType.ON) {
                 try {
-                    printTasksOn(command, tasks);
+                    LocalDate date = parseOnDate(command);
+                    ui.showTasksOn(date, tasksOn(tasks, date));
                 } catch (NomsException e) {
-                    printError(e.getMessage());
+                    ui.showError(e.getMessage());
                 }
             } else {
                 Task task;
                 try {
                     task = parseTask(command);
                 } catch (NomsException e) {
-                    printError(e.getMessage());
+                    ui.showError(e.getMessage());
                     continue;
                 }
                 tasks.add(task);
-                saveTasks(storage, tasks);
-
-                System.out.println(" Got it. I've added this task:");
-                System.out.println("   " + task);
-                System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
-                System.out.println("____________________________________________________________");
+                saveTasks(storage, tasks, ui);
+                ui.showTaskAdded(task, tasks.size());
             }
         }
 
-        scanner.close();
+        ui.close();
     }
 
     private static Task parseTask(String command) throws NomsException {
@@ -236,48 +211,43 @@ public class Noms {
     }
 
     /**
-     * Prints every deadline and event that falls on the given date. The
-     * date is extracted from the {@code on <date>} command and parsed
-     * with the same rules used when adding tasks, so an invalid date
+     * Extracts and parses the date from an {@code on <date>} command,
+     * using the same rules used when adding tasks so that an invalid date
      * surfaces the same friendly error message.
      */
-    private static void printTasksOn(String command, List<Task> tasks) throws NomsException {
+    private static LocalDate parseOnDate(String command) throws NomsException {
         String[] parts = command.trim().split("\\s+", 2);
         if (parts.length < 2 || parts[1].isBlank()) {
             throw new InvalidDateException("");
         }
-        LocalDate date = DateUtil.parse(parts[1].trim());
+        return DateUtil.parse(parts[1].trim());
+    }
 
-        System.out.println(" Tasks on " + DateUtil.format(date) + ":");
-        int matches = 0;
+    /**
+     * Returns the deadlines and events that occur on the given date, in
+     * their original list order.
+     */
+    private static List<Task> tasksOn(List<Task> tasks, LocalDate date) {
+        List<Task> matches = new ArrayList<>();
         for (Task task : tasks) {
             boolean occurs = task instanceof Deadline d && d.occursOn(date)
                     || task instanceof Event e && e.occursOn(date);
             if (occurs) {
-                matches++;
-                System.out.println("   " + matches + ". " + task);
+                matches.add(task);
             }
         }
-        if (matches == 0) {
-            System.out.println(" (nothing on the menu that day)");
-        }
-        System.out.println("____________________________________________________________");
+        return matches;
     }
 
     /**
      * Saves the current task list to disk, reporting a Noms-style error
      * if the save fails instead of crashing the program.
      */
-    private static void saveTasks(Storage storage, List<Task> tasks) {
+    private static void saveTasks(Storage storage, List<Task> tasks, Ui ui) {
         try {
             storage.save(tasks);
         } catch (IOException e) {
-            printError("Noms couldn't save the menu to disk: " + e.getMessage());
+            ui.showError("Noms couldn't save the menu to disk: " + e.getMessage());
         }
-    }
-
-    private static void printError(String message) {
-        System.out.println(" OOPS! " + message);
-        System.out.println("____________________________________________________________");
     }
 }
