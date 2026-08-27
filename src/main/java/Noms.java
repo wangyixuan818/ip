@@ -1,7 +1,5 @@
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Noms {
     private static final String TODO_FORMAT = "todo <description>";
@@ -17,11 +15,11 @@ public class Noms {
         ui.showWelcome();
 
         Storage storage = new Storage(SAVE_DIRECTORY, SAVE_FILE_NAME);
-        List<Task> tasks;
+        TaskList tasks;
         try {
-            tasks = storage.load();
+            tasks = new TaskList(storage.load());
         } catch (IOException e) {
-            tasks = new ArrayList<>();
+            tasks = new TaskList();
             ui.showError("Noms couldn't load the saved menu, starting with an empty plate: " + e.getMessage());
         }
 
@@ -40,7 +38,7 @@ public class Noms {
                 ui.showGoodbye();
                 break;
             } else if (commandType == CommandType.LIST) {
-                ui.showTaskList(tasks);
+                ui.showTaskList(tasks.asList());
             } else if (commandType == CommandType.MARK) {
                 try {
                     int taskNumber = parseTaskNumber(command, "mark", tasks.size());
@@ -64,7 +62,7 @@ public class Noms {
             } else if (commandType == CommandType.DELETE) {
                 try {
                     int taskNumber = parseTaskNumber(command, "delete", tasks.size());
-                    Task deletedTask = tasks.remove(taskNumber - 1);
+                    Task deletedTask = tasks.delete(taskNumber - 1);
                     saveTasks(storage, tasks, ui);
                     ui.showTaskDeleted(deletedTask, tasks.size());
                 } catch (NomsException e) {
@@ -73,7 +71,7 @@ public class Noms {
             } else if (commandType == CommandType.ON) {
                 try {
                     LocalDate date = parseOnDate(command);
-                    ui.showTasksOn(date, tasksOn(tasks, date));
+                    ui.showTasksOn(date, tasks.tasksOn(date));
                 } catch (NomsException e) {
                     ui.showError(e.getMessage());
                 }
@@ -224,28 +222,12 @@ public class Noms {
     }
 
     /**
-     * Returns the deadlines and events that occur on the given date, in
-     * their original list order.
-     */
-    private static List<Task> tasksOn(List<Task> tasks, LocalDate date) {
-        List<Task> matches = new ArrayList<>();
-        for (Task task : tasks) {
-            boolean occurs = task instanceof Deadline d && d.occursOn(date)
-                    || task instanceof Event e && e.occursOn(date);
-            if (occurs) {
-                matches.add(task);
-            }
-        }
-        return matches;
-    }
-
-    /**
      * Saves the current task list to disk, reporting a Noms-style error
      * if the save fails instead of crashing the program.
      */
-    private static void saveTasks(Storage storage, List<Task> tasks, Ui ui) {
+    private static void saveTasks(Storage storage, TaskList tasks, Ui ui) {
         try {
-            storage.save(tasks);
+            storage.save(tasks.asList());
         } catch (IOException e) {
             ui.showError("Noms couldn't save the menu to disk: " + e.getMessage());
         }
