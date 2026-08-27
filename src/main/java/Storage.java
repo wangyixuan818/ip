@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,10 +100,12 @@ public class Storage {
             task = new ToDo(description);
             break;
         case "D":
-            task = new Deadline(description, Task.unescape(fields[3]));
+            task = new Deadline(description, LocalDate.parse(Task.unescape(fields[3])));
             break;
         case "E":
-            task = new Event(description, Task.unescape(fields[3]), Task.unescape(fields[4]));
+            task = new Event(description,
+                    LocalDate.parse(Task.unescape(fields[3])),
+                    LocalDate.parse(Task.unescape(fields[4])));
             break;
         default:
             throw new IllegalArgumentException("Unknown task type: " + type);

@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -6,9 +7,9 @@ import java.util.Scanner;
 public class Noms {
     private static final String TODO_FORMAT = "todo <description>";
     private static final String DEADLINE_FORMAT =
-            "deadline <description> /by <date/time>";
+            "deadline <description> /by yyyy-mm-dd";
     private static final String EVENT_FORMAT =
-            "event <description> /from <date/time> /to <date/time>";
+            "event <description> /from yyyy-mm-dd /to yyyy-mm-dd";
     private static final String SAVE_DIRECTORY = "data";
     private static final String SAVE_FILE_NAME = "noms.txt";
 
@@ -91,6 +92,12 @@ public class Noms {
                 } catch (NomsException e) {
                     printError(e.getMessage());
                 }
+            } else if (commandType == CommandType.ON) {
+                try {
+                    printTasksOn(command, tasks);
+                } catch (NomsException e) {
+                    printError(e.getMessage());
+                }
             } else {
                 Task task;
                 try {
@@ -140,7 +147,7 @@ public class Noms {
             if (by.isEmpty()) {
                 throw new InvalidDeadlineException(DEADLINE_FORMAT);
             }
-            return new Deadline(description, by);
+            return new Deadline(description, DateUtil.parse(by));
         }
 
         if (commandType == CommandType.EVENT) {
@@ -165,7 +172,7 @@ public class Noms {
             if (from.isEmpty() || to.isEmpty()) {
                 throw new InvalidEventException(EVENT_FORMAT);
             }
-            return new Event(description, from, to);
+            return new Event(description, DateUtil.parse(from), DateUtil.parse(to));
         }
 
         throw new UnknownCommandException();
@@ -226,6 +233,35 @@ public class Noms {
                     "That task number is too large for Noms.\n"
                             + "Choose a task number from 1 to " + taskCount + ".");
         }
+    }
+
+    /**
+     * Prints every deadline and event that falls on the given date. The
+     * date is extracted from the {@code on <date>} command and parsed
+     * with the same rules used when adding tasks, so an invalid date
+     * surfaces the same friendly error message.
+     */
+    private static void printTasksOn(String command, List<Task> tasks) throws NomsException {
+        String[] parts = command.trim().split("\\s+", 2);
+        if (parts.length < 2 || parts[1].isBlank()) {
+            throw new InvalidDateException("");
+        }
+        LocalDate date = DateUtil.parse(parts[1].trim());
+
+        System.out.println(" Tasks on " + DateUtil.format(date) + ":");
+        int matches = 0;
+        for (Task task : tasks) {
+            boolean occurs = task instanceof Deadline d && d.occursOn(date)
+                    || task instanceof Event e && e.occursOn(date);
+            if (occurs) {
+                matches++;
+                System.out.println("   " + matches + ". " + task);
+            }
+        }
+        if (matches == 0) {
+            System.out.println(" (nothing on the menu that day)");
+        }
+        System.out.println("____________________________________________________________");
     }
 
     /**
