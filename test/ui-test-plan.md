@@ -5,8 +5,8 @@ The `test-ui` skill executes these cases in order and stops at the first failure
 ## Run information
 
 - Java version: Java 25 (`25.0.3.fx-zulu` on macOS)
-- Compile command: `javac -d /tmp/noms-ui-test-out src/main/java/*.java`
-- Run command: `java -cp /tmp/noms-ui-test-out Noms`
+- Compile command: `javac -d /tmp/noms-ui-test-out $(find src/main/java -name "*.java")` (sources now live in `noms` sub-packages, so a recursive find is needed instead of a flat `*.java` glob)
+- Run command: `java -cp /tmp/noms-ui-test-out noms.Noms` (the entry point is now the fully qualified `noms.Noms`)
 - Working directory: repository root
 - Output comparison: exact, except for line-ending differences
 - Shared process: no; every test case starts a fresh process with an empty task list, **except TC-017 and TC-018, which explicitly test persistence across two processes**
