@@ -15,6 +15,8 @@ public class MarkCommand extends Command {
     private final String command;
 
     /**
+     * Creates a command that marks the task named by the command line as done.
+     *
      * @param command the full command line, e.g. {@code "mark 2"}
      */
     public MarkCommand(String command) {

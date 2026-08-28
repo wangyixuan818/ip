@@ -15,6 +15,8 @@ public class UnmarkCommand extends Command {
     private final String command;
 
     /**
+     * Creates a command that marks the task named by the command line as not done.
+     *
      * @param command the full command line, e.g. {@code "unmark 2"}
      */
     public UnmarkCommand(String command) {
