@@ -57,9 +57,17 @@ the start rather than only at refactoring increments.
 
 ## Git
 
-Use lightweight tags unless the user requests an annotated tag.
-When proposing or creating a commit message, include enough detail to explain the rationale for the change.
-Do not commit or push unless explicitly asked.
+All commits and branch names in this project MUST follow the project-specific
+`seedu-git-standard` skill, which encodes the se-education Git conventions
+(imperative subject, 50/72 length limits, WHAT-and-WHY body, kebab-case
+branches). Invoke that skill whenever you propose or create a commit message or
+name a branch, and self-check against its review checklist first.
+
+Project-specific policy on top of that skill:
+
+- Use lightweight tags unless the user requests an annotated tag.
+- When proposing or creating a commit message, include enough detail to explain the rationale for the change.
+- Do not commit or push unless explicitly asked.
 
 ## JUnit test coverage
 
