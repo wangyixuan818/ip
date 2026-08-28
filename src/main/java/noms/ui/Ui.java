@@ -11,7 +11,7 @@ import noms.util.DateUtil;
  * Handles all interaction with the user: reading typed commands from
  * standard input and printing Noms' responses to standard output.
  *
- * Centralising console I/O here keeps the rest of the program free of
+ * Centralizing console I/O here keeps the rest of the program free of
  * {@code System.out.println} calls and gives every message and the
  * horizontal divider a single, consistent home.
  */

@@ -50,7 +50,7 @@ public class Parser {
      *
      * @param fullCommand the raw line typed by the user
      * @return the command to execute
-     * @throws NomsException if the command is blank, unrecognised, or malformed
+     * @throws NomsException if the command is blank, unrecognized, or malformed
      */
     public static Command parse(String fullCommand) throws NomsException {
         CommandType commandType = getCommandType(fullCommand);
@@ -82,7 +82,7 @@ public class Parser {
 
     /**
      * Returns the command type named by the first word of the command, or
-     * {@code null} if that word is not a recognised command.
+     * {@code null} if that word is not a recognized command.
      *
      * @param command the raw line typed by the user
      * @throws EmptyCommandException if the command is blank

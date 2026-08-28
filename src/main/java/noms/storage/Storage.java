@@ -109,7 +109,7 @@ public class Storage {
      * Parses a single save-file line back into a {@link Task}, reversing
      * the format produced by {@link Task#toFileFormat()}.
      *
-     * @throws RuntimeException if the line is missing fields or has an unrecognised type letter
+     * @throws RuntimeException if the line is missing fields or has an unrecognized type letter
      */
     private Task parseLine(String line) {
         String[] fields = line.split(" \\| ");

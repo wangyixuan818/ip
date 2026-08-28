@@ -204,7 +204,7 @@ public class ParserTest {
     // --- parse: top-level dispatch to the right Command ---
 
     @Test
-    public void parse_recognisedCommands_returnMatchingCommandType() throws NomsException {
+    public void parse_recognizedCommands_returnMatchingCommandType() throws NomsException {
         assertInstanceOf(ExitCommand.class, Parser.parse("bye"));
         assertInstanceOf(ListCommand.class, Parser.parse("list"));
         assertInstanceOf(MarkCommand.class, Parser.parse("mark 1"));

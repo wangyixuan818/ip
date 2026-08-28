@@ -1,7 +1,7 @@
 package noms.exception;
 
 /**
- * Indicates that Noms does not recognise a user's command.
+ * Indicates that Noms does not recognize a user's command.
  */
 public class UnknownCommandException extends NomsException {
     /** Creates the exception with a message listing the valid commands. */
