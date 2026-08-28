@@ -15,6 +15,8 @@ public class DeleteCommand extends Command {
     private final String command;
 
     /**
+     * Creates a command that deletes the task named by the command line.
+     *
      * @param command the full command line, e.g. {@code "delete 2"}
      */
     public DeleteCommand(String command) {

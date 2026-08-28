@@ -75,6 +75,12 @@ public class Noms {
         ui.close();
     }
 
+    /**
+     * Launches Noms with the default save location and runs it until the
+     * user exits.
+     *
+     * @param args command-line arguments (unused)
+     */
     public static void main(String[] args) {
         new Noms(SAVE_DIRECTORY, SAVE_FILE_NAME).run();
     }

@@ -9,6 +9,12 @@ public class Deadline extends Task {
 
     protected final LocalDate by;
 
+    /**
+     * Creates a deadline with the given description and due date.
+     *
+     * @param description the text describing the task
+     * @param by the date the task is due
+     */
     public Deadline(String description, LocalDate by) {
         super(description);
         this.by = by;
