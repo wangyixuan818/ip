@@ -46,6 +46,13 @@ Ensure that Java 25 is used when running the application or build tasks. On macO
 
 ## Code style
 
+All Java code in this project (both `src/main/java` and `src/test/java`) MUST
+follow the project-specific `seedu-java-coding-standard` skill, which encodes the
+se-education intermediate Java conventions. Invoke that skill whenever you write,
+review, or refactor Java, and self-check every change against its review checklist
+before considering the work done. These conventions are graded, so apply them from
+the start rather than only at refactoring increments.
+
 @docs/style-guide.md
 
 ## Git

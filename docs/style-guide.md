@@ -1,52 +1,26 @@
 # Java and Git style guide
 
-This project (CS2103 iP) follows the se-education.org house conventions
-below. These are graded, not just stylistic preferences — code and commits
-should follow them from the start, not just at the refactoring increments.
+This project (CS2103 iP) follows the se-education.org house conventions. These
+are graded, not just stylistic preferences — code and commits should follow them
+from the start, not just at the refactoring increments.
 
-Full source guides:
+## Java coding standard
 
-- Java (intermediate level): https://se-education.org/guides/conventions/java/intermediate.html
-- Git: https://se-education.org/guides/conventions/git.html
-
-This file is a condensed summary for quick reference; re-check the source
-guides directly if a rule's exact wording matters or this summary seems out
-of date. Project-specific Git policy (tag type, when to commit/push) is in
-[AGENTS.md](../AGENTS.md) rather than repeated here.
-
-## Java naming
-
-- Packages: all lowercase (e.g. `todobuddy.ui`)
-- Classes/Enums: PascalCase nouns (`Line`, `AudioSystem`)
-- Variables/methods: camelCase; methods are verbs (`getName()`, `computeTotalWidth()`)
-- Constants: `UPPER_SNAKE_CASE` (`MAX_ITERATIONS`)
-- Booleans: prefix `is`/`has`/`was` (`isVisible`, `hasData`)
-- Collections: plural names (`points`, `values`)
-- No uppercase acronyms mid-name: `exportHtmlSource()` not `exportHTMLSource()`
-- Test methods: `featureUnderTest_testScenario_expectedBehavior()`
-- Loop indices: `i, j, k` fine for short/nested scopes only; larger-scope variables get descriptive names
-
-## Java layout
-
-- 4-space indent, no tabs
-- Line length: soft limit <110 chars, hard limit 120
-- Wrapped lines indent 8 spaces; break after commas, before operators
-- K&R/Egyptian braces (opening brace on the same line)
-- Always use braces for loop/if bodies, even single-statement ones; conditional body never on the same line as `if`
-- One blank line between logical sections within a block
-- Array brackets attach to the type: `int[] a`, not `int a[]`
-- No wildcard imports; explicit imports only, ordered: static, `java.*`, `javax.*`, `org.*`, `com.*`, `javafx.*`
-- Every class in a package — not yet applicable to this codebase; it still predates the A-Packages increment, so today's classes are in the default package
-- Class variables never public (unless a pure data class) — use accessors
-- Variables initialized at declaration, in the smallest possible scope
-
-## Java comments/Javadoc
-
-- English only, American spelling
-- Javadoc required on public classes and nontrivial public methods (skip for getters/setters, overrides with inherited doc, tests)
-- First Javadoc sentence is a short summary; `@param` for all parameters or none; blank line between the description and the tags
+The authoritative, detailed Java ruleset lives in the project-specific
+**`seedu-java-coding-standard`** skill
+([.claude/skills/seedu-java-coding-standard/SKILL.md](../.claude/skills/seedu-java-coding-standard/SKILL.md)),
+derived from the se-education intermediate Java guide
+(https://se-education.org/guides/conventions/java/intermediate.html). Follow that
+skill for all Java code in `src/main/java` and `src/test/java`. It is the single
+source of truth for naming, layout, imports, comments/Javadoc, statements, and
+class design, so those rules are intentionally not duplicated here.
 
 ## Git commits
+
+The Java skill deliberately does not cover Git; those conventions
+(https://se-education.org/guides/conventions/git.html) are summarized here. The
+project-specific Git policy — tag type, and when to commit or push — is in
+[AGENTS.md](../AGENTS.md).
 
 - Subject line: imperative mood, capitalized, no trailing period, soft limit 50 chars / hard limit 72
 - Optional scope prefix, e.g. `Person class: Remove static imports`
