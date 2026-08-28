@@ -14,12 +14,14 @@ import noms.command.Command;
 import noms.command.CommandType;
 import noms.command.DeleteCommand;
 import noms.command.ExitCommand;
+import noms.command.FindCommand;
 import noms.command.ListCommand;
 import noms.command.MarkCommand;
 import noms.command.OnCommand;
 import noms.command.UnmarkCommand;
 import noms.exception.EmptyCommandException;
 import noms.exception.EmptyDescriptionException;
+import noms.exception.EmptyKeywordException;
 import noms.exception.InvalidDateException;
 import noms.exception.InvalidDeadlineException;
 import noms.exception.InvalidEventException;
@@ -201,6 +203,25 @@ public class ParserTest {
         assertThrows(InvalidDateException.class, () -> Parser.parseOnDate("on Sunday"));
     }
 
+    // --- parseKeyword ---
+
+    @Test
+    public void parseKeyword_singleWord_returnsKeyword() throws NomsException {
+        assertEquals("book", Parser.parseKeyword("find book"));
+    }
+
+    @Test
+    public void parseKeyword_multiWord_returnsWholeRemainder() throws NomsException {
+        // Everything after "find" is the keyword, so spaces are preserved.
+        assertEquals("read book", Parser.parseKeyword("find read book"));
+    }
+
+    @Test
+    public void parseKeyword_missingKeyword_throwsEmptyKeywordException() {
+        assertThrows(EmptyKeywordException.class, () -> Parser.parseKeyword("find"));
+        assertThrows(EmptyKeywordException.class, () -> Parser.parseKeyword("find   "));
+    }
+
     // --- parse: top-level dispatch to the right Command ---
 
     @Test
@@ -211,6 +232,7 @@ public class ParserTest {
         assertInstanceOf(UnmarkCommand.class, Parser.parse("unmark 1"));
         assertInstanceOf(DeleteCommand.class, Parser.parse("delete 1"));
         assertInstanceOf(OnCommand.class, Parser.parse("on 2019-12-01"));
+        assertInstanceOf(FindCommand.class, Parser.parse("find book"));
         assertInstanceOf(AddCommand.class, Parser.parse("todo read book"));
     }
 

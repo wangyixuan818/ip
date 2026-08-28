@@ -162,4 +162,26 @@ public class Ui {
         }
         System.out.println(DIVIDER);
     }
+
+    /**
+     * Prints the tasks whose description matched a {@code find} keyword. If no
+     * task matches, prints a friendly "nothing found" note instead.
+     *
+     * @param keyword the keyword that was searched for
+     * @param matches the tasks whose descriptions contain the keyword
+     */
+    public void showMatchingTasks(String keyword, List<Task> matches) {
+        if (matches.isEmpty()) {
+            System.out.println(" Hmm, Noms sniffed around but found no tasks matching \""
+                    + keyword + "\".");
+            System.out.println(" Nothing on the menu to nibble on!");
+            System.out.println(DIVIDER);
+            return;
+        }
+        System.out.println(" Yum! Noms dug up these matching tasks for \"" + keyword + "\":");
+        for (int i = 0; i < matches.size(); i++) {
+            System.out.println("   " + (i + 1) + ". " + matches.get(i));
+        }
+        System.out.println(DIVIDER);
+    }
 }

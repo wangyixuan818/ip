@@ -7,12 +7,14 @@ import noms.command.Command;
 import noms.command.CommandType;
 import noms.command.DeleteCommand;
 import noms.command.ExitCommand;
+import noms.command.FindCommand;
 import noms.command.ListCommand;
 import noms.command.MarkCommand;
 import noms.command.OnCommand;
 import noms.command.UnmarkCommand;
 import noms.exception.EmptyCommandException;
 import noms.exception.EmptyDescriptionException;
+import noms.exception.EmptyKeywordException;
 import noms.exception.InvalidDateException;
 import noms.exception.InvalidDeadlineException;
 import noms.exception.InvalidEventException;
@@ -41,6 +43,7 @@ public class Parser {
             "deadline <description> /by yyyy-mm-dd";
     private static final String EVENT_FORMAT =
             "event <description> /from yyyy-mm-dd /to yyyy-mm-dd";
+    private static final String FIND_FORMAT = "find <keyword>";
 
     /**
      * Turns a full command line into the {@link Command} that carries it
@@ -71,6 +74,8 @@ public class Parser {
             return new DeleteCommand(fullCommand);
         case ON:
             return new OnCommand(parseOnDate(fullCommand));
+        case FIND:
+            return new FindCommand(parseKeyword(fullCommand));
         case TODO:
         case DEADLINE:
         case EVENT:
@@ -237,5 +242,22 @@ public class Parser {
             throw new InvalidDateException("");
         }
         return DateUtil.parse(parts[1].trim());
+    }
+
+    /**
+     * Extracts the search keyword from a {@code find <keyword>} command. The
+     * whole remainder of the line (after the {@code find} word) is treated as
+     * the keyword, so multi-word keywords such as {@code find read book} work.
+     *
+     * @param command the raw line typed by the user
+     * @return the keyword to search for
+     * @throws EmptyKeywordException if no keyword is given
+     */
+    public static String parseKeyword(String command) throws EmptyKeywordException {
+        String[] parts = command.trim().split("\\s+", 2);
+        if (parts.length < 2 || parts[1].isBlank()) {
+            throw new EmptyKeywordException(FIND_FORMAT);
+        }
+        return parts[1].trim();
     }
 }
