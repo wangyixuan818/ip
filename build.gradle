@@ -37,7 +37,7 @@ test {
 }
 
 application {
-    mainClass = 'seedu.duke.Duke'
+    mainClass = 'noms.Noms'
 }
 
 jar {
@@ -48,7 +48,10 @@ jar {
 }
 
 shadowJar {
-    archiveFileName = 'duke.jar'
+    // Fixed output name for the distributable fat JAR, so releases have a
+    // stable, product-named file (build/libs/noms.jar) rather than a
+    // version-suffixed default like iP-all.jar.
+    archiveFileName = 'noms.jar'
 }
 
 run {
