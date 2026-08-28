@@ -89,6 +89,24 @@ public class TaskList {
     }
 
     /**
+     * Returns the tasks whose description contains the given keyword, in
+     * their original list order. Matching is case-insensitive, so
+     * {@code find BOOK} still matches a task described as "read book".
+     *
+     * @param keyword the text to search for within each task's description
+     */
+    public List<Task> find(String keyword) {
+        String needle = keyword.toLowerCase();
+        List<Task> matches = new ArrayList<>();
+        for (Task task : tasks) {
+            if (task.getDescription().toLowerCase().contains(needle)) {
+                matches.add(task);
+            }
+        }
+        return matches;
+    }
+
+    /**
      * Returns the tasks as a plain list, for displaying or saving. The
      * returned list is a copy, so modifying it does not change this
      * TaskList.

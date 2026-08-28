@@ -995,3 +995,95 @@ ____________________________________________________________
 Bye~ Hope to see you again soon!
 ____________________________________________________________
 ```
+
+### TC-020: Find tasks by keyword
+
+**Aim:**
+
+Verify that `find <keyword>` lists every task whose description contains the keyword (case-insensitively, in list order), and reports a friendly "nothing found" message when no task matches. Matching is on the description text only, so a keyword that appears in a date is not matched.
+
+**Inputs:**
+
+```text
+todo read book
+deadline return book /by 2019-06-06
+event project meeting /from 2019-08-06 /to 2019-08-07
+find book
+find BOOK
+find holiday
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ _   _  ___  __  __  ____
+| \ | |/ _ \|  \/  |/ ___|
+|  \| | | | | |\/| | \___ \
+| |\  | |_| | |  | |  ___) |
+|_| \_|\___/|_|  |_| |____/
+____________________________________________________________
+Hello! I'm Noms.
+NomNom, have you eaten? What can I do for you?
+____________________________________________________________
+ Got it. I've added this task:
+   [T][ ] read book
+ Now you have 1 tasks in the list.
+____________________________________________________________
+ Got it. I've added this task:
+   [D][ ] return book (by: Jun 06 2019)
+ Now you have 2 tasks in the list.
+____________________________________________________________
+ Got it. I've added this task:
+   [E][ ] project meeting (from: Aug 06 2019 to: Aug 07 2019)
+ Now you have 3 tasks in the list.
+____________________________________________________________
+ Yum! Noms dug up these matching tasks for "book":
+   1. [T][ ] read book
+   2. [D][ ] return book (by: Jun 06 2019)
+____________________________________________________________
+ Yum! Noms dug up these matching tasks for "BOOK":
+   1. [T][ ] read book
+   2. [D][ ] return book (by: Jun 06 2019)
+____________________________________________________________
+ Hmm, Noms sniffed around but found no tasks matching "holiday".
+ Nothing on the menu to nibble on!
+____________________________________________________________
+Bye~ Hope to see you again soon!
+____________________________________________________________
+```
+
+### TC-021: Reject `find` with no keyword
+
+**Aim:**
+
+Verify that a bare `find` (or `find` followed only by whitespace) is rejected with a friendly Noms message showing the correct format, and that Noms keeps running.
+
+**Inputs:**
+
+```text
+find
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ _   _  ___  __  __  ____
+| \ | |/ _ \|  \/  |/ ___|
+|  \| | | | | |\/| | \___ \
+| |\  | |_| | |  | |  ___) |
+|_| \_|\___/|_|  |_| |____/
+____________________________________________________________
+Hello! I'm Noms.
+NomNom, have you eaten? What can I do for you?
+____________________________________________________________
+ OOPS! Noms can't sniff out a task without a scent!
+Tell Noms a keyword to hunt for.
+Try: find <keyword>
+____________________________________________________________
+Bye~ Hope to see you again soon!
+____________________________________________________________
+```

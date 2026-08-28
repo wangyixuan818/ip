@@ -57,6 +57,38 @@ public class TaskListTest {
         assertEquals(List.of(), list.tasksOn(LocalDate.of(2019, 12, 1)));
     }
 
+    // --- find ---
+
+    @Test
+    public void find_matchingDescriptions_returnedInListOrder() {
+        List<Task> matches = populatedList().find("book");
+        // Only "return book" contains the keyword; results keep list order.
+        assertEquals(List.of(returnBook), matches);
+    }
+
+    @Test
+    public void find_isCaseInsensitive() {
+        // An upper-case keyword still matches a lower-case description.
+        assertEquals(List.of(returnBook), populatedList().find("BOOK"));
+    }
+
+    @Test
+    public void find_matchesSubstringAcrossTasks() {
+        TaskList list = new TaskList();
+        ToDo readBook = new ToDo("read book");
+        ToDo bookFlight = new ToDo("book flight");
+        list.add(readBook);
+        list.add(chore);
+        list.add(bookFlight);
+        // "book" appears in two descriptions, returned in their list order.
+        assertEquals(List.of(readBook, bookFlight), list.find("book"));
+    }
+
+    @Test
+    public void find_noMatches_returnsEmptyList() {
+        assertEquals(List.of(), populatedList().find("holiday"));
+    }
+
     // --- delete ---
 
     @Test
