@@ -54,6 +54,28 @@ Use lightweight tags unless the user requests an annotated tag.
 When proposing or creating a commit message, include enough detail to explain the rationale for the change.
 Do not commit or push unless explicitly asked.
 
+## JUnit test coverage
+
+Maintain automated JUnit tests covering approximately the top 50% highest-value
+methods in the codebase, prioritizing complex, core, or business-critical logic
+(e.g. parsing, task and date handling, and persistence). Thin accessors, simple
+display formatting, and console-facing orchestration are the lower-value half and
+need not be covered.
+
+Tests live under `src/test/java`, mirroring the package of the class under test
+(e.g. `noms.parser.Parser` -> `src/test/java/noms/parser/ParserTest.java`), and
+run via `./gradlew test`.
+
+After every code change, update the JUnit tests so this target continues to hold:
+
+1. Add tests for any new high-value method, and update existing tests whose
+   expected behavior the change affects.
+2. Run `./gradlew test` and confirm it passes before considering the change done.
+
+If a change touches only lower-value code (or is itself test-only), no new tests
+may be needed, but still run `./gradlew test` to confirm nothing regressed. Do not
+silently skip this step.
+
 ## Console UI regression testing
 
 After every code update:

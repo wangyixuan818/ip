@@ -1,0 +1,53 @@
+package noms.task;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.time.LocalDate;
+
+import org.junit.jupiter.api.Test;
+
+/**
+ * Tests {@link Event#occursOn(LocalDate)}, which decides whether an event
+ * spans a given date. The range check is inclusive of both endpoints, a
+ * boundary condition that is easy to get wrong (off-by-one at the start or
+ * end), so each boundary is covered explicitly.
+ */
+public class EventTest {
+
+    private final Event event = new Event("conference",
+            LocalDate.of(2019, 8, 6), LocalDate.of(2019, 8, 8));
+
+    @Test
+    public void occursOn_startDate_returnsTrue() {
+        assertTrue(event.occursOn(LocalDate.of(2019, 8, 6)));
+    }
+
+    @Test
+    public void occursOn_endDate_returnsTrue() {
+        assertTrue(event.occursOn(LocalDate.of(2019, 8, 8)));
+    }
+
+    @Test
+    public void occursOn_dateInsideRange_returnsTrue() {
+        assertTrue(event.occursOn(LocalDate.of(2019, 8, 7)));
+    }
+
+    @Test
+    public void occursOn_dayBeforeStart_returnsFalse() {
+        assertFalse(event.occursOn(LocalDate.of(2019, 8, 5)));
+    }
+
+    @Test
+    public void occursOn_dayAfterEnd_returnsFalse() {
+        assertFalse(event.occursOn(LocalDate.of(2019, 8, 9)));
+    }
+
+    @Test
+    public void occursOn_singleDayEvent_matchesOnlyThatDay() {
+        Event singleDay = new Event("standup",
+                LocalDate.of(2019, 8, 6), LocalDate.of(2019, 8, 6));
+        assertTrue(singleDay.occursOn(LocalDate.of(2019, 8, 6)));
+        assertFalse(singleDay.occursOn(LocalDate.of(2019, 8, 7)));
+    }
+}
