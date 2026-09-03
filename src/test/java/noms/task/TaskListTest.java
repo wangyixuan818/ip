@@ -133,6 +133,16 @@ public class TaskListTest {
     }
 
     @Test
+    public void constructor_withVarargs_preservesTaskOrder() {
+        TaskList list = new TaskList(chore, returnBook, conference);
+
+        assertEquals(3, list.size());
+        assertSame(chore, list.get(0));
+        assertSame(returnBook, list.get(1));
+        assertSame(conference, list.get(2));
+    }
+
+    @Test
     public void asList_returnsCopy_soChangesDoNotLeakOut() {
         TaskList list = new TaskList();
         list.add(chore);

@@ -34,6 +34,15 @@ public class TaskList {
     }
 
     /**
+     * Creates a task list containing the tasks supplied directly by the caller.
+     *
+     * @param tasks the initial tasks, in display order
+     */
+    public TaskList(Task... tasks) {
+        this.tasks = new ArrayList<>(List.of(tasks));
+    }
+
+    /**
      * Returns the number of tasks in the list.
      */
     public int size() {
