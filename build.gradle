@@ -59,7 +59,10 @@ checkstyle {
 }
 
 application {
-    mainClass = 'noms.Noms'
+    // The GUI is launched via noms.Launcher (a plain class), which in turn
+    // starts the JavaFX noms.gui.Main. noms.Noms still has its own main() for
+    // running the text UI directly (e.g. java -cp ... noms.Noms).
+    mainClass = 'noms.Launcher'
 }
 
 jar {
