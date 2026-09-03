@@ -2,7 +2,9 @@ package noms.command;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -63,6 +65,17 @@ public class UnmarkCommandTest {
         new UnmarkCommand("unmark 1").execute(tasks, ui, storage);
 
         assertEquals(" ", storage.load().get(0).getStatusIcon());
+    }
+
+    @Test
+    public void execute_alreadyUnmarked_remindsUser() throws NomsException {
+        tasks.get(0).markAsNotDone();
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(output));
+
+        new UnmarkCommand("unmark 1").execute(tasks, ui, storage);
+
+        assertTrue(output.toString().contains("already unmarked"));
     }
 
     @Test

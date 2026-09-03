@@ -76,6 +76,8 @@ Verify that marking and unmarking preserves the task type and deadline details a
 ```text
 deadline submit report /by 2019-10-11
 mark 1
+mark 1
+unmark 1
 unmark 1
 list
 bye
@@ -101,7 +103,13 @@ ____________________________________________________________
  Nice! I've marked this task as done:
    [D][X] submit report (by: Oct 11 2019)
 ____________________________________________________________
+ Nom nom! This task is already marked as done:
+   [D][X] submit report (by: Oct 11 2019)
+____________________________________________________________
  OK, I've marked this task as not done yet:
+   [D][ ] submit report (by: Oct 11 2019)
+____________________________________________________________
+ Nom nom! This task is already unmarked:
    [D][ ] submit report (by: Oct 11 2019)
 ____________________________________________________________
  1.[D][ ] submit report (by: Oct 11 2019)

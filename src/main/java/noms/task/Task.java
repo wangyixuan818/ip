@@ -29,14 +29,26 @@ public class Task {
         return isDone ? "X" : " ";
     }
 
-    /** Marks this task as completed. */
-    public void markAsDone() {
+    /**
+     * Marks this task as completed.
+     *
+     * @return {@code true} if the task changed from incomplete to complete
+     */
+    public boolean markAsDone() {
+        boolean changed = !isDone;
         isDone = true;
+        return changed;
     }
 
-    /** Marks this task as incomplete. */
-    public void markAsNotDone() {
+    /**
+     * Marks this task as incomplete.
+     *
+     * @return {@code true} if the task changed from complete to incomplete
+     */
+    public boolean markAsNotDone() {
+        boolean changed = isDone;
         isDone = false;
+        return changed;
     }
 
     /**

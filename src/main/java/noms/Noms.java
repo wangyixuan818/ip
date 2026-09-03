@@ -1,6 +1,10 @@
 package noms;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
+import java.util.stream.Collectors;
 
 import noms.command.Command;
 import noms.exception.NomsException;
@@ -24,6 +28,9 @@ public class Noms {
     private final Ui ui;
     private final Storage storage;
     private final TaskList tasks;
+
+    /** Whether the most recent GUI command asked Noms to exit. */
+    private boolean isExitRequested;
 
     /**
      * Creates a Noms instance backed by the save file in the given
@@ -73,6 +80,80 @@ public class Noms {
         }
 
         ui.close();
+    }
+
+    /**
+     * Runs a single command entered in the GUI and returns Noms' reply as text.
+     *
+     * The GUI reuses the exact same parse-execute pipeline as the console loop.
+     * Because the existing {@link Command}s report their results by printing
+     * through {@link Ui} (i.e. to {@code System.out}), this method temporarily
+     * captures standard output while the command runs, then returns that text
+     * with the console dividers stripped so it reads cleanly in a chat bubble.
+     *
+     * @param input the raw command line entered in the GUI
+     * @return Noms' response text (a friendly error message if the command failed)
+     */
+    public String getResponse(String input) {
+        String output = captureConsoleOutput(() -> {
+            try {
+                Command command = Parser.parse(input);
+                command.execute(tasks, ui, storage);
+                isExitRequested = command.isExit();
+            } catch (NomsException e) {
+                ui.showError(e.getMessage());
+            }
+        });
+        return stripDividers(output);
+    }
+
+    /**
+     * Returns whether the last command run through {@link #getResponse} asked
+     * Noms to exit, so the GUI knows when to close the window.
+     */
+    public boolean isExitRequested() {
+        return isExitRequested;
+    }
+
+    /**
+     * Returns the greeting shown when the GUI window first opens.
+     */
+    public String getGreeting() {
+        return "Hello! I'm Noms.\nNomNom, have you eaten? What can I do for you?";
+    }
+
+    /**
+     * Runs the given action with {@code System.out} redirected into a buffer
+     * and returns whatever it printed. The original stream is always restored,
+     * even if the action throws.
+     *
+     * @param action the code whose console output should be captured
+     * @return everything the action printed to standard output
+     */
+    private static String captureConsoleOutput(Runnable action) {
+        PrintStream originalOut = System.out;
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(buffer, true, StandardCharsets.UTF_8));
+        try {
+            action.run();
+        } finally {
+            System.setOut(originalOut);
+        }
+        return buffer.toString(StandardCharsets.UTF_8);
+    }
+
+    /**
+     * Removes the console divider lines (rows of underscores) and trims blank
+     * edges so console-formatted output reads cleanly in a GUI chat bubble.
+     *
+     * @param text the raw captured console output
+     * @return the same text without divider lines or surrounding blank space
+     */
+    private static String stripDividers(String text) {
+        return text.lines()
+                .filter(line -> !line.matches("_+"))
+                .collect(Collectors.joining("\n"))
+                .strip();
     }
 
     /**

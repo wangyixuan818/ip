@@ -27,8 +27,8 @@ public class MarkCommand extends Command {
     public void execute(TaskList tasks, Ui ui, Storage storage) throws NomsException {
         int taskNumber = Parser.parseTaskNumber(command, "mark", tasks.size());
         Task task = tasks.get(taskNumber - 1);
-        task.markAsDone();
+        boolean changed = task.markAsDone();
         save(tasks, ui, storage);
-        ui.showTaskMarked(task);
+        ui.showTaskMarked(task, changed);
     }
 }
