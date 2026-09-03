@@ -76,9 +76,24 @@ with the surrounding code.
   - `for`-statement semicolons are followed by a space.
 - **Blank lines** — separate logical units within a block with a single blank
   line. No runs of multiple blank lines.
-- **Switch** — align `case` labels with the `switch` keyword (not indented an
-  extra level), as the se-education style does. Arrow-form `switch` is also
-  acceptable. When a fall-through is intentional, mark it `// Fallthrough`.
+- **Switch** — indent `case` labels one level (4 spaces) inside the `switch`,
+  and the statements under each `case` one level deeper again, as the
+  se-education guide's example shows:
+  ```java
+  switch (condition) {
+      case ABC:
+          statements;
+          // Fallthrough
+      case DEF:
+          statements;
+          break;
+      default:
+          statements;
+          break;
+  }
+  ```
+  Arrow-form `switch` is also acceptable. When a fall-through is intentional,
+  mark it `// Fallthrough`.
 
 ## 3. Imports
 
