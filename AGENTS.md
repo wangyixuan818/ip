@@ -53,6 +53,15 @@ review, or refactor Java, and self-check every change against its review checkli
 before considering the work done. These conventions are graded, so apply them from
 the start rather than only at refactoring increments.
 
+In addition, all code MUST follow the project-specific `seedu-code-quality`
+skill, which encodes the CS2103 code-quality conventions. It currently covers
+naming (nouns vs. verbs, self-explaining names, spelling, word order), with more
+areas to be added over time. Where the two skills overlap on naming,
+`seedu-java-coding-standard` governs the mechanical form (casing) and
+`seedu-code-quality` governs whether the name communicates. Invoke it whenever
+you write, review, or refactor code, and self-check against its review checklist
+before considering the work done.
+
 @docs/style-guide.md
 
 ## Git
