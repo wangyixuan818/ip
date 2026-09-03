@@ -342,8 +342,12 @@
       <property name="option" value="nl"/>
     </module>
     <module name="SeparatorWrap">
-      <!-- Checks that the ",", "]", "[", "...", ";", "(" is at the previous end of line in a line wrap. -->
-      <property name="tokens" value="COMMA, RBRACK, ARRAY_DECLARATOR, ELLIPSIS, SEMI, LPAREN"/>
+      <!-- Checks that the ",", "]", "[", "...", ";" is at the previous end of line in a line wrap.
+           LPAREN is intentionally omitted: the SE-EDU guide requires only breaking *after* a comma,
+           not that a "(" sit at end-of-line, so a wrapped line may legitimately start with "(" (e.g.
+           a lambda "() -> ..." argument). The guide's "keep the method name attached to its opening
+           parenthesis" rule is still enforced separately by MethodParamPad below. -->
+      <property name="tokens" value="COMMA, RBRACK, ARRAY_DECLARATOR, ELLIPSIS, SEMI"/>
       <property name="option" value="eol"/>
     </module>
 

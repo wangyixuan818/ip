@@ -62,26 +62,26 @@ public class Parser {
         }
 
         switch (commandType) {
-        case BYE:
-            return new ExitCommand();
-        case LIST:
-            return new ListCommand();
-        case MARK:
-            return new MarkCommand(fullCommand);
-        case UNMARK:
-            return new UnmarkCommand(fullCommand);
-        case DELETE:
-            return new DeleteCommand(fullCommand);
-        case ON:
-            return new OnCommand(parseOnDate(fullCommand));
-        case FIND:
-            return new FindCommand(parseKeyword(fullCommand));
-        case TODO:
-        case DEADLINE:
-        case EVENT:
-            return new AddCommand(parseTask(fullCommand));
-        default:
-            throw new UnknownCommandException();
+            case BYE:
+                return new ExitCommand();
+            case LIST:
+                return new ListCommand();
+            case MARK:
+                return new MarkCommand(fullCommand);
+            case UNMARK:
+                return new UnmarkCommand(fullCommand);
+            case DELETE:
+                return new DeleteCommand(fullCommand);
+            case ON:
+                return new OnCommand(parseOnDate(fullCommand));
+            case FIND:
+                return new FindCommand(parseKeyword(fullCommand));
+            case TODO:
+            case DEADLINE:
+            case EVENT:
+                return new AddCommand(parseTask(fullCommand));
+            default:
+                throw new UnknownCommandException();
         }
     }
 

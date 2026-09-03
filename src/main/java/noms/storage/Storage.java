@@ -119,19 +119,19 @@ public class Storage {
 
         Task task;
         switch (type) {
-        case "T":
-            task = new ToDo(description);
-            break;
-        case "D":
-            task = new Deadline(description, LocalDate.parse(Task.unescape(fields[3])));
-            break;
-        case "E":
-            task = new Event(description,
-                    LocalDate.parse(Task.unescape(fields[3])),
-                    LocalDate.parse(Task.unescape(fields[4])));
-            break;
-        default:
-            throw new IllegalArgumentException("Unknown task type: " + type);
+            case "T":
+                task = new ToDo(description);
+                break;
+            case "D":
+                task = new Deadline(description, LocalDate.parse(Task.unescape(fields[3])));
+                break;
+            case "E":
+                task = new Event(description,
+                        LocalDate.parse(Task.unescape(fields[3])),
+                        LocalDate.parse(Task.unescape(fields[4])));
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown task type: " + type);
         }
 
         if (isDone) {
