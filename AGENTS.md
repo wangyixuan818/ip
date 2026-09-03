@@ -69,6 +69,23 @@ Project-specific policy on top of that skill:
 - When proposing or creating a commit message, include enough detail to explain the rationale for the change.
 - Do not commit or push unless explicitly asked.
 
+## PR review comments
+
+When drafting or posting review comments on a pull request (e.g. via
+`/code-review --comment`), follow the se-education PR-reviewing guidelines
+(https://se-education.org/guides/guidelines/PRs-reviewing.html):
+
+- Attach comments at the specific lines they refer to, not as one lump summary.
+- Phrase feedback as questions or suggestions ("Could this be extracted?")
+  rather than directives.
+- Lead with what works before raising concerns, and keep compliments genuine.
+- Consolidate a recurring issue: flag it at a couple of spots, then note that it
+  applies throughout instead of repeating the same comment everywhere.
+- Keep the tone collegial; avoid condescension (including an over-used "please").
+
+This is about how findings are communicated. The technical substance of a review
+still comes from the `code-review` skill.
+
 ## JUnit test coverage
 
 Maintain automated JUnit tests covering approximately the top 50% highest-value
