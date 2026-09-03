@@ -127,9 +127,12 @@ public class Ui {
      * Confirms that a task has just been marked as done.
      *
      * @param task the task that was marked done
+     * @param changed whether the task changed from incomplete to complete
      */
-    public void showTaskMarked(Task task) {
-        System.out.println(" Nice! I've marked this task as done:");
+    public void showTaskMarked(Task task, boolean changed) {
+        System.out.println(changed
+                ? " Nice! I've marked this task as done:"
+                : " Nom nom! This task is already marked as done:");
         System.out.println("   " + task);
         System.out.println(DIVIDER);
     }
@@ -138,9 +141,12 @@ public class Ui {
      * Confirms that a task has just been marked as not done.
      *
      * @param task the task that was marked not done
+     * @param changed whether the task changed from complete to incomplete
      */
-    public void showTaskUnmarked(Task task) {
-        System.out.println(" OK, I've marked this task as not done yet:");
+    public void showTaskUnmarked(Task task, boolean changed) {
+        System.out.println(changed
+                ? " OK, I've marked this task as not done yet:"
+                : " Nom nom! This task is already unmarked:");
         System.out.println("   " + task);
         System.out.println(DIVIDER);
     }

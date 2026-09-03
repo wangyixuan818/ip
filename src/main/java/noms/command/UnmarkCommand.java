@@ -27,8 +27,8 @@ public class UnmarkCommand extends Command {
     public void execute(TaskList tasks, Ui ui, Storage storage) throws NomsException {
         int taskNumber = Parser.parseTaskNumber(command, "unmark", tasks.size());
         Task task = tasks.get(taskNumber - 1);
-        task.markAsNotDone();
+        boolean changed = task.markAsNotDone();
         save(tasks, ui, storage);
-        ui.showTaskUnmarked(task);
+        ui.showTaskUnmarked(task, changed);
     }
 }
