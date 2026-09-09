@@ -26,6 +26,8 @@ public class DeleteCommand extends Command {
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws NomsException {
         int taskNumber = Parser.parseTaskNumber(command, "delete", tasks.size());
+        assert taskNumber >= 1 && taskNumber <= tasks.size()
+                : "Parser returned an invalid task number";
         Task deletedTask = tasks.delete(taskNumber - 1);
         save(tasks, ui, storage);
         ui.showTaskDeleted(deletedTask, tasks.size());
