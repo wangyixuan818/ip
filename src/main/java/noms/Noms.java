@@ -71,9 +71,7 @@ public class Noms {
         while (!isExit && ui.hasNextCommand()) {
             String fullCommand = ui.readCommand();
             try {
-                Command command = Parser.parse(fullCommand);
-                command.execute(tasks, ui, storage);
-                isExit = command.isExit();
+                isExit = executeCommand(fullCommand);
             } catch (NomsException e) {
                 ui.showError(e.getMessage());
             }
@@ -97,14 +95,26 @@ public class Noms {
     public String getResponse(String input) {
         String output = captureConsoleOutput(() -> {
             try {
-                Command command = Parser.parse(input);
-                command.execute(tasks, ui, storage);
-                isExitRequested = command.isExit();
+                isExitRequested = executeCommand(input);
             } catch (NomsException e) {
                 ui.showError(e.getMessage());
             }
         });
         return stripDividers(output);
+    }
+
+    /**
+     * Parses and executes one command through the shared console and GUI
+     * pipeline.
+     *
+     * @param input the raw command line to execute
+     * @return whether the command requests that Noms exit
+     * @throws NomsException if the command is invalid
+     */
+    private boolean executeCommand(String input) throws NomsException {
+        Command command = Parser.parse(input);
+        command.execute(tasks, ui, storage);
+        return command.isExit();
     }
 
     /**
