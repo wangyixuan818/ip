@@ -118,60 +118,94 @@ public class Parser {
     public static Task parseTask(String command) throws NomsException {
         CommandType commandType = getCommandType(command);
 
-        if (commandType == CommandType.TODO) {
-            String description = command.substring(4).trim();
-            if (description.isEmpty()) {
-                throw new EmptyDescriptionException("todo", TODO_FORMAT);
-            }
-            return new ToDo(description);
+        if (commandType == null) {
+            throw new UnknownCommandException();
         }
 
-        if (commandType == CommandType.DEADLINE) {
-            if (command.equals("deadline")) {
-                throw new EmptyDescriptionException("deadline", DEADLINE_FORMAT);
-            }
-            String remainder = command.substring(9);
-            int byIndex = remainder.indexOf(" /by ");
-            if (byIndex < 1) {
-                throw new InvalidDeadlineException(DEADLINE_FORMAT);
-            }
-            String description = remainder.substring(0, byIndex).trim();
-            String by = remainder.substring(byIndex + 5).trim();
-            if (description.isEmpty()) {
-                throw new EmptyDescriptionException("deadline", DEADLINE_FORMAT);
-            }
-            if (by.isEmpty()) {
-                throw new InvalidDeadlineException(DEADLINE_FORMAT);
-            }
-            return new Deadline(description, DateUtil.parse(by));
+        switch (commandType) {
+            case TODO:
+                return parseTodo(command);
+            case DEADLINE:
+                return parseDeadline(command);
+            case EVENT:
+                return parseEvent(command);
+            default:
+                throw new UnknownCommandException();
         }
+    }
 
-        if (commandType == CommandType.EVENT) {
-            if (command.equals("event")) {
-                throw new EmptyDescriptionException("event", EVENT_FORMAT);
-            }
-            String remainder = command.substring(6);
-            int fromIndex = remainder.indexOf(" /from ");
-            if (fromIndex < 1) {
-                throw new InvalidEventException(EVENT_FORMAT);
-            }
-            int toIndex = remainder.indexOf(" /to ", fromIndex + 7);
-            if (toIndex < 0) {
-                throw new InvalidEventException(EVENT_FORMAT);
-            }
-            String description = remainder.substring(0, fromIndex).trim();
-            String from = remainder.substring(fromIndex + 7, toIndex).trim();
-            String to = remainder.substring(toIndex + 5).trim();
-            if (description.isEmpty()) {
-                throw new EmptyDescriptionException("event", EVENT_FORMAT);
-            }
-            if (from.isEmpty() || to.isEmpty()) {
-                throw new InvalidEventException(EVENT_FORMAT);
-            }
-            return new Event(description, DateUtil.parse(from), DateUtil.parse(to));
+    /**
+     * Parses a todo command after its command type has been identified.
+     *
+     * @param command the raw todo command
+     * @return the parsed todo task
+     * @throws EmptyDescriptionException if no description is provided
+     */
+    private static Task parseTodo(String command) throws EmptyDescriptionException {
+        String description = command.substring(4).trim();
+        if (description.isEmpty()) {
+            throw new EmptyDescriptionException("todo", TODO_FORMAT);
         }
+        return new ToDo(description);
+    }
 
-        throw new UnknownCommandException();
+    /**
+     * Parses a deadline command after its command type has been identified.
+     *
+     * @param command the raw deadline command
+     * @return the parsed deadline task
+     * @throws NomsException if the description or deadline date is invalid
+     */
+    private static Task parseDeadline(String command) throws NomsException {
+        if (command.equals("deadline")) {
+            throw new EmptyDescriptionException("deadline", DEADLINE_FORMAT);
+        }
+        String remainder = command.substring(9);
+        int byIndex = remainder.indexOf(" /by ");
+        if (byIndex < 1) {
+            throw new InvalidDeadlineException(DEADLINE_FORMAT);
+        }
+        String description = remainder.substring(0, byIndex).trim();
+        String by = remainder.substring(byIndex + 5).trim();
+        if (description.isEmpty()) {
+            throw new EmptyDescriptionException("deadline", DEADLINE_FORMAT);
+        }
+        if (by.isEmpty()) {
+            throw new InvalidDeadlineException(DEADLINE_FORMAT);
+        }
+        return new Deadline(description, DateUtil.parse(by));
+    }
+
+    /**
+     * Parses an event command after its command type has been identified.
+     *
+     * @param command the raw event command
+     * @return the parsed event task
+     * @throws NomsException if the description or event dates are invalid
+     */
+    private static Task parseEvent(String command) throws NomsException {
+        if (command.equals("event")) {
+            throw new EmptyDescriptionException("event", EVENT_FORMAT);
+        }
+        String remainder = command.substring(6);
+        int fromIndex = remainder.indexOf(" /from ");
+        if (fromIndex < 1) {
+            throw new InvalidEventException(EVENT_FORMAT);
+        }
+        int toIndex = remainder.indexOf(" /to ", fromIndex + 7);
+        if (toIndex < 0) {
+            throw new InvalidEventException(EVENT_FORMAT);
+        }
+        String description = remainder.substring(0, fromIndex).trim();
+        String from = remainder.substring(fromIndex + 7, toIndex).trim();
+        String to = remainder.substring(toIndex + 5).trim();
+        if (description.isEmpty()) {
+            throw new EmptyDescriptionException("event", EVENT_FORMAT);
+        }
+        if (from.isEmpty() || to.isEmpty()) {
+            throw new InvalidEventException(EVENT_FORMAT);
+        }
+        return new Event(description, DateUtil.parse(from), DateUtil.parse(to));
     }
 
     /**
