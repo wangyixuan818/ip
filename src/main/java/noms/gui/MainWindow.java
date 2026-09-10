@@ -21,6 +21,8 @@ import noms.Noms;
  * (the user's message and Noms' reply).
  */
 public class MainWindow {
+    private static final Duration EXIT_DELAY = Duration.seconds(1.5);
+
     @FXML
     private ScrollPane scrollPane;
     @FXML
@@ -74,9 +76,9 @@ public class MainWindow {
 
         if (noms.isExitRequested()) {
             // Pause briefly so the user can read the farewell, then close.
-            PauseTransition delay = new PauseTransition(Duration.seconds(1.5));
-            delay.setOnFinished(event -> Platform.exit());
-            delay.play();
+            PauseTransition exitDelay = new PauseTransition(EXIT_DELAY);
+            exitDelay.setOnFinished(event -> Platform.exit());
+            exitDelay.play();
         }
     }
 
