@@ -124,13 +124,9 @@ public class TaskList {
      */
     public List<Task> find(String keyword) {
         String needle = keyword.toLowerCase();
-        List<Task> matches = new ArrayList<>();
-        for (Task task : tasks) {
-            if (task.getDescription().toLowerCase().contains(needle)) {
-                matches.add(task);
-            }
-        }
-        return matches;
+        return tasks.stream()
+                .filter(task -> task.getDescription().toLowerCase().contains(needle))
+                .toList();
     }
 
     /**
