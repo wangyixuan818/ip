@@ -18,6 +18,18 @@ import noms.ui.Ui;
  * location on the hard disk, so that the list can persist across runs.
  */
 public class Storage {
+    private static final String FIELD_SEPARATOR_REGEX = " \\| ";
+    private static final String COMPLETED_FLAG = "1";
+    private static final String TODO_TYPE = "T";
+    private static final String DEADLINE_TYPE = "D";
+    private static final String EVENT_TYPE = "E";
+
+    private static final int TYPE_FIELD = 0;
+    private static final int COMPLETION_FIELD = 1;
+    private static final int DESCRIPTION_FIELD = 2;
+    private static final int DATE_FIELD = 3;
+    private static final int EVENT_END_DATE_FIELD = 4;
+
     private final Path filePath;
     private final List<String> skippedLines = new ArrayList<>();
 
@@ -112,23 +124,24 @@ public class Storage {
      * @throws RuntimeException if the line is missing fields or has an unrecognized type letter
      */
     private Task parseLine(String line) {
-        String[] fields = line.split(" \\| ");
-        String type = fields[0];
-        boolean isDone = fields[1].equals("1");
-        String description = Task.unescape(fields[2]);
+        String[] fields = line.split(FIELD_SEPARATOR_REGEX);
+        String type = fields[TYPE_FIELD];
+        boolean isDone = fields[COMPLETION_FIELD].equals(COMPLETED_FLAG);
+        String description = Task.unescape(fields[DESCRIPTION_FIELD]);
 
         Task task;
         switch (type) {
-            case "T":
+            case TODO_TYPE:
                 task = new ToDo(description);
                 break;
-            case "D":
-                task = new Deadline(description, LocalDate.parse(Task.unescape(fields[3])));
+            case DEADLINE_TYPE:
+                task = new Deadline(description,
+                        LocalDate.parse(Task.unescape(fields[DATE_FIELD])));
                 break;
-            case "E":
+            case EVENT_TYPE:
                 task = new Event(description,
-                        LocalDate.parse(Task.unescape(fields[3])),
-                        LocalDate.parse(Task.unescape(fields[4])));
+                        LocalDate.parse(Task.unescape(fields[DATE_FIELD])),
+                        LocalDate.parse(Task.unescape(fields[EVENT_END_DATE_FIELD])));
                 break;
             default:
                 throw new IllegalArgumentException("Unknown task type: " + type);
