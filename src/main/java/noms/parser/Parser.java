@@ -38,11 +38,18 @@ import noms.util.DateUtil;
  * no value while there is nothing to remember between calls.
  */
 public class Parser {
-    private static final String TODO_FORMAT = "todo <description>";
+    private static final String TODO_COMMAND = "todo";
+    private static final String DEADLINE_COMMAND = "deadline";
+    private static final String EVENT_COMMAND = "event";
+    private static final String DEADLINE_DATE_SEPARATOR = " /by ";
+    private static final String EVENT_START_DATE_SEPARATOR = " /from ";
+    private static final String EVENT_END_DATE_SEPARATOR = " /to ";
+
+    private static final String TODO_FORMAT = TODO_COMMAND + " <description>";
     private static final String DEADLINE_FORMAT =
-            "deadline <description> /by yyyy-mm-dd";
+            DEADLINE_COMMAND + " <description> /by yyyy-mm-dd";
     private static final String EVENT_FORMAT =
-            "event <description> /from yyyy-mm-dd /to yyyy-mm-dd";
+            EVENT_COMMAND + " <description> /from yyyy-mm-dd /to yyyy-mm-dd";
     private static final String FIND_FORMAT = "find <keyword>";
 
     /**
@@ -142,9 +149,9 @@ public class Parser {
      * @throws EmptyDescriptionException if no description is provided
      */
     private static Task parseTodo(String command) throws EmptyDescriptionException {
-        String description = command.substring(4).trim();
+        String description = command.substring(TODO_COMMAND.length()).trim();
         if (description.isEmpty()) {
-            throw new EmptyDescriptionException("todo", TODO_FORMAT);
+            throw new EmptyDescriptionException(TODO_COMMAND, TODO_FORMAT);
         }
         return new ToDo(description);
     }
@@ -157,18 +164,19 @@ public class Parser {
      * @throws NomsException if the description or deadline date is invalid
      */
     private static Task parseDeadline(String command) throws NomsException {
-        if (command.equals("deadline")) {
-            throw new EmptyDescriptionException("deadline", DEADLINE_FORMAT);
+        if (command.equals(DEADLINE_COMMAND)) {
+            throw new EmptyDescriptionException(DEADLINE_COMMAND, DEADLINE_FORMAT);
         }
-        String remainder = command.substring(9);
-        int byIndex = remainder.indexOf(" /by ");
+        String remainder = command.substring(DEADLINE_COMMAND.length());
+        int byIndex = remainder.indexOf(DEADLINE_DATE_SEPARATOR);
         if (byIndex < 1) {
             throw new InvalidDeadlineException(DEADLINE_FORMAT);
         }
         String description = remainder.substring(0, byIndex).trim();
-        String by = remainder.substring(byIndex + 5).trim();
+        String by = remainder.substring(
+                byIndex + DEADLINE_DATE_SEPARATOR.length()).trim();
         if (description.isEmpty()) {
-            throw new EmptyDescriptionException("deadline", DEADLINE_FORMAT);
+            throw new EmptyDescriptionException(DEADLINE_COMMAND, DEADLINE_FORMAT);
         }
         if (by.isEmpty()) {
             throw new InvalidDeadlineException(DEADLINE_FORMAT);
@@ -184,23 +192,26 @@ public class Parser {
      * @throws NomsException if the description or event dates are invalid
      */
     private static Task parseEvent(String command) throws NomsException {
-        if (command.equals("event")) {
-            throw new EmptyDescriptionException("event", EVENT_FORMAT);
+        if (command.equals(EVENT_COMMAND)) {
+            throw new EmptyDescriptionException(EVENT_COMMAND, EVENT_FORMAT);
         }
-        String remainder = command.substring(6);
-        int fromIndex = remainder.indexOf(" /from ");
+        String remainder = command.substring(EVENT_COMMAND.length());
+        int fromIndex = remainder.indexOf(EVENT_START_DATE_SEPARATOR);
         if (fromIndex < 1) {
             throw new InvalidEventException(EVENT_FORMAT);
         }
-        int toIndex = remainder.indexOf(" /to ", fromIndex + 7);
+        int toIndex = remainder.indexOf(EVENT_END_DATE_SEPARATOR,
+                fromIndex + EVENT_START_DATE_SEPARATOR.length());
         if (toIndex < 0) {
             throw new InvalidEventException(EVENT_FORMAT);
         }
         String description = remainder.substring(0, fromIndex).trim();
-        String from = remainder.substring(fromIndex + 7, toIndex).trim();
-        String to = remainder.substring(toIndex + 5).trim();
+        String from = remainder.substring(
+                fromIndex + EVENT_START_DATE_SEPARATOR.length(), toIndex).trim();
+        String to = remainder.substring(
+                toIndex + EVENT_END_DATE_SEPARATOR.length()).trim();
         if (description.isEmpty()) {
-            throw new EmptyDescriptionException("event", EVENT_FORMAT);
+            throw new EmptyDescriptionException(EVENT_COMMAND, EVENT_FORMAT);
         }
         if (from.isEmpty() || to.isEmpty()) {
             throw new InvalidEventException(EVENT_FORMAT);
