@@ -7,33 +7,33 @@ import noms.util.DateUtil;
 /** Represents a task that must be completed by a specific date. */
 public class Deadline extends Task {
 
-    protected final LocalDate by;
+    private final LocalDate dueDate;
 
     /**
      * Creates a deadline with the given description and due date.
      *
      * @param description the text describing the task
-     * @param by the date the task is due
+     * @param dueDate the date the task is due
      */
-    public Deadline(String description, LocalDate by) {
+    public Deadline(String description, LocalDate dueDate) {
         super(description);
-        this.by = by;
+        this.dueDate = dueDate;
     }
 
     /** Returns true if this deadline falls on the given date. */
     public boolean occursOn(LocalDate date) {
-        return by.equals(date);
+        return dueDate.equals(date);
     }
 
     @Override
     public String toString() {
-        return "[D]" + super.toString() + " (by: " + DateUtil.format(by) + ")";
+        return "[D]" + super.toString() + " (by: " + DateUtil.format(dueDate) + ")";
     }
 
     @Override
     public String toFileFormat() {
         // LocalDate.toString() writes ISO yyyy-MM-dd, which round-trips
         // exactly with LocalDate.parse when the save file is read back.
-        return "D | " + super.toFileFormat() + " | " + escape(by.toString());
+        return "D | " + super.toFileFormat() + " | " + escape(dueDate.toString());
     }
 }

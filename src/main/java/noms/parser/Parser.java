@@ -173,15 +173,15 @@ public class Parser {
             throw new InvalidDeadlineException(DEADLINE_FORMAT);
         }
         String description = remainder.substring(0, byIndex).trim();
-        String by = remainder.substring(
+        String dueDate = remainder.substring(
                 byIndex + DEADLINE_DATE_SEPARATOR.length()).trim();
         if (description.isEmpty()) {
             throw new EmptyDescriptionException(DEADLINE_COMMAND, DEADLINE_FORMAT);
         }
-        if (by.isEmpty()) {
+        if (dueDate.isEmpty()) {
             throw new InvalidDeadlineException(DEADLINE_FORMAT);
         }
-        return new Deadline(description, DateUtil.parse(by));
+        return new Deadline(description, DateUtil.parse(dueDate));
     }
 
     /**
@@ -206,17 +206,17 @@ public class Parser {
             throw new InvalidEventException(EVENT_FORMAT);
         }
         String description = remainder.substring(0, fromIndex).trim();
-        String from = remainder.substring(
+        String startDate = remainder.substring(
                 fromIndex + EVENT_START_DATE_SEPARATOR.length(), toIndex).trim();
-        String to = remainder.substring(
+        String endDate = remainder.substring(
                 toIndex + EVENT_END_DATE_SEPARATOR.length()).trim();
         if (description.isEmpty()) {
             throw new EmptyDescriptionException(EVENT_COMMAND, EVENT_FORMAT);
         }
-        if (from.isEmpty() || to.isEmpty()) {
+        if (startDate.isEmpty() || endDate.isEmpty()) {
             throw new InvalidEventException(EVENT_FORMAT);
         }
-        return new Event(description, DateUtil.parse(from), DateUtil.parse(to));
+        return new Event(description, DateUtil.parse(startDate), DateUtil.parse(endDate));
     }
 
     /**
