@@ -17,12 +17,10 @@ import noms.Noms;
  * the outer shell (a window instead of a {@code Scanner} loop) differs.
  */
 public class Main extends Application {
-    private static final String SAVE_DIRECTORY = "data";
-    private static final String SAVE_FILE_NAME = "noms.txt";
     private static final double MIN_WINDOW_WIDTH = 400.0;
     private static final double MIN_WINDOW_HEIGHT = 600.0;
 
-    private final Noms noms = new Noms(SAVE_DIRECTORY, SAVE_FILE_NAME);
+    private final Noms noms = new Noms();
 
     @Override
     public void start(Stage stage) {

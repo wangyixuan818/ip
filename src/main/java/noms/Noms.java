@@ -33,6 +33,13 @@ public class Noms {
     private boolean isExitRequested;
 
     /**
+     * Creates a Noms instance backed by the default save file.
+     */
+    public Noms() {
+        this(SAVE_DIRECTORY, SAVE_FILE_NAME);
+    }
+
+    /**
      * Creates a Noms instance backed by the save file in the given
      * directory, loading any previously saved tasks. If the file cannot be
      * read, Noms starts with an empty list and reports the problem rather
@@ -173,6 +180,6 @@ public class Noms {
      * @param args command-line arguments (unused)
      */
     public static void main(String[] args) {
-        new Noms(SAVE_DIRECTORY, SAVE_FILE_NAME).run();
+        new Noms().run();
     }
 }
