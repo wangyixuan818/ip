@@ -1,6 +1,7 @@
 package noms.task;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 import java.time.LocalDate;
@@ -107,6 +108,27 @@ public class TaskListTest {
         assertSame(chore, list.get(0));
         assertSame(payRent, list.get(1));
         assertSame(conference, list.get(2));
+    }
+
+    @Test
+    public void get_invalidIndex_assertionFails() {
+        TaskList list = populatedList();
+
+        assertThrows(AssertionError.class, () -> list.get(list.size()));
+    }
+
+    @Test
+    public void delete_invalidIndex_assertionFails() {
+        TaskList list = populatedList();
+
+        assertThrows(AssertionError.class, () -> list.delete(-1));
+    }
+
+    @Test
+    public void add_nullTask_assertionFails() {
+        TaskList list = new TaskList();
+
+        assertThrows(AssertionError.class, () -> list.add(null));
     }
 
     // --- add / size ---

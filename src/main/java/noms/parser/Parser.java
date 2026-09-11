@@ -81,6 +81,7 @@ public class Parser {
             case EVENT:
                 return new AddCommand(parseTask(fullCommand));
             default:
+                assert false : "Unhandled command type";
                 throw new UnknownCommandException();
         }
     }

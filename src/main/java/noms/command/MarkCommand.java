@@ -26,6 +26,8 @@ public class MarkCommand extends Command {
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws NomsException {
         int taskNumber = Parser.parseTaskNumber(command, "mark", tasks.size());
+        assert taskNumber >= 1 && taskNumber <= tasks.size()
+                : "Parser returned an invalid task number";
         Task task = tasks.get(taskNumber - 1);
         boolean changed = task.markAsDone();
         save(tasks, ui, storage);
