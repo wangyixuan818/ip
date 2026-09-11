@@ -7,7 +7,7 @@ import noms.util.DateUtil;
 /** Represents a task that must be completed by a specific date. */
 public class Deadline extends Task {
 
-    private final LocalDate dueDate;
+    private LocalDate dueDate;
 
     /**
      * Creates a deadline with the given description and due date.
@@ -23,6 +23,15 @@ public class Deadline extends Task {
     /** Returns true if this deadline falls on the given date. */
     public boolean occursOn(LocalDate date) {
         return dueDate.equals(date);
+    }
+
+    /**
+     * Replaces this deadline's due date without changing its other details.
+     *
+     * @param newDueDate the replacement due date
+     */
+    public void rescheduleTo(LocalDate newDueDate) {
+        dueDate = newDueDate;
     }
 
     @Override

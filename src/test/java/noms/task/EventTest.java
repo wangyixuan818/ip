@@ -1,5 +1,6 @@
 package noms.task;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -49,5 +50,21 @@ public class EventTest {
                 LocalDate.of(2019, 8, 6), LocalDate.of(2019, 8, 6));
         assertTrue(singleDay.occursOn(LocalDate.of(2019, 8, 6)));
         assertFalse(singleDay.occursOn(LocalDate.of(2019, 8, 7)));
+    }
+
+    @Test
+    public void rescheduleFrom_newStart_preservesDuration() {
+        event.rescheduleFrom(LocalDate.of(2026, 9, 20));
+
+        assertEquals("[E][ ] conference (from: Sept 20 2026 to: Sept 22 2026)",
+                event.toString());
+    }
+
+    @Test
+    public void reschedule_newDates_replacesBothDates() {
+        event.reschedule(LocalDate.of(2026, 9, 20), LocalDate.of(2026, 10, 1));
+
+        assertEquals("[E][ ] conference (from: Sept 20 2026 to: Oct 01 2026)",
+                event.toString());
     }
 }
