@@ -526,12 +526,12 @@ ____________________________________________________________
 Try: event <description> /from yyyy-mm-dd /to yyyy-mm-dd
 ____________________________________________________________
  Got it. I've added this task:
-   [E][ ] study session (from: Sept 01 2019 to: Sept 02 2019)
+   [E][ ] study session (from: Sep 01 2019 to: Sep 02 2019)
  Now you have 3 tasks in the list.
 ____________________________________________________________
  1.[T][ ] buy groceries
  2.[D][ ] submit report (by: Aug 30 2019)
- 3.[E][ ] study session (from: Sept 01 2019 to: Sept 02 2019)
+ 3.[E][ ] study session (from: Sep 01 2019 to: Sep 02 2019)
 ____________________________________________________________
 Bye~ Hope to see you again soon!
 ____________________________________________________________
@@ -575,7 +575,7 @@ ____________________________________________________________
  Now you have 1 tasks in the list.
 ____________________________________________________________
  Got it. I've added this task:
-   [D][ ] pay bills (by: Sept 30 2019)
+   [D][ ] pay bills (by: Sep 30 2019)
  Now you have 2 tasks in the list.
 ____________________________________________________________
  Nice! I've marked this task as done:
@@ -591,10 +591,10 @@ ____________________________________________________________
    [T][ ] wash dishes
 ____________________________________________________________
  Nice! I've marked this task as done:
-   [D][X] pay bills (by: Sept 30 2019)
+   [D][X] pay bills (by: Sep 30 2019)
 ____________________________________________________________
  1.[T][ ] wash dishes
- 2.[D][X] pay bills (by: Sept 30 2019)
+ 2.[D][X] pay bills (by: Sep 30 2019)
 ____________________________________________________________
 Bye~ Hope to see you again soon!
 ____________________________________________________________

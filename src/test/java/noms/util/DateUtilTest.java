@@ -81,7 +81,7 @@ public class DateUtilTest {
         assertThrows(InvalidDateException.class, () -> DateUtil.parse(""));
     }
 
-    // --- format: renders a date in the display pattern "MMM dd yyyy" ---
+    // --- format: renders a date as "<3-letter month> dd yyyy" ---
 
     @Test
     public void format_typicalDate_returnsFriendlyPattern() {
@@ -100,9 +100,11 @@ public class DateUtilTest {
     }
 
     @Test
-    public void format_september_usesFourLetterAbbreviation() {
-        // September's short form in the JDK's date data is "Sept", not "Sep".
-        assertEquals("Sept 01 2019", DateUtil.format(LocalDate.of(2019, 9, 1)));
+    public void format_september_usesFixedThreeLetterAbbreviation() {
+        // Pinned to DateUtil's own MONTH_ABBREVIATIONS map, not the JDK's locale
+        // data, whose short form for September varies between JDK builds ("Sep"
+        // vs "Sept") and previously made this test fail only on some machines/CI.
+        assertEquals("Sep 01 2019", DateUtil.format(LocalDate.of(2019, 9, 1)));
     }
 
     @Test
