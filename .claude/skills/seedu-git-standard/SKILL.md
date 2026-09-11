@@ -52,6 +52,10 @@ commit or push — lives in [AGENTS.md](../../../AGENTS.md), not here.
 - A useful body arc: the current situation (present tense) → why it needs to
   change → what this commit does about it (imperative) → why this approach → any
   other relevant notes.
+- When describing the current situation, avoid words such as `currently` and
+  `originally`; the timing is already implied.
+- You may use `Let's` to introduce the section that describes the change made
+  by the commit.
 
 ## 3. Branch names
 
@@ -83,5 +87,7 @@ Run through this before committing:
 - [ ] Optional scope prefix uses `Scope: Subject` form if present.
 - [ ] Non-trivial commit has a body, separated from the subject by a blank line.
 - [ ] Body is wrapped at 72 chars and explains WHAT and WHY, not HOW.
+- [ ] Current situation uses present tense without redundant timing words such
+      as `currently` or `originally`.
 - [ ] Body does not merely repeat the code comments in the same commit.
 - [ ] Any new branch is kebab-case (issue branches: `issueNumber-keywords`).
