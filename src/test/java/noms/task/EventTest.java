@@ -56,7 +56,7 @@ public class EventTest {
     public void rescheduleFrom_newStart_preservesDuration() {
         event.rescheduleFrom(LocalDate.of(2026, 9, 20));
 
-        assertEquals("[E][ ] conference (from: Sept 20 2026 to: Sept 22 2026)",
+        assertEquals("[E][ ] conference (from: Sep 20 2026 to: Sep 22 2026)",
                 event.toString());
     }
 
@@ -64,7 +64,7 @@ public class EventTest {
     public void reschedule_newDates_replacesBothDates() {
         event.reschedule(LocalDate.of(2026, 9, 20), LocalDate.of(2026, 10, 1));
 
-        assertEquals("[E][ ] conference (from: Sept 20 2026 to: Oct 01 2026)",
+        assertEquals("[E][ ] conference (from: Sep 20 2026 to: Oct 01 2026)",
                 event.toString());
     }
 }

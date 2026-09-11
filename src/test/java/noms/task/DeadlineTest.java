@@ -32,6 +32,6 @@ public class DeadlineTest {
     public void rescheduleTo_newDate_replacesDueDate() {
         deadline.rescheduleTo(LocalDate.of(2026, 9, 20));
 
-        assertEquals("[D][ ] return book (by: Sept 20 2026)", deadline.toString());
+        assertEquals("[D][ ] return book (by: Sep 20 2026)", deadline.toString());
     }
 }
