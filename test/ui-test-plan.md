@@ -188,7 +188,7 @@ Hello! I'm Noms.
 NomNom, have you eaten? What can I do for you?
 ____________________________________________________________
  OOPS! Grrr... Noms couldn't understand that command.
-Try feeding me a todo, deadline, event, list, mark, unmark, delete, on, or bye.
+Try feeding me a todo, deadline, event, list, mark, unmark, delete, snooze, on, or bye.
 ____________________________________________________________
 Bye~ Hope to see you again soon!
 ____________________________________________________________
@@ -470,7 +470,7 @@ ____________________________________________________________
 Hello! I'm Noms.
 NomNom, have you eaten? What can I do for you?
 ____________________________________________________________
- OOPS! Noms needs a command. Try feeding me a todo, deadline, event, list, mark, unmark, delete, on, or bye.
+ OOPS! Noms needs a command. Try feeding me a todo, deadline, event, list, mark, unmark, delete, snooze, on, or bye.
 ____________________________________________________________
 ____________________________________________________________
 Bye~ Hope to see you again soon!
@@ -634,10 +634,10 @@ ____________________________________________________________
    [T][ ] first
  Now you have 1 tasks in the list.
 ____________________________________________________________
- OOPS! Noms needs a command. Try feeding me a todo, deadline, event, list, mark, unmark, delete, on, or bye.
+ OOPS! Noms needs a command. Try feeding me a todo, deadline, event, list, mark, unmark, delete, snooze, on, or bye.
 ____________________________________________________________
  OOPS! Grrr... Noms couldn't understand that command.
-Try feeding me a todo, deadline, event, list, mark, unmark, delete, on, or bye.
+Try feeding me a todo, deadline, event, list, mark, unmark, delete, snooze, on, or bye.
 ____________________________________________________________
  Got it. I've added this task:
    [D][ ] second (by: Dec 31 2019)
@@ -1091,6 +1091,188 @@ ____________________________________________________________
  OOPS! Noms can't sniff out a task without a scent!
 Tell Noms a keyword to hunt for.
 Try: find <keyword>
+____________________________________________________________
+Bye~ Hope to see you again soon!
+____________________________________________________________
+```
+
+### TC-022: Snooze deadlines and events
+
+**Aim:**
+
+Verify that a deadline accepts `/by`, an event accepts either `/from` alone
+or `/from` with `/to`, an event keeps its duration when only `/from` is given,
+and snoozing preserves completion state and list order.
+
+**Inputs:**
+
+```text
+deadline submit report /by 2026-09-15
+event conference /from 2026-09-10 /to 2026-09-12
+mark 1
+snooze 1 /by 2026-09-20
+snooze 2 /from 2026-09-20
+snooze 2 /from 2026-10-01 /to 2026-10-05
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ _   _  ___  __  __  ____
+| \ | |/ _ \|  \/  |/ ___|
+|  \| | | | | |\/| | \___ \
+| |\  | |_| | |  | |  ___) |
+|_| \_|\___/|_|  |_| |____/
+____________________________________________________________
+Hello! I'm Noms.
+NomNom, have you eaten? What can I do for you?
+____________________________________________________________
+ Got it. I've added this task:
+   [D][ ] submit report (by: Sept 15 2026)
+ Now you have 1 tasks in the list.
+____________________________________________________________
+ Got it. I've added this task:
+   [E][ ] conference (from: Sept 10 2026 to: Sept 12 2026)
+ Now you have 2 tasks in the list.
+____________________________________________________________
+ Nice! I've marked this task as done:
+   [D][X] submit report (by: Sept 15 2026)
+____________________________________________________________
+ Nom nom! Noms has snoozed this task:
+   [D][X] submit report (by: Sept 20 2026)
+____________________________________________________________
+ Nom nom! Noms has snoozed this task:
+   [E][ ] conference (from: Sept 20 2026 to: Sept 22 2026)
+____________________________________________________________
+ Nom nom! Noms has snoozed this task:
+   [E][ ] conference (from: Oct 01 2026 to: Oct 05 2026)
+____________________________________________________________
+ 1.[D][X] submit report (by: Sept 20 2026)
+ 2.[E][ ] conference (from: Oct 01 2026 to: Oct 05 2026)
+____________________________________________________________
+Bye~ Hope to see you again soon!
+____________________________________________________________
+```
+
+### TC-023: Reject unsupported and malformed snooze commands
+
+**Aim:**
+
+Verify that todos cannot be snoozed, each dated task requires its own command
+markers, invalid dates reuse the normal date error, and rejected commands do
+not change any task.
+
+**Inputs:**
+
+```text
+todo read book
+deadline submit report /by 2026-09-15
+event conference /from 2026-09-10 /to 2026-09-12
+snooze 1 /by 2026-09-20
+snooze 2 /from 2026-09-20
+snooze 3 /by 2026-09-20
+snooze 2 /by tomorrow
+snooze 3 /from 2026-09-20 /to
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ _   _  ___  __  __  ____
+| \ | |/ _ \|  \/  |/ ___|
+|  \| | | | | |\/| | \___ \
+| |\  | |_| | |  | |  ___) |
+|_| \_|\___/|_|  |_| |____/
+____________________________________________________________
+Hello! I'm Noms.
+NomNom, have you eaten? What can I do for you?
+____________________________________________________________
+ Got it. I've added this task:
+   [T][ ] read book
+ Now you have 1 tasks in the list.
+____________________________________________________________
+ Got it. I've added this task:
+   [D][ ] submit report (by: Sept 15 2026)
+ Now you have 2 tasks in the list.
+____________________________________________________________
+ Got it. I've added this task:
+   [E][ ] conference (from: Sept 10 2026 to: Sept 12 2026)
+ Now you have 3 tasks in the list.
+____________________________________________________________
+ OOPS! Noms can only snooze deadlines and events.
+Try choosing a task that has a date.
+____________________________________________________________
+ OOPS! This deadline snooze recipe is incomplete.
+Try: snooze <task number> /by yyyy-mm-dd
+____________________________________________________________
+ OOPS! This event snooze recipe is incomplete.
+Try: snooze <task number> /from yyyy-mm-dd [/to yyyy-mm-dd]
+____________________________________________________________
+ OOPS! Noms couldn't read the date "tomorrow".
+Try the format yyyy-mm-dd (e.g. 2019-10-15).
+____________________________________________________________
+ OOPS! This event snooze recipe is incomplete.
+Try: snooze <task number> /from yyyy-mm-dd [/to yyyy-mm-dd]
+____________________________________________________________
+ 1.[T][ ] read book
+ 2.[D][ ] submit report (by: Sept 15 2026)
+ 3.[E][ ] conference (from: Sept 10 2026 to: Sept 12 2026)
+____________________________________________________________
+Bye~ Hope to see you again soon!
+____________________________________________________________
+```
+
+### TC-024: Reject invalid snooze task numbers
+
+**Aim:**
+
+Verify that missing, non-numeric, and out-of-range task numbers produce the
+existing task-number errors without changing the selected task.
+
+**Inputs:**
+
+```text
+deadline submit report /by 2026-09-15
+snooze
+snooze abc /by 2026-09-20
+snooze 2 /by 2026-09-20
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ _   _  ___  __  __  ____
+| \ | |/ _ \|  \/  |/ ___|
+|  \| | | | | |\/| | \___ \
+| |\  | |_| | |  | |  ___) |
+|_| \_|\___/|_|  |_| |____/
+____________________________________________________________
+Hello! I'm Noms.
+NomNom, have you eaten? What can I do for you?
+____________________________________________________________
+ Got it. I've added this task:
+   [D][ ] submit report (by: Sept 15 2026)
+ Now you have 1 tasks in the list.
+____________________________________________________________
+ OOPS! Noms needs to know which task to snooze.
+Try: snooze <task number>
+____________________________________________________________
+ OOPS! The task number must be a whole number.
+Try: snooze 1
+____________________________________________________________
+ OOPS! Task number 2 is out of range.
+Choose a task number from 1 to 1.
+____________________________________________________________
+ 1.[D][ ] submit report (by: Sept 15 2026)
 ____________________________________________________________
 Bye~ Hope to see you again soon!
 ____________________________________________________________

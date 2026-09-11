@@ -152,6 +152,17 @@ public class Ui {
     }
 
     /**
+     * Confirms that a dated task has been snoozed.
+     *
+     * @param task the task with its updated date or dates
+     */
+    public void showTaskSnoozed(Task task) {
+        System.out.println(" Nom nom! Noms has snoozed this task:");
+        System.out.println("   " + task);
+        System.out.println(DIVIDER);
+    }
+
+    /**
      * Prints the deadlines and events that fall on the given date. If no
      * task matches, prints a friendly "nothing that day" note instead.
      *

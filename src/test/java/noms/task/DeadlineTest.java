@@ -1,5 +1,6 @@
 package noms.task;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -25,5 +26,12 @@ public class DeadlineTest {
     @Test
     public void occursOn_differentDate_returnsFalse() {
         assertFalse(deadline.occursOn(LocalDate.of(2019, 12, 2)));
+    }
+
+    @Test
+    public void rescheduleTo_newDate_replacesDueDate() {
+        deadline.rescheduleTo(LocalDate.of(2026, 9, 20));
+
+        assertEquals("[D][ ] return book (by: Sept 20 2026)", deadline.toString());
     }
 }
