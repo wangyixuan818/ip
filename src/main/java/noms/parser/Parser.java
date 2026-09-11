@@ -1,6 +1,9 @@
 package noms.parser;
 
 import java.time.LocalDate;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import noms.command.AddCommand;
 import noms.command.Command;
@@ -11,6 +14,7 @@ import noms.command.FindCommand;
 import noms.command.ListCommand;
 import noms.command.MarkCommand;
 import noms.command.OnCommand;
+import noms.command.SnoozeCommand;
 import noms.command.UnmarkCommand;
 import noms.exception.EmptyCommandException;
 import noms.exception.EmptyDescriptionException;
@@ -18,6 +22,7 @@ import noms.exception.EmptyKeywordException;
 import noms.exception.InvalidDateException;
 import noms.exception.InvalidDeadlineException;
 import noms.exception.InvalidEventException;
+import noms.exception.InvalidSnoozeException;
 import noms.exception.InvalidTaskNumberException;
 import noms.exception.NomsException;
 import noms.exception.UnknownCommandException;
@@ -51,6 +56,16 @@ public class Parser {
     private static final String EVENT_FORMAT =
             EVENT_COMMAND + " <description> /from yyyy-mm-dd /to yyyy-mm-dd";
     private static final String FIND_FORMAT = "find <keyword>";
+    private static final String DEADLINE_SNOOZE_FORMAT =
+            "snooze <task number> /by yyyy-mm-dd";
+    private static final String EVENT_SNOOZE_FORMAT =
+            "snooze <task number> /from yyyy-mm-dd [/to yyyy-mm-dd]";
+
+    private static final Pattern DEADLINE_SNOOZE_PATTERN = Pattern.compile(
+            "^\\s*(?i:snooze)\\s+-?\\d+\\s+/by\\s+([^\\s/]+)\\s*$");
+    private static final Pattern EVENT_SNOOZE_PATTERN = Pattern.compile(
+            "^\\s*(?i:snooze)\\s+-?\\d+\\s+/from\\s+([^\\s/]+)"
+                    + "(?:\\s+/to\\s+([^\\s/]+))?\\s*$");
 
     /**
      * Turns a full command line into the {@link Command} that carries it
@@ -79,6 +94,8 @@ public class Parser {
                 return new UnmarkCommand(fullCommand);
             case DELETE:
                 return new DeleteCommand(fullCommand);
+            case SNOOZE:
+                return new SnoozeCommand(fullCommand);
             case ON:
                 return new OnCommand(parseOnDate(fullCommand));
             case FIND:
@@ -252,7 +269,88 @@ public class Parser {
                             + "Try: " + action + " <task number>");
         }
 
-        String taskNumberText = parts[1];
+        return parseTaskNumberText(parts[1], action, taskCount);
+    }
+
+    /**
+     * Parses the task number from a snooze command while leaving its date
+     * arguments for the task-specific snooze parser.
+     *
+     * @param command the raw snooze command
+     * @param taskCount the current number of tasks
+     * @return the validated 1-based task number
+     * @throws InvalidTaskNumberException if the number is missing, invalid,
+     *         or out of range
+     */
+    public static int parseSnoozeTaskNumber(String command, int taskCount)
+            throws InvalidTaskNumberException {
+        String[] parts = command.trim().split("\\s+", 3);
+
+        if (taskCount == 0) {
+            throw new InvalidTaskNumberException(
+                    "Noms has no tasks to snooze yet.\n"
+                            + "Add a task first, then try again.");
+        }
+
+        if (parts.length == 1) {
+            throw new InvalidTaskNumberException(
+                    "Noms needs to know which task to snooze.\n"
+                            + "Try: snooze <task number>");
+        }
+
+        return parseTaskNumberText(parts[1], "snooze", taskCount);
+    }
+
+    /**
+     * Parses the replacement date from a deadline snooze command.
+     *
+     * @param command the raw snooze command
+     * @return the deadline's replacement due date
+     * @throws NomsException if the syntax or date is invalid
+     */
+    public static LocalDate parseDeadlineSnoozeDate(String command) throws NomsException {
+        Matcher matcher = DEADLINE_SNOOZE_PATTERN.matcher(command);
+        if (!matcher.matches()) {
+            throw new InvalidSnoozeException(
+                    "This deadline snooze recipe is incomplete.\n"
+                            + "Try: " + DEADLINE_SNOOZE_FORMAT);
+        }
+        return DateUtil.parse(matcher.group(1));
+    }
+
+    /**
+     * Parses the replacement dates from an event snooze command. The end
+     * date is empty when the user supplies only {@code /from}.
+     *
+     * @param command the raw snooze command
+     * @return the event's replacement start and optional end date
+     * @throws NomsException if the syntax or either date is invalid
+     */
+    public static EventSnoozeDates parseEventSnoozeDates(String command) throws NomsException {
+        Matcher matcher = EVENT_SNOOZE_PATTERN.matcher(command);
+        if (!matcher.matches()) {
+            throw new InvalidSnoozeException(
+                    "This event snooze recipe is incomplete.\n"
+                            + "Try: " + EVENT_SNOOZE_FORMAT);
+        }
+
+        LocalDate startDate = DateUtil.parse(matcher.group(1));
+        String endDateText = matcher.group(2);
+        Optional<LocalDate> endDate = endDateText == null
+                ? Optional.empty()
+                : Optional.of(DateUtil.parse(endDateText));
+        return new EventSnoozeDates(startDate, endDate);
+    }
+
+    /** Holds the parsed dates for an event snooze command. */
+    public record EventSnoozeDates(LocalDate startDate, Optional<LocalDate> endDate) {
+    }
+
+    /**
+     * Validates one task-number token against the current task list.
+     */
+    private static int parseTaskNumberText(String taskNumberText, String action, int taskCount)
+            throws InvalidTaskNumberException {
         if (!taskNumberText.matches("-?\\d+")) {
             throw new InvalidTaskNumberException(
                     "The task number must be a whole number.\nTry: " + action + " 1");

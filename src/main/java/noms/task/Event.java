@@ -1,13 +1,14 @@
 package noms.task;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 import noms.util.DateUtil;
 
 /** Represents a task that takes place between two stated dates. */
 public class Event extends Task {
-    private final LocalDate startDate;
-    private final LocalDate endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
     /**
      * Creates an event with the given description and start and end dates.
@@ -25,6 +26,29 @@ public class Event extends Task {
     /** Returns true if this event spans (inclusively) the given date. */
     public boolean occursOn(LocalDate date) {
         return !date.isBefore(startDate) && !date.isAfter(endDate);
+    }
+
+    /**
+     * Replaces this event's start date and moves its end date by the same
+     * number of days, preserving the original duration.
+     *
+     * @param newStartDate the replacement start date
+     */
+    public void rescheduleFrom(LocalDate newStartDate) {
+        long durationInDays = ChronoUnit.DAYS.between(startDate, endDate);
+        startDate = newStartDate;
+        endDate = newStartDate.plusDays(durationInDays);
+    }
+
+    /**
+     * Replaces both dates of this event without changing its other details.
+     *
+     * @param newStartDate the replacement start date
+     * @param newEndDate the replacement end date
+     */
+    public void reschedule(LocalDate newStartDate, LocalDate newEndDate) {
+        startDate = newStartDate;
+        endDate = newEndDate;
     }
 
     @Override

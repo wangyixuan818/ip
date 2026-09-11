@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 
@@ -18,6 +19,7 @@ import noms.command.FindCommand;
 import noms.command.ListCommand;
 import noms.command.MarkCommand;
 import noms.command.OnCommand;
+import noms.command.SnoozeCommand;
 import noms.command.UnmarkCommand;
 import noms.exception.EmptyCommandException;
 import noms.exception.EmptyDescriptionException;
@@ -25,6 +27,7 @@ import noms.exception.EmptyKeywordException;
 import noms.exception.InvalidDateException;
 import noms.exception.InvalidDeadlineException;
 import noms.exception.InvalidEventException;
+import noms.exception.InvalidSnoozeException;
 import noms.exception.InvalidTaskNumberException;
 import noms.exception.NomsException;
 import noms.exception.UnknownCommandException;
@@ -49,6 +52,7 @@ public class ParserTest {
         assertEquals(CommandType.LIST, Parser.getCommandType("list"));
         assertEquals(CommandType.TODO, Parser.getCommandType("TODO read book"));
         assertEquals(CommandType.BYE, Parser.getCommandType("  bye  "));
+        assertEquals(CommandType.SNOOZE, Parser.getCommandType("SnOoZe 1 /by 2026-09-20"));
     }
 
     @Test
@@ -186,6 +190,62 @@ public class ParserTest {
                 () -> Parser.parseTaskNumber("mark 999999999999", "mark", 1));
     }
 
+    // --- snooze parsing ---
+
+    @Test
+    public void parseSnoozeTaskNumber_validCommand_returnsNumber() throws NomsException {
+        assertEquals(2, Parser.parseSnoozeTaskNumber(
+                "snooze 2 /from 2026-09-20", 3));
+    }
+
+    @Test
+    public void parseSnoozeTaskNumber_missingNumber_throwsInvalidTaskNumberException() {
+        assertThrows(InvalidTaskNumberException.class,
+                () -> Parser.parseSnoozeTaskNumber("snooze", 1));
+    }
+
+    @Test
+    public void parseDeadlineSnoozeDate_validCommand_returnsDate() throws NomsException {
+        assertEquals(LocalDate.of(2026, 9, 20),
+                Parser.parseDeadlineSnoozeDate("SnOoZe 1 /by 2026-09-20"));
+    }
+
+    @Test
+    public void parseDeadlineSnoozeDate_uppercaseMarker_throwsInvalidSnoozeException() {
+        assertThrows(InvalidSnoozeException.class,
+                () -> Parser.parseDeadlineSnoozeDate("snooze 1 /BY 2026-09-20"));
+    }
+
+    @Test
+    public void parseDeadlineSnoozeDate_extraText_throwsInvalidSnoozeException() {
+        assertThrows(InvalidSnoozeException.class,
+                () -> Parser.parseDeadlineSnoozeDate("snooze 1 /by 2026-09-20 extra"));
+    }
+
+    @Test
+    public void parseEventSnoozeDates_fromOnly_returnsEmptyEndDate() throws NomsException {
+        Parser.EventSnoozeDates dates = Parser.parseEventSnoozeDates(
+                "snooze 1 /from 2026-09-20");
+
+        assertEquals(LocalDate.of(2026, 9, 20), dates.startDate());
+        assertTrue(dates.endDate().isEmpty());
+    }
+
+    @Test
+    public void parseEventSnoozeDates_fromAndTo_returnsBothDates() throws NomsException {
+        Parser.EventSnoozeDates dates = Parser.parseEventSnoozeDates(
+                "snooze 1 /from 2026-09-20 /to 2026-09-22");
+
+        assertEquals(LocalDate.of(2026, 9, 20), dates.startDate());
+        assertEquals(LocalDate.of(2026, 9, 22), dates.endDate().orElseThrow());
+    }
+
+    @Test
+    public void parseEventSnoozeDates_invalidDate_throwsInvalidDateException() {
+        assertThrows(InvalidDateException.class,
+                () -> Parser.parseEventSnoozeDates("snooze 1 /from tomorrow"));
+    }
+
     // --- parseOnDate ---
 
     @Test
@@ -231,6 +291,7 @@ public class ParserTest {
         assertInstanceOf(MarkCommand.class, Parser.parse("mark 1"));
         assertInstanceOf(UnmarkCommand.class, Parser.parse("unmark 1"));
         assertInstanceOf(DeleteCommand.class, Parser.parse("delete 1"));
+        assertInstanceOf(SnoozeCommand.class, Parser.parse("snooze 1 /by 2026-09-20"));
         assertInstanceOf(OnCommand.class, Parser.parse("on 2019-12-01"));
         assertInstanceOf(FindCommand.class, Parser.parse("find book"));
         assertInstanceOf(AddCommand.class, Parser.parse("todo read book"));
