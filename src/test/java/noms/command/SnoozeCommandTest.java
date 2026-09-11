@@ -55,7 +55,7 @@ public class SnoozeCommandTest {
 
         new SnoozeCommand("snooze 1 /by 2026-09-20").execute(tasks, ui, storage);
 
-        assertEquals("[D][X] submit report (by: Sept 20 2026)", tasks.get(0).toString());
+        assertEquals("[D][X] submit report (by: Sep 20 2026)", tasks.get(0).toString());
     }
 
     @Test
@@ -66,7 +66,7 @@ public class SnoozeCommandTest {
 
         new SnoozeCommand("snooze 1 /from 2026-09-20").execute(tasks, ui, storage);
 
-        assertEquals("[E][ ] conference (from: Sept 20 2026 to: Sept 22 2026)",
+        assertEquals("[E][ ] conference (from: Sep 20 2026 to: Sep 22 2026)",
                 tasks.get(0).toString());
     }
 
@@ -79,7 +79,7 @@ public class SnoozeCommandTest {
         new SnoozeCommand("snooze 1 /from 2026-09-20 /to 2026-10-01")
                 .execute(tasks, ui, storage);
 
-        assertEquals("[E][ ] conference (from: Sept 20 2026 to: Oct 01 2026)",
+        assertEquals("[E][ ] conference (from: Sep 20 2026 to: Oct 01 2026)",
                 tasks.get(0).toString());
     }
 
@@ -90,7 +90,7 @@ public class SnoozeCommandTest {
 
         new SnoozeCommand("snooze 1 /by 2026-09-20").execute(tasks, ui, storage);
 
-        assertEquals("[D][ ] submit report (by: Sept 20 2026)",
+        assertEquals("[D][ ] submit report (by: Sep 20 2026)",
                 storage.load().get(0).toString());
     }
 
@@ -103,9 +103,11 @@ public class SnoozeCommandTest {
 
         new SnoozeCommand("snooze 1 /by 2026-09-20").execute(tasks, ui, storage);
 
-        assertTrue(output.toString().contains(
-                "Nom nom! Noms has snoozed this task:\n"
-                        + "   [D][ ] submit report (by: Sept 20 2026)"));
+        // Checked as two separate lines, not one string joined by "\n": println
+        // emits the platform line separator (e.g. "\r\n" on Windows), so a
+        // literal "\n" between them would not match there.
+        assertTrue(output.toString().contains("Nom nom! Noms has snoozed this task:"));
+        assertTrue(output.toString().contains("   [D][ ] submit report (by: Sep 20 2026)"));
     }
 
     @Test
@@ -125,6 +127,6 @@ public class SnoozeCommandTest {
         assertThrows(InvalidSnoozeException.class,
                 () -> new SnoozeCommand("snooze 1 /from 2026-09-20")
                         .execute(tasks, ui, storage));
-        assertEquals("[D][ ] submit report (by: Sept 15 2026)", deadline.toString());
+        assertEquals("[D][ ] submit report (by: Sep 15 2026)", deadline.toString());
     }
 }

@@ -526,12 +526,12 @@ ____________________________________________________________
 Try: event <description> /from yyyy-mm-dd /to yyyy-mm-dd
 ____________________________________________________________
  Got it. I've added this task:
-   [E][ ] study session (from: Sept 01 2019 to: Sept 02 2019)
+   [E][ ] study session (from: Sep 01 2019 to: Sep 02 2019)
  Now you have 3 tasks in the list.
 ____________________________________________________________
  1.[T][ ] buy groceries
  2.[D][ ] submit report (by: Aug 30 2019)
- 3.[E][ ] study session (from: Sept 01 2019 to: Sept 02 2019)
+ 3.[E][ ] study session (from: Sep 01 2019 to: Sep 02 2019)
 ____________________________________________________________
 Bye~ Hope to see you again soon!
 ____________________________________________________________
@@ -575,7 +575,7 @@ ____________________________________________________________
  Now you have 1 tasks in the list.
 ____________________________________________________________
  Got it. I've added this task:
-   [D][ ] pay bills (by: Sept 30 2019)
+   [D][ ] pay bills (by: Sep 30 2019)
  Now you have 2 tasks in the list.
 ____________________________________________________________
  Nice! I've marked this task as done:
@@ -591,10 +591,10 @@ ____________________________________________________________
    [T][ ] wash dishes
 ____________________________________________________________
  Nice! I've marked this task as done:
-   [D][X] pay bills (by: Sept 30 2019)
+   [D][X] pay bills (by: Sep 30 2019)
 ____________________________________________________________
  1.[T][ ] wash dishes
- 2.[D][X] pay bills (by: Sept 30 2019)
+ 2.[D][X] pay bills (by: Sep 30 2019)
 ____________________________________________________________
 Bye~ Hope to see you again soon!
 ____________________________________________________________
@@ -1131,26 +1131,26 @@ Hello! I'm Noms.
 NomNom, have you eaten? What can I do for you?
 ____________________________________________________________
  Got it. I've added this task:
-   [D][ ] submit report (by: Sept 15 2026)
+   [D][ ] submit report (by: Sep 15 2026)
  Now you have 1 tasks in the list.
 ____________________________________________________________
  Got it. I've added this task:
-   [E][ ] conference (from: Sept 10 2026 to: Sept 12 2026)
+   [E][ ] conference (from: Sep 10 2026 to: Sep 12 2026)
  Now you have 2 tasks in the list.
 ____________________________________________________________
  Nice! I've marked this task as done:
-   [D][X] submit report (by: Sept 15 2026)
+   [D][X] submit report (by: Sep 15 2026)
 ____________________________________________________________
  Nom nom! Noms has snoozed this task:
-   [D][X] submit report (by: Sept 20 2026)
+   [D][X] submit report (by: Sep 20 2026)
 ____________________________________________________________
  Nom nom! Noms has snoozed this task:
-   [E][ ] conference (from: Sept 20 2026 to: Sept 22 2026)
+   [E][ ] conference (from: Sep 20 2026 to: Sep 22 2026)
 ____________________________________________________________
  Nom nom! Noms has snoozed this task:
    [E][ ] conference (from: Oct 01 2026 to: Oct 05 2026)
 ____________________________________________________________
- 1.[D][X] submit report (by: Sept 20 2026)
+ 1.[D][X] submit report (by: Sep 20 2026)
  2.[E][ ] conference (from: Oct 01 2026 to: Oct 05 2026)
 ____________________________________________________________
 Bye~ Hope to see you again soon!
@@ -1198,11 +1198,11 @@ ____________________________________________________________
  Now you have 1 tasks in the list.
 ____________________________________________________________
  Got it. I've added this task:
-   [D][ ] submit report (by: Sept 15 2026)
+   [D][ ] submit report (by: Sep 15 2026)
  Now you have 2 tasks in the list.
 ____________________________________________________________
  Got it. I've added this task:
-   [E][ ] conference (from: Sept 10 2026 to: Sept 12 2026)
+   [E][ ] conference (from: Sep 10 2026 to: Sep 12 2026)
  Now you have 3 tasks in the list.
 ____________________________________________________________
  OOPS! Noms can only snooze deadlines and events.
@@ -1221,8 +1221,8 @@ ____________________________________________________________
 Try: snooze <task number> /from yyyy-mm-dd [/to yyyy-mm-dd]
 ____________________________________________________________
  1.[T][ ] read book
- 2.[D][ ] submit report (by: Sept 15 2026)
- 3.[E][ ] conference (from: Sept 10 2026 to: Sept 12 2026)
+ 2.[D][ ] submit report (by: Sep 15 2026)
+ 3.[E][ ] conference (from: Sep 10 2026 to: Sep 12 2026)
 ____________________________________________________________
 Bye~ Hope to see you again soon!
 ____________________________________________________________
@@ -1260,7 +1260,7 @@ Hello! I'm Noms.
 NomNom, have you eaten? What can I do for you?
 ____________________________________________________________
  Got it. I've added this task:
-   [D][ ] submit report (by: Sept 15 2026)
+   [D][ ] submit report (by: Sep 15 2026)
  Now you have 1 tasks in the list.
 ____________________________________________________________
  OOPS! Noms needs to know which task to snooze.
@@ -1272,7 +1272,7 @@ ____________________________________________________________
  OOPS! Task number 2 is out of range.
 Choose a task number from 1 to 1.
 ____________________________________________________________
- 1.[D][ ] submit report (by: Sept 15 2026)
+ 1.[D][ ] submit report (by: Sep 15 2026)
 ____________________________________________________________
 Bye~ Hope to see you again soon!
 ____________________________________________________________
