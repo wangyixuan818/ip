@@ -33,6 +33,13 @@ public class Noms {
     private boolean isExitRequested;
 
     /**
+     * Creates a Noms instance backed by the default save file.
+     */
+    public Noms() {
+        this(SAVE_DIRECTORY, SAVE_FILE_NAME);
+    }
+
+    /**
      * Creates a Noms instance backed by the save file in the given
      * directory, loading any previously saved tasks. If the file cannot be
      * read, Noms starts with an empty list and reports the problem rather
@@ -71,9 +78,7 @@ public class Noms {
         while (!isExit && ui.hasNextCommand()) {
             String fullCommand = ui.readCommand();
             try {
-                Command command = Parser.parse(fullCommand);
-                command.execute(tasks, ui, storage);
-                isExit = command.isExit();
+                isExit = executeCommand(fullCommand);
             } catch (NomsException e) {
                 ui.showError(e.getMessage());
             }
@@ -97,14 +102,26 @@ public class Noms {
     public String getResponse(String input) {
         String output = captureConsoleOutput(() -> {
             try {
-                Command command = Parser.parse(input);
-                command.execute(tasks, ui, storage);
-                isExitRequested = command.isExit();
+                isExitRequested = executeCommand(input);
             } catch (NomsException e) {
                 ui.showError(e.getMessage());
             }
         });
         return stripDividers(output);
+    }
+
+    /**
+     * Parses and executes one command through the shared console and GUI
+     * pipeline.
+     *
+     * @param input the raw command line to execute
+     * @return whether the command requests that Noms exit
+     * @throws NomsException if the command is invalid
+     */
+    private boolean executeCommand(String input) throws NomsException {
+        Command command = Parser.parse(input);
+        command.execute(tasks, ui, storage);
+        return command.isExit();
     }
 
     /**
@@ -163,6 +180,6 @@ public class Noms {
      * @param args command-line arguments (unused)
      */
     public static void main(String[] args) {
-        new Noms(SAVE_DIRECTORY, SAVE_FILE_NAME).run();
+        new Noms().run();
     }
 }

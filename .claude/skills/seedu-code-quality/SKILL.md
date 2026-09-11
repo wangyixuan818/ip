@@ -1,21 +1,20 @@
 ---
 name: seedu-code-quality
-description: The project's code-quality conventions, derived from the CS2103 "Code Quality" topics. Currently covers naming (nouns vs. verbs, self-explaining names, spelling, word order). Apply whenever writing, reviewing, or refactoring code so that names read clearly. More quality areas (e.g. avoiding magic numbers, error handling, comments) will be added here over time.
+description: The project's code-quality conventions, derived from the CS2103 "Code Quality" topics. Apply whenever writing, reviewing, or refactoring code so that it remains readable, simple, maintainable, and well named.
 ---
 
 # se-education code-quality conventions
 
 This is the authoritative code-quality standard for this project. It is derived
-from the CS2103 "Code Quality" teaching (see the week 4 topic
-https://nus-cs2103-ay2627-s1.github.io/website/schedule/week4/topics.html and the
-se-education guide https://se-education.org/guides/conventions/), and is graded,
-so apply it while writing code rather than only at the refactoring increments.
+from the CS2103 "Code Quality" chapter
+(https://nus-cs2103-ay2627-s1.github.io/website/se-book-adapted/chapters/codeQuality.html)
+and the SE-EDU conventions, and is graded, so apply it while writing code
+rather than only at refactoring increments.
 
-This skill is deliberately scoped: **right now it covers naming only.** Other
-code-quality areas will be added as further sections over time. Until then, for
-anything not about naming, fall back to the
-[seedu-java-coding-standard](../seedu-java-coding-standard/SKILL.md) skill and the
-source guides above.
+This skill complements the
+[seedu-java-coding-standard](../seedu-java-coding-standard/SKILL.md), which
+specifies Java-specific mechanical rules such as indentation, imports, and
+Javadoc. This skill focuses on design and readability decisions.
 
 This complements the Java coding standard: `seedu-java-coding-standard` fixes the
 *mechanical* naming form (PascalCase classes, camelCase methods, UPPER_SNAKE
@@ -28,7 +27,7 @@ constants). This skill is about whether a name, once correctly cased, actually
 2. After editing, self-check every new or renamed identifier against the
    **Review checklist** at the end. Fix any violation before considering the
    work done.
-3. Git and general Java layout conventions are **not** part of this skill; they
+3. Git and Java-specific mechanical layout conventions are **not** part of this skill; they
    live in the [seedu-git-standard](../seedu-git-standard/SKILL.md) and
    [seedu-java-coding-standard](../seedu-java-coding-standard/SKILL.md) skills.
 
@@ -115,9 +114,37 @@ clear meaning throughout.
 - Keep a pattern consistent across a set: prefer `hexForBlack`, `hexForWhite`,
   `hexForRed` over mixing `colorBlack` with `hexForRed`.
 
+## 2. Readability and structure
+
+- Avoid long methods (especially methods exceeding roughly 30 lines). Extract
+  cohesive pieces into methods with intention-revealing names.
+- Avoid deep nesting. Handle unusual or error cases early with guard clauses so
+  the normal path remains easy to follow.
+- Avoid complicated expressions with many negations or nested parentheses.
+  Calculate meaningful intermediate values instead.
+- Replace magic numbers and other unexplained literals with named constants.
+- Make code explicit and obvious; use enums and clear grouping rather than
+  relying on implicit behavior or clever shortcuts.
+- Structure related statements into logical blocks separated by blank lines.
+  Keep each block at one level of abstraction (SLAP).
+- Keep the simple solution (KISS) and avoid premature optimization until a real
+  bottleneck has been measured.
+- Remove dead code, duplicated logic, and variables whose scope can be smaller.
+- Do not reuse a variable or parameter for a different purpose.
+- Include a `default` branch in switches to handle unexpected values or report
+  an error.
+
+## 3. Comments
+
+- Do not write comments that merely repeat obvious code.
+- Write comments for the reader, explaining behavior or rationale that the code
+  cannot communicate by itself.
+- Explain WHAT the code is intended to do and WHY the approach is needed, not
+  HOW the statements operate line by line.
+
 ---
 
-## Review checklist (naming)
+## Review checklist
 
 Before considering a change done, confirm every new or renamed identifier:
 
@@ -134,9 +161,14 @@ Before considering a change done, confirm every new or renamed identifier:
 
 ---
 
-## Future sections
-
-Additional CS2103 code-quality topics will be added here as they are covered,
-e.g. avoiding magic numbers, SLAP / one level of abstraction, error handling,
-and comments. Until a topic appears above, treat it as out of scope for this
-skill and follow the source guides.
+- [ ] Methods are focused and not unnecessarily long; nesting is shallow (§2).
+- [ ] Expressions are readable; magic literals, dead code, and duplication are
+      avoided (§2).
+- [ ] Related statements are logically grouped and kept at one abstraction
+      level (§2).
+- [ ] The implementation favors simple, obvious code over cleverness or
+      premature optimization (§2).
+- [ ] Variables have one purpose and the smallest practical scope (§2).
+- [ ] Switches include a meaningful `default` branch (§2).
+- [ ] Comments add non-obvious WHAT/WHY information and do not explain HOW or
+      restate the code (§3).

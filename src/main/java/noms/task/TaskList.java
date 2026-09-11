@@ -91,13 +91,28 @@ public class TaskList {
     public List<Task> tasksOn(LocalDate date) {
         List<Task> matches = new ArrayList<>();
         for (Task task : tasks) {
-            boolean occurs = task instanceof Deadline d && d.occursOn(date)
-                    || task instanceof Event e && e.occursOn(date);
-            if (occurs) {
+            if (isScheduledOn(task, date)) {
                 matches.add(task);
             }
         }
         return matches;
+    }
+
+    /**
+     * Returns whether the task is a dated task that occurs on the given date.
+     *
+     * @param task the task to check
+     * @param date the date to check against
+     * @return {@code true} if the task is scheduled on the date
+     */
+    private static boolean isScheduledOn(Task task, LocalDate date) {
+        if (task instanceof Deadline deadline) {
+            return deadline.occursOn(date);
+        }
+        if (task instanceof Event event) {
+            return event.occursOn(date);
+        }
+        return false;
     }
 
     /**

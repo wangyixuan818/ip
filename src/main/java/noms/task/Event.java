@@ -6,38 +6,38 @@ import noms.util.DateUtil;
 
 /** Represents a task that takes place between two stated dates. */
 public class Event extends Task {
-    private final LocalDate from;
-    private final LocalDate to;
+    private final LocalDate startDate;
+    private final LocalDate endDate;
 
     /**
      * Creates an event with the given description and start and end dates.
      *
      * @param description the text describing the task
-     * @param from the date the event starts
-     * @param to the date the event ends
+     * @param startDate the date the event starts
+     * @param endDate the date the event ends
      */
-    public Event(String description, LocalDate from, LocalDate to) {
+    public Event(String description, LocalDate startDate, LocalDate endDate) {
         super(description);
-        this.from = from;
-        this.to = to;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     /** Returns true if this event spans (inclusively) the given date. */
     public boolean occursOn(LocalDate date) {
-        return !date.isBefore(from) && !date.isAfter(to);
+        return !date.isBefore(startDate) && !date.isAfter(endDate);
     }
 
     @Override
     public String toString() {
         return "[E]" + super.toString()
-                + " (from: " + DateUtil.format(from)
-                + " to: " + DateUtil.format(to) + ")";
+                + " (from: " + DateUtil.format(startDate)
+                + " to: " + DateUtil.format(endDate) + ")";
     }
 
     @Override
     public String toFileFormat() {
         return "E | " + super.toFileFormat()
-                + " | " + escape(from.toString())
-                + " | " + escape(to.toString());
+                + " | " + escape(startDate.toString())
+                + " | " + escape(endDate.toString());
     }
 }

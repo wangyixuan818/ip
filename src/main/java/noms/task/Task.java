@@ -111,10 +111,17 @@ public class Task {
                 continue;
             }
 
-            if (i + 1 >= text.length() || (text.charAt(i + 1) != '\\' && text.charAt(i + 1) != '|')) {
+            if (i + 1 >= text.length()) {
                 throw new IllegalArgumentException("Malformed escape sequence in: " + text);
             }
-            result.append(text.charAt(i + 1));
+
+            char escapedCharacter = text.charAt(i + 1);
+            boolean isValidEscape = escapedCharacter == '\\' || escapedCharacter == '|';
+            if (!isValidEscape) {
+                throw new IllegalArgumentException("Malformed escape sequence in: " + text);
+            }
+
+            result.append(escapedCharacter);
             i++;
         }
         return result.toString();
