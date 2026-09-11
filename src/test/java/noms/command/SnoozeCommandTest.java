@@ -103,9 +103,11 @@ public class SnoozeCommandTest {
 
         new SnoozeCommand("snooze 1 /by 2026-09-20").execute(tasks, ui, storage);
 
-        assertTrue(output.toString().contains(
-                "Nom nom! Noms has snoozed this task:\n"
-                        + "   [D][ ] submit report (by: Sep 20 2026)"));
+        // Checked as two separate lines, not one string joined by "\n": println
+        // emits the platform line separator (e.g. "\r\n" on Windows), so a
+        // literal "\n" between them would not match there.
+        assertTrue(output.toString().contains("Nom nom! Noms has snoozed this task:"));
+        assertTrue(output.toString().contains("   [D][ ] submit report (by: Sep 20 2026)"));
     }
 
     @Test
