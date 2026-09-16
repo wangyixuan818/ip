@@ -20,9 +20,9 @@
 }
 
 .user-dialog #displayPicture {
-    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.55), 8, 0.15, 0, 2);
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.55), 7, 0.15, 0, 2);
 }
 
 .noms-dialog #displayPicture {
-    -fx-effect: dropshadow(gaussian, rgba(103, 232, 249, 0.8), 16, 0.25, 0, 2);
+    -fx-effect: dropshadow(gaussian, rgba(103, 232, 249, 0.8), 12, 0.25, 0, 2);
 }
