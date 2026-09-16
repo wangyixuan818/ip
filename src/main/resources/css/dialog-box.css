@@ -1,22 +1,28 @@
 .label {
-    -fx-background-color: linear-gradient(to bottom right, rgba(219, 39, 119, 0.92), rgba(124, 58, 237, 0.92));
+    -fx-background-color: linear-gradient(to bottom right, #4a194f, #25204f);
     -fx-background-radius: 18px 18px 4px 18px;
-    -fx-border-color: rgba(251, 207, 232, 0.65);
+    -fx-border-color: rgba(216, 180, 254, 0.45);
     -fx-border-radius: 18px 18px 4px 18px;
     -fx-border-width: 1px;
-    -fx-effect: dropshadow(gaussian, rgba(8, 5, 25, 0.35), 10, 0.15, 0, 3);
+    -fx-effect: dropshadow(gaussian, rgba(8, 5, 25, 0.45), 10, 0.15, 0, 3);
     -fx-font-size: 14px;
     -fx-line-spacing: 2px;
     -fx-text-fill: white;
 }
 
 .reply-label {
-    -fx-background-color: linear-gradient(to bottom right, rgba(37, 99, 235, 0.92), rgba(109, 40, 217, 0.92));
+    -fx-background-color: linear-gradient(to bottom right, #d8b4fe, #67e8f9);
     -fx-background-radius: 18px 18px 18px 4px;
-    -fx-border-color: rgba(191, 219, 254, 0.65);
+    -fx-border-color: rgba(245, 208, 254, 0.9);
     -fx-border-radius: 18px 18px 18px 4px;
+    -fx-effect: dropshadow(gaussian, rgba(192, 132, 252, 0.5), 14, 0.2, 0, 3);
+    -fx-text-fill: #21123f;
 }
 
-#displayPicture {
-    -fx-effect: dropshadow(gaussian, rgba(192, 132, 252, 0.70), 12, 0.25, 0, 2);
+.user-dialog #displayPicture {
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.55), 8, 0.15, 0, 2);
+}
+
+.noms-dialog #displayPicture {
+    -fx-effect: dropshadow(gaussian, rgba(103, 232, 249, 0.8), 16, 0.25, 0, 2);
 }
