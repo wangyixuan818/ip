@@ -1,10 +1,13 @@
 package noms;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.junit.jupiter.api.AfterEach;
@@ -39,17 +42,41 @@ public class NomsTest {
 
     @Test
     public void getResponse_addTodo_confirmsAndStripsDividers() {
-        String response = noms.getResponse("todo read book");
+        NomsResponse response = noms.getResponse("todo read book");
 
-        assertTrue(response.contains("read book"), "response should mention the added task");
-        assertFalse(response.contains("____"), "GUI response should not contain console dividers");
+        assertTrue(response.text().contains("read book"), "response should mention the added task");
+        assertFalse(response.text().contains("____"), "GUI response should not contain console dividers");
+        assertEquals(ResponseType.NORMAL, response.type());
+        assertFalse(response.isError());
     }
 
     @Test
     public void getResponse_unknownCommand_returnsNonBlankErrorMessage() {
-        String response = noms.getResponse("blahblah");
+        NomsResponse response = noms.getResponse("blahblah");
 
-        assertFalse(response.isBlank(), "an unknown command should still produce a reply");
+        assertFalse(response.text().isBlank(), "an unknown command should still produce a reply");
+        assertEquals(ResponseType.ERROR, response.type());
+        assertTrue(response.isError());
+    }
+
+    @Test
+    public void getResponse_validCommandAfterError_resetsResponseType() {
+        noms.getResponse("blahblah");
+
+        NomsResponse response = noms.getResponse("list");
+
+        assertEquals(ResponseType.NORMAL, response.type());
+    }
+
+    @Test
+    public void getResponse_storageFailure_returnsErrorResponse() throws IOException {
+        Path blockedDirectory = tempDir.resolve("blocked-directory");
+        Files.writeString(blockedDirectory, "not a directory");
+        Noms nomsWithBlockedStorage = new Noms(blockedDirectory.toString(), "noms.txt");
+
+        NomsResponse response = nomsWithBlockedStorage.getResponse("todo read book");
+
+        assertEquals(ResponseType.ERROR, response.type());
     }
 
     @Test

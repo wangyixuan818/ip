@@ -13,7 +13,6 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 
 /**
  * A single chat bubble: a wrapped text label paired with the speaker's avatar.
@@ -25,6 +24,9 @@ import javafx.scene.layout.Priority;
  * sides of the conversation easy to tell apart.
  */
 public class DialogBox extends HBox {
+    private static final double DEFAULT_MAX_DIALOG_WIDTH = 300.0;
+    private static final double MAX_DIALOG_WIDTH_RATIO = 0.75;
+
     @FXML
     private Label dialog;
     @FXML
@@ -42,8 +44,12 @@ public class DialogBox extends HBox {
             e.printStackTrace();
         }
         dialog.setText(text);
-        dialog.setMaxWidth(Double.MAX_VALUE);
-        HBox.setHgrow(dialog, Priority.ALWAYS);
+        dialog.setMaxWidth(DEFAULT_MAX_DIALOG_WIDTH);
+        widthProperty().addListener((observable, oldWidth, newWidth) -> {
+            if (newWidth.doubleValue() > 0) {
+                dialog.setMaxWidth(newWidth.doubleValue() * MAX_DIALOG_WIDTH_RATIO);
+            }
+        });
         displayPicture.setImage(image);
     }
 
@@ -67,7 +73,9 @@ public class DialogBox extends HBox {
      * @return the user's dialog box
      */
     public static DialogBox getUserDialog(String text, Image image) {
-        return new DialogBox(text, image);
+        DialogBox box = new DialogBox(text, image);
+        box.getStyleClass().add("user-dialog");
+        return box;
     }
 
     /**
@@ -79,7 +87,21 @@ public class DialogBox extends HBox {
      */
     public static DialogBox getNomsDialog(String text, Image image) {
         DialogBox box = new DialogBox(text, image);
+        box.getStyleClass().add("noms-dialog");
         box.flip();
+        return box;
+    }
+
+    /**
+     * Creates an error bubble for one of Noms' replies (avatar on the left).
+     *
+     * @param text Noms' error message
+     * @param image Noms' avatar
+     * @return the error dialog box
+     */
+    public static DialogBox getErrorDialog(String text, Image image) {
+        DialogBox box = getNomsDialog(text, image);
+        box.dialog.getStyleClass().add("error-label");
         return box;
     }
 }

@@ -20,6 +20,7 @@ public class Ui {
             "____________________________________________________________";
 
     private final Scanner scanner;
+    private boolean hasShownError;
 
     /**
      * Creates a Ui that reads user input from standard input.
@@ -80,8 +81,23 @@ public class Ui {
      * @param message the explanation of what went wrong
      */
     public void showError(String message) {
+        hasShownError = true;
         System.out.println(" OOPS! " + message);
         System.out.println(DIVIDER);
+    }
+
+    /**
+     * Clears the error status before Noms processes another GUI command.
+     */
+    public void resetErrorState() {
+        hasShownError = false;
+    }
+
+    /**
+     * Returns whether an error has been shown since the error status was reset.
+     */
+    public boolean hasShownError() {
+        return hasShownError;
     }
 
     /**

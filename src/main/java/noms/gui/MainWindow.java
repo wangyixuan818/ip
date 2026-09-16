@@ -12,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import noms.Noms;
+import noms.NomsResponse;
 
 /**
  * Controller for the main GUI window.
@@ -43,7 +44,8 @@ public class MainWindow {
      */
     @FXML
     public void initialize() {
-        scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
+        dialogContainer.heightProperty().addListener((observable, oldHeight, newHeight) ->
+                Platform.runLater(() -> scrollPane.setVvalue(scrollPane.getVmax())));
     }
 
     /**
@@ -68,10 +70,13 @@ public class MainWindow {
         if (input.isBlank()) {
             return;
         }
-        String response = noms.getResponse(input);
+        NomsResponse response = noms.getResponse(input);
+        DialogBox responseDialog = response.isError()
+                ? DialogBox.getErrorDialog(response.text(), nomsImage)
+                : DialogBox.getNomsDialog(response.text(), nomsImage);
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
-                DialogBox.getNomsDialog(response, nomsImage));
+                responseDialog);
         userInput.clear();
 
         if (noms.isExitRequested()) {

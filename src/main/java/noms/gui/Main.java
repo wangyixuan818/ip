@@ -18,7 +18,7 @@ import noms.Noms;
  */
 public class Main extends Application {
     private static final double MIN_WINDOW_WIDTH = 400.0;
-    private static final double MIN_WINDOW_HEIGHT = 600.0;
+    private static final double MIN_WINDOW_HEIGHT = 450.0;
 
     private final Noms noms = new Noms();
 
