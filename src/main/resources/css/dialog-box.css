@@ -5,7 +5,7 @@
     -fx-border-radius: 18px 18px 4px 18px;
     -fx-border-width: 1px;
     -fx-effect: dropshadow(gaussian, rgba(8, 5, 25, 0.45), 10, 0.15, 0, 3);
-    -fx-font-size: 14px;
+    -fx-font-size: 13px;
     -fx-line-spacing: 2px;
     -fx-text-fill: white;
 }
