@@ -43,26 +43,26 @@ ____________________________________________________________
 | |\  | |_| | |  | |  ___) |
 |_| \_|\___/|_|  |_| |____/
 ____________________________________________________________
-Hello! I'm Noms.
-NomNom, have you eaten? What can I do for you?
+Hi! I'm Noms, your hungry little task monster. What's on the menu today?
 ____________________________________________________________
- Got it. I've added this task:
+ Yum! Noms has gobbled up your new task:
    [T][ ] borrow book
- Now you have 1 tasks in the list.
+ Your menu now has 1 task.
 ____________________________________________________________
- Got it. I've added this task:
+ Yum! Noms has gobbled up your new task:
    [D][ ] return book (by: Dec 01 2019)
- Now you have 2 tasks in the list.
+ Your menu now has 2 tasks.
 ____________________________________________________________
- Got it. I've added this task:
+ Yum! Noms has gobbled up your new task:
    [E][ ] project meeting (from: Aug 06 2019 to: Aug 07 2019)
- Now you have 3 tasks in the list.
+ Your menu now has 3 tasks.
 ____________________________________________________________
+ Here's what Noms has on the menu:
  1.[T][ ] borrow book
  2.[D][ ] return book (by: Dec 01 2019)
  3.[E][ ] project meeting (from: Aug 06 2019 to: Aug 07 2019)
 ____________________________________________________________
-Bye~ Hope to see you again soon!
+All done! Noms is full for now. See you next time!
 ____________________________________________________________
 ```
 ### TC-002: Mark and unmark a typed task
@@ -93,28 +93,28 @@ ____________________________________________________________
 | |\  | |_| | |  | |  ___) |
 |_| \_|\___/|_|  |_| |____/
 ____________________________________________________________
-Hello! I'm Noms.
-NomNom, have you eaten? What can I do for you?
+Hi! I'm Noms, your hungry little task monster. What's on the menu today?
 ____________________________________________________________
- Got it. I've added this task:
+ Yum! Noms has gobbled up your new task:
    [D][ ] submit report (by: Oct 11 2019)
- Now you have 1 tasks in the list.
+ Your menu now has 1 task.
 ____________________________________________________________
- Nice! I've marked this task as done:
+ Yum! Noms has marked this task as done:
    [D][X] submit report (by: Oct 11 2019)
 ____________________________________________________________
  Nom nom! This task is already marked as done:
    [D][X] submit report (by: Oct 11 2019)
 ____________________________________________________________
- OK, I've marked this task as not done yet:
+ No worries! Noms has put this task back on the menu:
    [D][ ] submit report (by: Oct 11 2019)
 ____________________________________________________________
  Nom nom! This task is already unmarked:
    [D][ ] submit report (by: Oct 11 2019)
 ____________________________________________________________
+ Here's what Noms has on the menu:
  1.[D][ ] submit report (by: Oct 11 2019)
 ____________________________________________________________
-Bye~ Hope to see you again soon!
+All done! Noms is full for now. See you next time!
 ____________________________________________________________
 ```
 
@@ -144,20 +144,20 @@ ____________________________________________________________
 | |\  | |_| | |  | |  ___) |
 |_| \_|\___/|_|  |_| |____/
 ____________________________________________________________
-Hello! I'm Noms.
-NomNom, have you eaten? What can I do for you?
+Hi! I'm Noms, your hungry little task monster. What's on the menu today?
 ____________________________________________________________
- OOPS! This todo is missing its main ingredient: a description.
+ Oops! This todo is missing its main ingredient: a description.
 Try: todo <description>
 ____________________________________________________________
- OOPS! This deadline recipe is incomplete.
+ Oops! This deadline recipe is incomplete.
 Try: deadline <description> /by yyyy-mm-dd
 ____________________________________________________________
- OOPS! This event recipe needs more ingredients.
+ Oops! This event recipe needs more ingredients.
 Try: event <description> /from yyyy-mm-dd /to yyyy-mm-dd
 ____________________________________________________________
+ Noms's menu is empty! Feed me a task when you're ready!
 ____________________________________________________________
-Bye~ Hope to see you again soon!
+All done! Noms is full for now. See you next time!
 ____________________________________________________________
 ```
 
@@ -184,13 +184,12 @@ ____________________________________________________________
 | |\  | |_| | |  | |  ___) |
 |_| \_|\___/|_|  |_| |____/
 ____________________________________________________________
-Hello! I'm Noms.
-NomNom, have you eaten? What can I do for you?
+Hi! I'm Noms, your hungry little task monster. What's on the menu today?
 ____________________________________________________________
- OOPS! Grrr... Noms couldn't understand that command.
+ Oops! Grrr... Noms couldn't understand that command.
 Try feeding me a todo, deadline, event, list, mark, unmark, delete, snooze, on, or bye.
 ____________________________________________________________
-Bye~ Hope to see you again soon!
+All done! Noms is full for now. See you next time!
 ____________________________________________________________
 ```
 
@@ -218,16 +217,15 @@ ____________________________________________________________
 | |\  | |_| | |  | |  ___) |
 |_| \_|\___/|_|  |_| |____/
 ____________________________________________________________
-Hello! I'm Noms.
-NomNom, have you eaten? What can I do for you?
+Hi! I'm Noms, your hungry little task monster. What's on the menu today?
 ____________________________________________________________
- OOPS! This deadline recipe is incomplete.
+ Oops! This deadline recipe is incomplete.
 Try: deadline <description> /by yyyy-mm-dd
 ____________________________________________________________
- OOPS! This deadline recipe is incomplete.
+ Oops! This deadline recipe is incomplete.
 Try: deadline <description> /by yyyy-mm-dd
 ____________________________________________________________
-Bye~ Hope to see you again soon!
+All done! Noms is full for now. See you next time!
 ____________________________________________________________
 ```
 
@@ -256,19 +254,18 @@ ____________________________________________________________
 | |\  | |_| | |  | |  ___) |
 |_| \_|\___/|_|  |_| |____/
 ____________________________________________________________
-Hello! I'm Noms.
-NomNom, have you eaten? What can I do for you?
+Hi! I'm Noms, your hungry little task monster. What's on the menu today?
 ____________________________________________________________
- OOPS! This event recipe needs more ingredients.
+ Oops! This event recipe needs more ingredients.
 Try: event <description> /from yyyy-mm-dd /to yyyy-mm-dd
 ____________________________________________________________
- OOPS! This event recipe needs more ingredients.
+ Oops! This event recipe needs more ingredients.
 Try: event <description> /from yyyy-mm-dd /to yyyy-mm-dd
 ____________________________________________________________
- OOPS! This event recipe needs more ingredients.
+ Oops! This event recipe needs more ingredients.
 Try: event <description> /from yyyy-mm-dd /to yyyy-mm-dd
 ____________________________________________________________
-Bye~ Hope to see you again soon!
+All done! Noms is full for now. See you next time!
 ____________________________________________________________
 ```
 
@@ -303,37 +300,37 @@ ____________________________________________________________
 | |\  | |_| | |  | |  ___) |
 |_| \_|\___/|_|  |_| |____/
 ____________________________________________________________
-Hello! I'm Noms.
-NomNom, have you eaten? What can I do for you?
+Hi! I'm Noms, your hungry little task monster. What's on the menu today?
 ____________________________________________________________
- Got it. I've added this task:
+ Yum! Noms has gobbled up your new task:
    [T][ ] anchor task
- Now you have 1 tasks in the list.
+ Your menu now has 1 task.
 ____________________________________________________________
- OOPS! Noms needs to know which task to mark.
+ Oops! Noms needs to know which task to mark.
 Try: mark <task number>
 ____________________________________________________________
- OOPS! The task number must be a whole number.
+ Oops! Noms needs a whole task number to find the right menu item.
 Try: mark 1
 ____________________________________________________________
- OOPS! Task number 0 is out of range.
+ Oops! Task number 0 is out of range.
 Choose a task number from 1 to 1.
 ____________________________________________________________
- OOPS! That task number is too large for Noms.
+ Oops! That task number is too large for Noms.
 Choose a task number from 1 to 1.
 ____________________________________________________________
- OOPS! Noms needs to know which task to unmark.
+ Oops! Noms needs to know which task to unmark.
 Try: unmark <task number>
 ____________________________________________________________
- OOPS! The task number must be a whole number.
+ Oops! Noms needs a whole task number to find the right menu item.
 Try: unmark 1
 ____________________________________________________________
- OOPS! Task number 99 is out of range.
+ Oops! Task number 99 is out of range.
 Choose a task number from 1 to 1.
 ____________________________________________________________
+ Here's what Noms has on the menu:
  1.[T][ ] anchor task
 ____________________________________________________________
-Bye~ Hope to see you again soon!
+All done! Noms is full for now. See you next time!
 ____________________________________________________________
 ```
 
@@ -364,29 +361,29 @@ ____________________________________________________________
 | |\  | |_| | |  | |  ___) |
 |_| \_|\___/|_|  |_| |____/
 ____________________________________________________________
-Hello! I'm Noms.
-NomNom, have you eaten? What can I do for you?
+Hi! I'm Noms, your hungry little task monster. What's on the menu today?
 ____________________________________________________________
- Got it. I've added this task:
+ Yum! Noms has gobbled up your new task:
    [T][ ] read book
- Now you have 1 tasks in the list.
+ Your menu now has 1 task.
 ____________________________________________________________
- Got it. I've added this task:
+ Yum! Noms has gobbled up your new task:
    [D][ ] return book (by: Jun 06 2019)
- Now you have 2 tasks in the list.
+ Your menu now has 2 tasks.
 ____________________________________________________________
- Got it. I've added this task:
+ Yum! Noms has gobbled up your new task:
    [E][ ] project meeting (from: Aug 06 2019 to: Aug 07 2019)
- Now you have 3 tasks in the list.
+ Your menu now has 3 tasks.
 ____________________________________________________________
  Noted. Noms has taken this task off the menu:
    [D][ ] return book (by: Jun 06 2019)
- Now you have 2 tasks in the list.
+ Your menu now has 2 tasks.
 ____________________________________________________________
+ Here's what Noms has on the menu:
  1.[T][ ] read book
  2.[E][ ] project meeting (from: Aug 06 2019 to: Aug 07 2019)
 ____________________________________________________________
-Bye~ Hope to see you again soon!
+All done! Noms is full for now. See you next time!
 ____________________________________________________________
 ```
 
@@ -418,28 +415,28 @@ ____________________________________________________________
 | |\  | |_| | |  | |  ___) |
 |_| \_|\___/|_|  |_| |____/
 ____________________________________________________________
-Hello! I'm Noms.
-NomNom, have you eaten? What can I do for you?
+Hi! I'm Noms, your hungry little task monster. What's on the menu today?
 ____________________________________________________________
- Got it. I've added this task:
+ Yum! Noms has gobbled up your new task:
    [T][ ] buy milk
- Now you have 1 tasks in the list.
+ Your menu now has 1 task.
 ____________________________________________________________
- OOPS! Noms needs to know which task to delete.
+ Oops! Noms needs to know which task to delete.
 Try: delete <task number>
 ____________________________________________________________
- OOPS! The task number must be a whole number.
+ Oops! Noms needs a whole task number to find the right menu item.
 Try: delete 1
 ____________________________________________________________
- OOPS! Task number 0 is out of range.
+ Oops! Task number 0 is out of range.
 Choose a task number from 1 to 1.
 ____________________________________________________________
- OOPS! Task number 2 is out of range.
+ Oops! Task number 2 is out of range.
 Choose a task number from 1 to 1.
 ____________________________________________________________
+ Here's what Noms has on the menu:
  1.[T][ ] buy milk
 ____________________________________________________________
-Bye~ Hope to see you again soon!
+All done! Noms is full for now. See you next time!
 ____________________________________________________________
 ```
 
@@ -467,13 +464,13 @@ ____________________________________________________________
 | |\  | |_| | |  | |  ___) |
 |_| \_|\___/|_|  |_| |____/
 ____________________________________________________________
-Hello! I'm Noms.
-NomNom, have you eaten? What can I do for you?
+Hi! I'm Noms, your hungry little task monster. What's on the menu today?
 ____________________________________________________________
- OOPS! Noms needs a command. Try feeding me a todo, deadline, event, list, mark, unmark, delete, snooze, on, or bye.
+ Oops! Noms needs a command. Try feeding me a todo, deadline, event, list, mark, unmark, delete, snooze, on, or bye.
 ____________________________________________________________
+ Noms's menu is empty! Feed me a task when you're ready!
 ____________________________________________________________
-Bye~ Hope to see you again soon!
+All done! Noms is full for now. See you next time!
 ____________________________________________________________
 ```
 ### TC-011: Preserve task numbering after malformed additions
@@ -505,35 +502,35 @@ ____________________________________________________________
 | |\  | |_| | |  | |  ___) |
 |_| \_|\___/|_|  |_| |____/
 ____________________________________________________________
-Hello! I'm Noms.
-NomNom, have you eaten? What can I do for you?
+Hi! I'm Noms, your hungry little task monster. What's on the menu today?
 ____________________________________________________________
- Got it. I've added this task:
+ Yum! Noms has gobbled up your new task:
    [T][ ] buy groceries
- Now you have 1 tasks in the list.
+ Your menu now has 1 task.
 ____________________________________________________________
- OOPS! This deadline recipe is incomplete.
+ Oops! This deadline recipe is incomplete.
 Try: deadline <description> /by yyyy-mm-dd
 ____________________________________________________________
- OOPS! This deadline recipe is incomplete.
+ Oops! This deadline recipe is incomplete.
 Try: deadline <description> /by yyyy-mm-dd
 ____________________________________________________________
- Got it. I've added this task:
+ Yum! Noms has gobbled up your new task:
    [D][ ] submit report (by: Aug 30 2019)
- Now you have 2 tasks in the list.
+ Your menu now has 2 tasks.
 ____________________________________________________________
- OOPS! This event recipe needs more ingredients.
+ Oops! This event recipe needs more ingredients.
 Try: event <description> /from yyyy-mm-dd /to yyyy-mm-dd
 ____________________________________________________________
- Got it. I've added this task:
+ Yum! Noms has gobbled up your new task:
    [E][ ] study session (from: Sep 01 2019 to: Sep 02 2019)
- Now you have 3 tasks in the list.
+ Your menu now has 3 tasks.
 ____________________________________________________________
+ Here's what Noms has on the menu:
  1.[T][ ] buy groceries
  2.[D][ ] submit report (by: Aug 30 2019)
  3.[E][ ] study session (from: Sep 01 2019 to: Sep 02 2019)
 ____________________________________________________________
-Bye~ Hope to see you again soon!
+All done! Noms is full for now. See you next time!
 ____________________________________________________________
 ```
 
@@ -567,36 +564,36 @@ ____________________________________________________________
 | |\  | |_| | |  | |  ___) |
 |_| \_|\___/|_|  |_| |____/
 ____________________________________________________________
-Hello! I'm Noms.
-NomNom, have you eaten? What can I do for you?
+Hi! I'm Noms, your hungry little task monster. What's on the menu today?
 ____________________________________________________________
- Got it. I've added this task:
+ Yum! Noms has gobbled up your new task:
    [T][ ] wash dishes
- Now you have 1 tasks in the list.
+ Your menu now has 1 task.
 ____________________________________________________________
- Got it. I've added this task:
+ Yum! Noms has gobbled up your new task:
    [D][ ] pay bills (by: Sep 30 2019)
- Now you have 2 tasks in the list.
+ Your menu now has 2 tasks.
 ____________________________________________________________
- Nice! I've marked this task as done:
+ Yum! Noms has marked this task as done:
    [T][X] wash dishes
 ____________________________________________________________
- OOPS! Task number 3 is out of range.
+ Oops! Task number 3 is out of range.
 Choose a task number from 1 to 2.
 ____________________________________________________________
- OOPS! The task number must be a whole number.
+ Oops! Noms needs a whole task number to find the right menu item.
 Try: unmark 1
 ____________________________________________________________
- OK, I've marked this task as not done yet:
+ No worries! Noms has put this task back on the menu:
    [T][ ] wash dishes
 ____________________________________________________________
- Nice! I've marked this task as done:
+ Yum! Noms has marked this task as done:
    [D][X] pay bills (by: Sep 30 2019)
 ____________________________________________________________
+ Here's what Noms has on the menu:
  1.[T][ ] wash dishes
  2.[D][X] pay bills (by: Sep 30 2019)
 ____________________________________________________________
-Bye~ Hope to see you again soon!
+All done! Noms is full for now. See you next time!
 ____________________________________________________________
 ```
 
@@ -627,26 +624,26 @@ ____________________________________________________________
 | |\  | |_| | |  | |  ___) |
 |_| \_|\___/|_|  |_| |____/
 ____________________________________________________________
-Hello! I'm Noms.
-NomNom, have you eaten? What can I do for you?
+Hi! I'm Noms, your hungry little task monster. What's on the menu today?
 ____________________________________________________________
- Got it. I've added this task:
+ Yum! Noms has gobbled up your new task:
    [T][ ] first
- Now you have 1 tasks in the list.
+ Your menu now has 1 task.
 ____________________________________________________________
- OOPS! Noms needs a command. Try feeding me a todo, deadline, event, list, mark, unmark, delete, snooze, on, or bye.
+ Oops! Noms needs a command. Try feeding me a todo, deadline, event, list, mark, unmark, delete, snooze, on, or bye.
 ____________________________________________________________
- OOPS! Grrr... Noms couldn't understand that command.
+ Oops! Grrr... Noms couldn't understand that command.
 Try feeding me a todo, deadline, event, list, mark, unmark, delete, snooze, on, or bye.
 ____________________________________________________________
- Got it. I've added this task:
+ Yum! Noms has gobbled up your new task:
    [D][ ] second (by: Dec 31 2019)
- Now you have 2 tasks in the list.
+ Your menu now has 2 tasks.
 ____________________________________________________________
+ Here's what Noms has on the menu:
  1.[T][ ] first
  2.[D][ ] second (by: Dec 31 2019)
 ____________________________________________________________
-Bye~ Hope to see you again soon!
+All done! Noms is full for now. See you next time!
 ____________________________________________________________
 ```
 
@@ -676,20 +673,20 @@ ____________________________________________________________
 | |\  | |_| | |  | |  ___) |
 |_| \_|\___/|_|  |_| |____/
 ____________________________________________________________
-Hello! I'm Noms.
-NomNom, have you eaten? What can I do for you?
+Hi! I'm Noms, your hungry little task monster. What's on the menu today?
 ____________________________________________________________
- OOPS! Noms couldn't read the date "Sunday".
+ Oops! Noms couldn't read the date "Sunday".
 Try the format yyyy-mm-dd (e.g. 2019-10-15).
 ____________________________________________________________
- OOPS! Noms couldn't read the date "2/12/2019".
+ Oops! Noms couldn't read the date "2/12/2019".
 Try the format yyyy-mm-dd (e.g. 2019-10-15).
 ____________________________________________________________
- OOPS! Noms couldn't read the date "nextweek".
+ Oops! Noms couldn't read the date "nextweek".
 Try the format yyyy-mm-dd (e.g. 2019-10-15).
 ____________________________________________________________
+ Noms's menu is empty! Feed me a task when you're ready!
 ____________________________________________________________
-Bye~ Hope to see you again soon!
+All done! Noms is full for now. See you next time!
 ____________________________________________________________
 ```
 
@@ -723,28 +720,27 @@ ____________________________________________________________
 | |\  | |_| | |  | |  ___) |
 |_| \_|\___/|_|  |_| |____/
 ____________________________________________________________
-Hello! I'm Noms.
-NomNom, have you eaten? What can I do for you?
+Hi! I'm Noms, your hungry little task monster. What's on the menu today?
 ____________________________________________________________
- Got it. I've added this task:
+ Yum! Noms has gobbled up your new task:
    [T][ ] standalone chore
- Now you have 1 tasks in the list.
+ Your menu now has 1 task.
 ____________________________________________________________
- Got it. I've added this task:
+ Yum! Noms has gobbled up your new task:
    [D][ ] return book (by: Dec 01 2019)
- Now you have 2 tasks in the list.
+ Your menu now has 2 tasks.
 ____________________________________________________________
- Got it. I've added this task:
+ Yum! Noms has gobbled up your new task:
    [D][ ] pay rent (by: Dec 15 2019)
- Now you have 3 tasks in the list.
+ Your menu now has 3 tasks.
 ____________________________________________________________
- Got it. I've added this task:
+ Yum! Noms has gobbled up your new task:
    [E][ ] conference (from: Nov 30 2019 to: Dec 02 2019)
- Now you have 4 tasks in the list.
+ Your menu now has 4 tasks.
 ____________________________________________________________
- Got it. I've added this task:
+ Yum! Noms has gobbled up your new task:
    [E][ ] holiday (from: Dec 20 2019 to: Dec 30 2019)
- Now you have 5 tasks in the list.
+ Your menu now has 5 tasks.
 ____________________________________________________________
  Tasks on Dec 01 2019:
    1. [D][ ] return book (by: Dec 01 2019)
@@ -756,7 +752,7 @@ ____________________________________________________________
  Tasks on Jun 15 2019:
  (nothing on the menu that day)
 ____________________________________________________________
-Bye~ Hope to see you again soon!
+All done! Noms is full for now. See you next time!
 ____________________________________________________________
 ```
 
@@ -784,16 +780,15 @@ ____________________________________________________________
 | |\  | |_| | |  | |  ___) |
 |_| \_|\___/|_|  |_| |____/
 ____________________________________________________________
-Hello! I'm Noms.
-NomNom, have you eaten? What can I do for you?
+Hi! I'm Noms, your hungry little task monster. What's on the menu today?
 ____________________________________________________________
- OOPS! Noms couldn't read the date "".
+ Oops! Noms couldn't read the date "".
 Try the format yyyy-mm-dd (e.g. 2019-10-15).
 ____________________________________________________________
- OOPS! Noms couldn't read the date "Sunday".
+ Oops! Noms couldn't read the date "Sunday".
 Try the format yyyy-mm-dd (e.g. 2019-10-15).
 ____________________________________________________________
-Bye~ Hope to see you again soon!
+All done! Noms is full for now. See you next time!
 ____________________________________________________________
 ```
 
@@ -831,25 +826,24 @@ ____________________________________________________________
 | |\  | |_| | |  | |  ___) |
 |_| \_|\___/|_|  |_| |____/
 ____________________________________________________________
-Hello! I'm Noms.
-NomNom, have you eaten? What can I do for you?
+Hi! I'm Noms, your hungry little task monster. What's on the menu today?
 ____________________________________________________________
- Got it. I've added this task:
+ Yum! Noms has gobbled up your new task:
    [T][ ] read book
- Now you have 1 tasks in the list.
+ Your menu now has 1 task.
 ____________________________________________________________
- Got it. I've added this task:
+ Yum! Noms has gobbled up your new task:
    [D][ ] return book (by: Jun 06 2019)
- Now you have 2 tasks in the list.
+ Your menu now has 2 tasks.
 ____________________________________________________________
- Got it. I've added this task:
+ Yum! Noms has gobbled up your new task:
    [E][ ] project meeting (from: Aug 06 2019 to: Aug 07 2019)
- Now you have 3 tasks in the list.
+ Your menu now has 3 tasks.
 ____________________________________________________________
- Nice! I've marked this task as done:
+ Yum! Noms has marked this task as done:
    [D][X] return book (by: Jun 06 2019)
 ____________________________________________________________
-Bye~ Hope to see you again soon!
+All done! Noms is full for now. See you next time!
 ____________________________________________________________
 ```
 
@@ -870,14 +864,14 @@ ____________________________________________________________
 | |\  | |_| | |  | |  ___) |
 |_| \_|\___/|_|  |_| |____/
 ____________________________________________________________
-Hello! I'm Noms.
-NomNom, have you eaten? What can I do for you?
+Hi! I'm Noms, your hungry little task monster. What's on the menu today?
 ____________________________________________________________
+ Here's what Noms has on the menu:
  1.[T][ ] read book
  2.[D][X] return book (by: Jun 06 2019)
  3.[E][ ] project meeting (from: Aug 06 2019 to: Aug 07 2019)
 ____________________________________________________________
-Bye~ Hope to see you again soon!
+All done! Noms is full for now. See you next time!
 ____________________________________________________________
 ```
 
@@ -910,18 +904,17 @@ ____________________________________________________________
 | |\  | |_| | |  | |  ___) |
 |_| \_|\___/|_|  |_| |____/
 ____________________________________________________________
-Hello! I'm Noms.
-NomNom, have you eaten? What can I do for you?
+Hi! I'm Noms, your hungry little task monster. What's on the menu today?
 ____________________________________________________________
- Got it. I've added this task:
+ Yum! Noms has gobbled up your new task:
    [T][ ] buy milk | bread
- Now you have 1 tasks in the list.
+ Your menu now has 1 task.
 ____________________________________________________________
- Got it. I've added this task:
+ Yum! Noms has gobbled up your new task:
    [D][ ] audit C:\logs\a\|b (by: Nov 08 2019)
- Now you have 2 tasks in the list.
+ Your menu now has 2 tasks.
 ____________________________________________________________
-Bye~ Hope to see you again soon!
+All done! Noms is full for now. See you next time!
 ____________________________________________________________
 ```
 
@@ -942,13 +935,13 @@ ____________________________________________________________
 | |\  | |_| | |  | |  ___) |
 |_| \_|\___/|_|  |_| |____/
 ____________________________________________________________
-Hello! I'm Noms.
-NomNom, have you eaten? What can I do for you?
+Hi! I'm Noms, your hungry little task monster. What's on the menu today?
 ____________________________________________________________
+ Here's what Noms has on the menu:
  1.[T][ ] buy milk | bread
  2.[D][ ] audit C:\logs\a\|b (by: Nov 08 2019)
 ____________________________________________________________
-Bye~ Hope to see you again soon!
+All done! Noms is full for now. See you next time!
 ____________________________________________________________
 ```
 
@@ -985,7 +978,7 @@ bye
 **Expected output:**
 
 ```text
- OOPS! Noms found a spoiled entry in the save file and skipped it: GARBAGE LINE
+ Oops! Noms found a spoiled entry in the save file and skipped it: GARBAGE LINE
 ____________________________________________________________
 ____________________________________________________________
  _   _  ___  __  __  ____
@@ -994,13 +987,13 @@ ____________________________________________________________
 | |\  | |_| | |  | |  ___) |
 |_| \_|\___/|_|  |_| |____/
 ____________________________________________________________
-Hello! I'm Noms.
-NomNom, have you eaten? What can I do for you?
+Hi! I'm Noms, your hungry little task monster. What's on the menu today?
 ____________________________________________________________
+ Here's what Noms has on the menu:
  1.[T][ ] good task
  2.[D][X] pay rent (by: Dec 15 2019)
 ____________________________________________________________
-Bye~ Hope to see you again soon!
+All done! Noms is full for now. See you next time!
 ____________________________________________________________
 ```
 
@@ -1032,20 +1025,19 @@ ____________________________________________________________
 | |\  | |_| | |  | |  ___) |
 |_| \_|\___/|_|  |_| |____/
 ____________________________________________________________
-Hello! I'm Noms.
-NomNom, have you eaten? What can I do for you?
+Hi! I'm Noms, your hungry little task monster. What's on the menu today?
 ____________________________________________________________
- Got it. I've added this task:
+ Yum! Noms has gobbled up your new task:
    [T][ ] read book
- Now you have 1 tasks in the list.
+ Your menu now has 1 task.
 ____________________________________________________________
- Got it. I've added this task:
+ Yum! Noms has gobbled up your new task:
    [D][ ] return book (by: Jun 06 2019)
- Now you have 2 tasks in the list.
+ Your menu now has 2 tasks.
 ____________________________________________________________
- Got it. I've added this task:
+ Yum! Noms has gobbled up your new task:
    [E][ ] project meeting (from: Aug 06 2019 to: Aug 07 2019)
- Now you have 3 tasks in the list.
+ Your menu now has 3 tasks.
 ____________________________________________________________
  Yum! Noms dug up these matching tasks for "book":
    1. [T][ ] read book
@@ -1058,7 +1050,7 @@ ____________________________________________________________
  Hmm, Noms sniffed around but found no tasks matching "holiday".
  Nothing on the menu to nibble on!
 ____________________________________________________________
-Bye~ Hope to see you again soon!
+All done! Noms is full for now. See you next time!
 ____________________________________________________________
 ```
 
@@ -1085,14 +1077,13 @@ ____________________________________________________________
 | |\  | |_| | |  | |  ___) |
 |_| \_|\___/|_|  |_| |____/
 ____________________________________________________________
-Hello! I'm Noms.
-NomNom, have you eaten? What can I do for you?
+Hi! I'm Noms, your hungry little task monster. What's on the menu today?
 ____________________________________________________________
- OOPS! Noms can't sniff out a task without a scent!
+ Oops! Noms can't sniff out a task without a scent!
 Tell Noms a keyword to hunt for.
 Try: find <keyword>
 ____________________________________________________________
-Bye~ Hope to see you again soon!
+All done! Noms is full for now. See you next time!
 ____________________________________________________________
 ```
 
@@ -1127,18 +1118,17 @@ ____________________________________________________________
 | |\  | |_| | |  | |  ___) |
 |_| \_|\___/|_|  |_| |____/
 ____________________________________________________________
-Hello! I'm Noms.
-NomNom, have you eaten? What can I do for you?
+Hi! I'm Noms, your hungry little task monster. What's on the menu today?
 ____________________________________________________________
- Got it. I've added this task:
+ Yum! Noms has gobbled up your new task:
    [D][ ] submit report (by: Sep 15 2026)
- Now you have 1 tasks in the list.
+ Your menu now has 1 task.
 ____________________________________________________________
- Got it. I've added this task:
+ Yum! Noms has gobbled up your new task:
    [E][ ] conference (from: Sep 10 2026 to: Sep 12 2026)
- Now you have 2 tasks in the list.
+ Your menu now has 2 tasks.
 ____________________________________________________________
- Nice! I've marked this task as done:
+ Yum! Noms has marked this task as done:
    [D][X] submit report (by: Sep 15 2026)
 ____________________________________________________________
  Nom nom! Noms has snoozed this task:
@@ -1150,10 +1140,11 @@ ____________________________________________________________
  Nom nom! Noms has snoozed this task:
    [E][ ] conference (from: Oct 01 2026 to: Oct 05 2026)
 ____________________________________________________________
+ Here's what Noms has on the menu:
  1.[D][X] submit report (by: Sep 20 2026)
  2.[E][ ] conference (from: Oct 01 2026 to: Oct 05 2026)
 ____________________________________________________________
-Bye~ Hope to see you again soon!
+All done! Noms is full for now. See you next time!
 ____________________________________________________________
 ```
 
@@ -1190,41 +1181,41 @@ ____________________________________________________________
 | |\  | |_| | |  | |  ___) |
 |_| \_|\___/|_|  |_| |____/
 ____________________________________________________________
-Hello! I'm Noms.
-NomNom, have you eaten? What can I do for you?
+Hi! I'm Noms, your hungry little task monster. What's on the menu today?
 ____________________________________________________________
- Got it. I've added this task:
+ Yum! Noms has gobbled up your new task:
    [T][ ] read book
- Now you have 1 tasks in the list.
+ Your menu now has 1 task.
 ____________________________________________________________
- Got it. I've added this task:
+ Yum! Noms has gobbled up your new task:
    [D][ ] submit report (by: Sep 15 2026)
- Now you have 2 tasks in the list.
+ Your menu now has 2 tasks.
 ____________________________________________________________
- Got it. I've added this task:
+ Yum! Noms has gobbled up your new task:
    [E][ ] conference (from: Sep 10 2026 to: Sep 12 2026)
- Now you have 3 tasks in the list.
+ Your menu now has 3 tasks.
 ____________________________________________________________
- OOPS! Noms can only snooze deadlines and events.
+ Oops! Noms can only snooze deadlines and events.
 Try choosing a task that has a date.
 ____________________________________________________________
- OOPS! This deadline snooze recipe is incomplete.
+ Oops! This deadline snooze recipe is incomplete.
 Try: snooze <task number> /by yyyy-mm-dd
 ____________________________________________________________
- OOPS! This event snooze recipe is incomplete.
+ Oops! This event snooze recipe is incomplete.
 Try: snooze <task number> /from yyyy-mm-dd [/to yyyy-mm-dd]
 ____________________________________________________________
- OOPS! Noms couldn't read the date "tomorrow".
+ Oops! Noms couldn't read the date "tomorrow".
 Try the format yyyy-mm-dd (e.g. 2019-10-15).
 ____________________________________________________________
- OOPS! This event snooze recipe is incomplete.
+ Oops! This event snooze recipe is incomplete.
 Try: snooze <task number> /from yyyy-mm-dd [/to yyyy-mm-dd]
 ____________________________________________________________
+ Here's what Noms has on the menu:
  1.[T][ ] read book
  2.[D][ ] submit report (by: Sep 15 2026)
  3.[E][ ] conference (from: Sep 10 2026 to: Sep 12 2026)
 ____________________________________________________________
-Bye~ Hope to see you again soon!
+All done! Noms is full for now. See you next time!
 ____________________________________________________________
 ```
 
@@ -1256,24 +1247,24 @@ ____________________________________________________________
 | |\  | |_| | |  | |  ___) |
 |_| \_|\___/|_|  |_| |____/
 ____________________________________________________________
-Hello! I'm Noms.
-NomNom, have you eaten? What can I do for you?
+Hi! I'm Noms, your hungry little task monster. What's on the menu today?
 ____________________________________________________________
- Got it. I've added this task:
+ Yum! Noms has gobbled up your new task:
    [D][ ] submit report (by: Sep 15 2026)
- Now you have 1 tasks in the list.
+ Your menu now has 1 task.
 ____________________________________________________________
- OOPS! Noms needs to know which task to snooze.
+ Oops! Noms needs to know which task to snooze.
 Try: snooze <task number>
 ____________________________________________________________
- OOPS! The task number must be a whole number.
+ Oops! Noms needs a whole task number to find the right menu item.
 Try: snooze 1
 ____________________________________________________________
- OOPS! Task number 2 is out of range.
+ Oops! Task number 2 is out of range.
 Choose a task number from 1 to 1.
 ____________________________________________________________
+ Here's what Noms has on the menu:
  1.[D][ ] submit report (by: Sep 15 2026)
 ____________________________________________________________
-Bye~ Hope to see you again soon!
+All done! Noms is full for now. See you next time!
 ____________________________________________________________
 ```

@@ -353,7 +353,8 @@ public class Parser {
             throws InvalidTaskNumberException {
         if (!taskNumberText.matches("-?\\d+")) {
             throw new InvalidTaskNumberException(
-                    "The task number must be a whole number.\nTry: " + action + " 1");
+                    "Noms needs a whole task number to find the right menu item.\n"
+                            + "Try: " + action + " 1");
         }
 
         try {

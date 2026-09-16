@@ -140,7 +140,7 @@ public class Noms {
      * Returns the greeting shown when the GUI window first opens.
      */
     public String getGreeting() {
-        return "Hello! I'm Noms.\nNomNom, have you eaten? What can I do for you?";
+        return "Hi! I'm Noms, your hungry little task monster. What's on the menu today?";
     }
 
     /**

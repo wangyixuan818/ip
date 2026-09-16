@@ -62,8 +62,7 @@ public class Ui {
                 + "|_| \\_|\\___/|_|  |_| |____/\n"
                 + DIVIDER;
         System.out.println(banner);
-        System.out.println("Hello! I'm Noms.");
-        System.out.println("NomNom, have you eaten? What can I do for you?");
+        System.out.println("Hi! I'm Noms, your hungry little task monster. What's on the menu today?");
         System.out.println(DIVIDER);
     }
 
@@ -71,7 +70,7 @@ public class Ui {
      * Prints the farewell message shown when the user says bye.
      */
     public void showGoodbye() {
-        System.out.println("Bye~ Hope to see you again soon!");
+        System.out.println("All done! Noms is full for now. See you next time!");
         System.out.println(DIVIDER);
     }
 
@@ -82,7 +81,7 @@ public class Ui {
      */
     public void showError(String message) {
         hasShownError = true;
-        System.out.println(" OOPS! " + message);
+        System.out.println(" Oops! " + message);
         System.out.println(DIVIDER);
     }
 
@@ -102,11 +101,18 @@ public class Ui {
 
     /**
      * Prints the whole task list, numbered from 1, followed by a divider.
-     * An empty list prints just the divider.
+     * An empty list prints a friendly message instead.
      *
      * @param tasks the tasks to display
      */
     public void showTaskList(List<Task> tasks) {
+        if (tasks.isEmpty()) {
+            System.out.println(" Noms's menu is empty! Feed me a task when you're ready!");
+            System.out.println(DIVIDER);
+            return;
+        }
+
+        System.out.println(" Here's what Noms has on the menu:");
         for (int i = 0; i < tasks.size(); i++) {
             System.out.println(" " + (i + 1) + "." + tasks.get(i));
         }
@@ -120,9 +126,9 @@ public class Ui {
      * @param taskCount the number of tasks now in the list
      */
     public void showTaskAdded(Task task, int taskCount) {
-        System.out.println(" Got it. I've added this task:");
+        System.out.println(" Yum! Noms has gobbled up your new task:");
         System.out.println("   " + task);
-        System.out.println(" Now you have " + taskCount + " tasks in the list.");
+        System.out.println(" Your menu now has " + formatTaskCount(taskCount) + ".");
         System.out.println(DIVIDER);
     }
 
@@ -135,7 +141,7 @@ public class Ui {
     public void showTaskDeleted(Task task, int taskCount) {
         System.out.println(" Noted. Noms has taken this task off the menu:");
         System.out.println("   " + task);
-        System.out.println(" Now you have " + taskCount + " tasks in the list.");
+        System.out.println(" Your menu now has " + formatTaskCount(taskCount) + ".");
         System.out.println(DIVIDER);
     }
 
@@ -147,7 +153,7 @@ public class Ui {
      */
     public void showTaskMarked(Task task, boolean changed) {
         System.out.println(changed
-                ? " Nice! I've marked this task as done:"
+                ? " Yum! Noms has marked this task as done:"
                 : " Nom nom! This task is already marked as done:");
         System.out.println("   " + task);
         System.out.println(DIVIDER);
@@ -161,7 +167,7 @@ public class Ui {
      */
     public void showTaskUnmarked(Task task, boolean changed) {
         System.out.println(changed
-                ? " OK, I've marked this task as not done yet:"
+                ? " No worries! Noms has put this task back on the menu:"
                 : " Nom nom! This task is already unmarked:");
         System.out.println("   " + task);
         System.out.println(DIVIDER);
@@ -216,5 +222,15 @@ public class Ui {
             System.out.println("   " + (i + 1) + ". " + matches.get(i));
         }
         System.out.println(DIVIDER);
+    }
+
+    /**
+     * Formats a task count with the correct singular or plural noun.
+     *
+     * @param taskCount the number of tasks
+     * @return the formatted task count
+     */
+    private static String formatTaskCount(int taskCount) {
+        return taskCount + (taskCount == 1 ? " task" : " tasks");
     }
 }
