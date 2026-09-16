@@ -23,3 +23,8 @@ Prerequisites: JDK 25, update Intellij to the most recent version.
    ```
 
 **Warning:** Keep the `src\main\java` folder as the root folder for Java files (i.e., don't rename those folders or move Java files to another folder outside of this folder path), as this is the default location some tools (e.g., Gradle) expect to find Java files.
+
+---
+### AI Usage Declaration
+I used Claude Code (Sonnet 5, Opus 4.8) and Codex (GPT5.6 Sol, GPT5.6 Luna and GPT6 Astra) as co-development tools throughout this project. They supported tasks such as code generation, test writing, debugging, refactoring, git support, and documentation drafting.
+I remain responsible for the project requirements, review of code generated and decisions made. 
