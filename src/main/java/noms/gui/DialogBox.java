@@ -85,4 +85,17 @@ public class DialogBox extends HBox {
         box.flip();
         return box;
     }
+
+    /**
+     * Creates an error bubble for one of Noms' replies (avatar on the left).
+     *
+     * @param text Noms' error message
+     * @param image Noms' avatar
+     * @return the error dialog box
+     */
+    public static DialogBox getErrorDialog(String text, Image image) {
+        DialogBox box = getNomsDialog(text, image);
+        box.dialog.getStyleClass().add("error-label");
+        return box;
+    }
 }

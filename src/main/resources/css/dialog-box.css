@@ -19,6 +19,13 @@
     -fx-text-fill: #21123f;
 }
 
+.error-label {
+    -fx-background-color: linear-gradient(to bottom right, #fecaca, #fb7185);
+    -fx-border-color: #fda4af;
+    -fx-effect: dropshadow(gaussian, rgba(244, 63, 94, 0.55), 14, 0.2, 0, 3);
+    -fx-text-fill: #4c0519;
+}
+
 .user-dialog #displayPicture {
     -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.55), 7, 0.15, 0, 2);
 }

@@ -97,9 +97,10 @@ public class Noms {
      * with the console dividers stripped so it reads cleanly in a chat bubble.
      *
      * @param input the raw command line entered in the GUI
-     * @return Noms' response text (a friendly error message if the command failed)
+     * @return Noms' response text and its presentation type
      */
-    public String getResponse(String input) {
+    public NomsResponse getResponse(String input) {
+        ui.resetErrorState();
         String output = captureConsoleOutput(() -> {
             try {
                 isExitRequested = executeCommand(input);
@@ -107,7 +108,10 @@ public class Noms {
                 ui.showError(e.getMessage());
             }
         });
-        return stripDividers(output);
+        ResponseType responseType = ui.hasShownError()
+                ? ResponseType.ERROR
+                : ResponseType.NORMAL;
+        return new NomsResponse(stripDividers(output), responseType);
     }
 
     /**
