@@ -24,6 +24,7 @@ import javafx.scene.layout.HBox;
  * sides of the conversation easy to tell apart.
  */
 public class DialogBox extends HBox {
+    private static final double DEFAULT_MAX_DIALOG_WIDTH = 300.0;
     private static final double MAX_DIALOG_WIDTH_RATIO = 0.75;
 
     @FXML
@@ -43,7 +44,12 @@ public class DialogBox extends HBox {
             e.printStackTrace();
         }
         dialog.setText(text);
-        dialog.maxWidthProperty().bind(widthProperty().multiply(MAX_DIALOG_WIDTH_RATIO));
+        dialog.setMaxWidth(DEFAULT_MAX_DIALOG_WIDTH);
+        widthProperty().addListener((observable, oldWidth, newWidth) -> {
+            if (newWidth.doubleValue() > 0) {
+                dialog.setMaxWidth(newWidth.doubleValue() * MAX_DIALOG_WIDTH_RATIO);
+            }
+        });
         displayPicture.setImage(image);
     }
 

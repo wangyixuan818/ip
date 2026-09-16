@@ -44,7 +44,8 @@ public class MainWindow {
      */
     @FXML
     public void initialize() {
-        scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
+        dialogContainer.heightProperty().addListener((observable, oldHeight, newHeight) ->
+                Platform.runLater(() -> scrollPane.setVvalue(scrollPane.getVmax())));
     }
 
     /**
