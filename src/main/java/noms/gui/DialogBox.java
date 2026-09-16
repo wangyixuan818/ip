@@ -13,7 +13,6 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 
 /**
  * A single chat bubble: a wrapped text label paired with the speaker's avatar.
@@ -25,6 +24,8 @@ import javafx.scene.layout.Priority;
  * sides of the conversation easy to tell apart.
  */
 public class DialogBox extends HBox {
+    private static final double MAX_DIALOG_WIDTH_RATIO = 0.75;
+
     @FXML
     private Label dialog;
     @FXML
@@ -42,8 +43,7 @@ public class DialogBox extends HBox {
             e.printStackTrace();
         }
         dialog.setText(text);
-        dialog.setMaxWidth(Double.MAX_VALUE);
-        HBox.setHgrow(dialog, Priority.ALWAYS);
+        dialog.maxWidthProperty().bind(widthProperty().multiply(MAX_DIALOG_WIDTH_RATIO));
         displayPicture.setImage(image);
     }
 
