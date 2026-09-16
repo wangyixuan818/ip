@@ -123,6 +123,12 @@ public class ParserTest {
     }
 
     @Test
+    public void parseTask_deadlineWithEmptyDescription_throwsEmptyDescriptionException() {
+        assertThrows(EmptyDescriptionException.class,
+                () -> Parser.parseTask("deadline   /by 2019-12-01"));
+    }
+
+    @Test
     public void parseTask_eventWordOnly_throwsEmptyDescriptionException() {
         assertThrows(EmptyDescriptionException.class, () -> Parser.parseTask("event"));
     }
@@ -137,6 +143,40 @@ public class ParserTest {
     public void parseTask_eventWithUnparseableDate_throwsInvalidDateException() {
         assertThrows(InvalidDateException.class,
                 () -> Parser.parseTask("event meeting /from 2019-08-06 /to nextweek"));
+    }
+
+    @Test
+    public void parseTask_eventWithoutFromSection_throwsInvalidEventException() {
+        assertThrows(InvalidEventException.class,
+                () -> Parser.parseTask("event meeting /to 2019-08-07"));
+    }
+
+    @Test
+    public void parseTask_eventWithEmptyDescription_throwsEmptyDescriptionException() {
+        assertThrows(EmptyDescriptionException.class,
+                () -> Parser.parseTask("event   /from 2019-08-06 /to 2019-08-07"));
+    }
+
+    @Test
+    public void parseTask_eventWithEmptyStartDate_throwsInvalidEventException() {
+        assertThrows(InvalidEventException.class,
+                () -> Parser.parseTask("event meeting /from   /to 2019-08-07"));
+    }
+
+    @Test
+    public void parseTask_eventWithEmptyEndDate_throwsInvalidEventException() {
+        assertThrows(InvalidEventException.class,
+                () -> Parser.parseTask("event meeting /from 2019-08-06 /to   "));
+    }
+
+    @Test
+    public void parseTask_unknownCommand_throwsUnknownCommandException() {
+        assertThrows(UnknownCommandException.class, () -> Parser.parseTask("cook dinner"));
+    }
+
+    @Test
+    public void parseTask_nonTaskCommand_throwsUnknownCommandException() {
+        assertThrows(UnknownCommandException.class, () -> Parser.parseTask("list"));
     }
 
     // --- parseTaskNumber ---
@@ -205,6 +245,12 @@ public class ParserTest {
     }
 
     @Test
+    public void parseSnoozeTaskNumber_emptyList_throwsInvalidTaskNumberException() {
+        assertThrows(InvalidTaskNumberException.class,
+                () -> Parser.parseSnoozeTaskNumber("snooze 1 /by 2026-09-20", 0));
+    }
+
+    @Test
     public void parseDeadlineSnoozeDate_validCommand_returnsDate() throws NomsException {
         assertEquals(LocalDate.of(2026, 9, 20),
                 Parser.parseDeadlineSnoozeDate("SnOoZe 1 /by 2026-09-20"));
@@ -244,6 +290,12 @@ public class ParserTest {
     public void parseEventSnoozeDates_invalidDate_throwsInvalidDateException() {
         assertThrows(InvalidDateException.class,
                 () -> Parser.parseEventSnoozeDates("snooze 1 /from tomorrow"));
+    }
+
+    @Test
+    public void parseEventSnoozeDates_invalidSyntax_throwsInvalidSnoozeException() {
+        assertThrows(InvalidSnoozeException.class,
+                () -> Parser.parseEventSnoozeDates("snooze 1 /to 2026-09-22"));
     }
 
     // --- parseOnDate ---
@@ -295,6 +347,18 @@ public class ParserTest {
         assertInstanceOf(OnCommand.class, Parser.parse("on 2019-12-01"));
         assertInstanceOf(FindCommand.class, Parser.parse("find book"));
         assertInstanceOf(AddCommand.class, Parser.parse("todo read book"));
+    }
+
+    @Test
+    public void parse_topLevelDeadline_returnsAddCommand() throws NomsException {
+        assertInstanceOf(AddCommand.class,
+                Parser.parse("deadline submit report /by 2026-09-20"));
+    }
+
+    @Test
+    public void parse_topLevelEvent_returnsAddCommand() throws NomsException {
+        assertInstanceOf(AddCommand.class,
+                Parser.parse("event conference /from 2026-09-20 /to 2026-09-22"));
     }
 
     @Test

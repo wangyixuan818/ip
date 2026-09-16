@@ -129,4 +129,47 @@ public class SnoozeCommandTest {
                         .execute(tasks, ui, storage));
         assertEquals("[D][ ] submit report (by: Sep 15 2026)", deadline.toString());
     }
+
+    @Test
+    public void execute_emptyList_throwsNomsException() {
+        TaskList tasks = new TaskList();
+
+        assertThrows(NomsException.class,
+                () -> new SnoozeCommand("snooze 1 /by 2026-09-20")
+                        .execute(tasks, ui, storage));
+    }
+
+    @Test
+    public void execute_outOfRangeNumber_throwsNomsException() {
+        TaskList tasks = new TaskList(
+                new Deadline("submit report", LocalDate.of(2026, 9, 15)));
+
+        assertThrows(NomsException.class,
+                () -> new SnoozeCommand("snooze 2 /by 2026-09-20")
+                        .execute(tasks, ui, storage));
+    }
+
+    @Test
+    public void execute_invalidEventSyntax_doesNotChangeTask() {
+        Event event = new Event("conference",
+                LocalDate.of(2026, 9, 10), LocalDate.of(2026, 9, 12));
+        TaskList tasks = new TaskList(event);
+
+        assertThrows(InvalidSnoozeException.class,
+                () -> new SnoozeCommand("snooze 1 /to 2026-09-20")
+                        .execute(tasks, ui, storage));
+        assertEquals("[E][ ] conference (from: Sep 10 2026 to: Sep 12 2026)",
+                event.toString());
+    }
+
+    @Test
+    public void execute_invalidDate_doesNotChangeTask() {
+        Deadline deadline = new Deadline("submit report", LocalDate.of(2026, 9, 15));
+        TaskList tasks = new TaskList(deadline);
+
+        assertThrows(NomsException.class,
+                () -> new SnoozeCommand("snooze 1 /by tomorrow")
+                        .execute(tasks, ui, storage));
+        assertEquals("[D][ ] submit report (by: Sep 15 2026)", deadline.toString());
+    }
 }

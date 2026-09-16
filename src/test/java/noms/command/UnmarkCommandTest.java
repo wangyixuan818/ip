@@ -83,4 +83,18 @@ public class UnmarkCommandTest {
         assertThrows(NomsException.class,
                 () -> new UnmarkCommand("unmark").execute(tasks, ui, storage));
     }
+
+    @Test
+    public void execute_emptyList_throwsNomsException() {
+        TaskList emptyTasks = new TaskList();
+
+        assertThrows(NomsException.class,
+                () -> new UnmarkCommand("unmark 1").execute(emptyTasks, ui, storage));
+    }
+
+    @Test
+    public void execute_outOfRangeNumber_throwsNomsException() {
+        assertThrows(NomsException.class,
+                () -> new UnmarkCommand("unmark 2").execute(tasks, ui, storage));
+    }
 }

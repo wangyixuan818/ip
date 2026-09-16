@@ -81,4 +81,18 @@ public class MarkCommandTest {
         assertThrows(NomsException.class,
                 () -> new MarkCommand("mark abc").execute(tasks, ui, storage));
     }
+
+    @Test
+    public void execute_emptyList_throwsNomsException() {
+        TaskList emptyTasks = new TaskList();
+
+        assertThrows(NomsException.class,
+                () -> new MarkCommand("mark 1").execute(emptyTasks, ui, storage));
+    }
+
+    @Test
+    public void execute_outOfRangeNumber_throwsNomsException() {
+        assertThrows(NomsException.class,
+                () -> new MarkCommand("mark 2").execute(tasks, ui, storage));
+    }
 }

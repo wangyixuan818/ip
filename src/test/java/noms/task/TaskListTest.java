@@ -118,10 +118,24 @@ public class TaskListTest {
     }
 
     @Test
+    public void get_negativeIndex_assertionFails() {
+        TaskList list = populatedList();
+
+        assertThrows(AssertionError.class, () -> list.get(-1));
+    }
+
+    @Test
     public void delete_invalidIndex_assertionFails() {
         TaskList list = populatedList();
 
         assertThrows(AssertionError.class, () -> list.delete(-1));
+    }
+
+    @Test
+    public void delete_indexEqualToSize_assertionFails() {
+        TaskList list = populatedList();
+
+        assertThrows(AssertionError.class, () -> list.delete(list.size()));
     }
 
     @Test
