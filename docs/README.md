@@ -9,7 +9,8 @@ still be on the menu the next time you open Noms.
 ## Quick start
 
 1. Install Java 25 if it is not already installed.
-2. Download `noms.jar` and place it in a folder of your choice.
+2. Download [`noms.jar`](https://github.com/wangyixuan818/ip/releases/tag/v0.2)
+   and place it in a folder of your choice.
 3. Open a terminal in that folder and run:
 
    ```text
@@ -20,9 +21,8 @@ still be on the menu the next time you open Noms.
 5. Press <kbd>Enter</kbd> or select **Send**.
 6. Type `bye` when you are finished.
 
-> [!IMPORTANT]
-> Enter dates as `yyyy-mm-dd`, including leading zeroes. For example, enter
-> 6 September 2026 as `2026-09-06`.
+> **Important:** Enter dates as `yyyy-mm-dd`, including leading zeroes. For
+> example, enter 6 September 2026 as `2026-09-06`.
 
 ## Command summary
 
@@ -108,10 +108,9 @@ not done, while `[X]` means it is done. For example:
 2.[D][X] submit report (by: Sep 20 2026)
 ```
 
-> [!TIP]
-> Run `list` before using a command that needs a task number. Only the task
-> numbers shown by `list` should be used with `mark`, `unmark`, `delete`, and
-> `snooze`. Numbers shown by `find` and `on` refer only to those filtered
+> **Tip:** Run `list` before using a command that needs a task number. Only the
+> task numbers shown by `list` should be used with `mark`, `unmark`, `delete`,
+> and `snooze`. Numbers shown by `find` and `on` refer only to those filtered
 > results. Deleting a task renumbers the tasks after it.
 
 ### Viewing tasks on a date
