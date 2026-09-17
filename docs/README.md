@@ -8,10 +8,17 @@ still be on the menu the next time you open Noms.
 
 ## Quick start
 
-1. Launch Noms.
-2. Type a command in the text box at the bottom of the window.
-3. Press <kbd>Enter</kbd> or select **Send**.
-4. Type `bye` when you are finished.
+1. Install Java 25 if it is not already installed.
+2. Download `noms.jar` and place it in a folder of your choice.
+3. Open a terminal in that folder and run:
+
+   ```text
+   java -jar noms.jar
+   ```
+
+4. Type a command in the text box at the bottom of the Noms window.
+5. Press <kbd>Enter</kbd> or select **Send**.
+6. Type `bye` when you are finished.
 
 > [!IMPORTANT]
 > Enter dates as `yyyy-mm-dd`, including leading zeroes. For example, enter
@@ -92,8 +99,10 @@ not done, while `[X]` means it is done. For example:
 ```
 
 > [!TIP]
-> Run `list` before using a command that needs a task number. Deleting a task
-> renumbers the tasks after it.
+> Run `list` before using a command that needs a task number. Only the task
+> numbers shown by `list` should be used with `mark`, `unmark`, `delete`, and
+> `snooze`. Numbers shown by `find` and `on` refer only to those filtered
+> results. Deleting a task renumbers the tasks after it.
 
 ### Viewing tasks on a date
 
@@ -115,8 +124,8 @@ find project
 find SUBMIT REPORT
 ```
 
-The numbers in search results number the matches themselves. Use `list` to
-check a task's actual task number before marking, deleting, or snoozing it.
+The numbers in search results number the matches themselves, not their
+positions in the complete task list.
 
 ## Updating task status
 
@@ -180,7 +189,8 @@ bye
 ```
 
 All changes to the task list are saved as they are made. Noms loads the saved
-list automatically the next time it starts.
+list automatically the next time it starts. The tasks are stored in
+`data/noms.txt`, relative to the folder from which you launched Noms.
 
 ## Troubleshooting
 
