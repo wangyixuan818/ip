@@ -68,7 +68,7 @@ public class Noms {
      * Reports each save-file line skipped while loading, so the user knows
      * their data was not silently dropped.
      *
-     * @param skippedLines the raw lines that could not be parsed, in load order
+     * @param skippedLines the raw lines that could not be parsed, in load order.
      */
     private void reportSkippedLines(List<String> skippedLines) {
         for (String spoiledLine : skippedLines) {

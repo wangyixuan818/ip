@@ -80,8 +80,8 @@ public class Storage {
     /**
      * Builds the save-file text for the given tasks, one per line.
      *
-     * @param tasks the tasks to format, in save order
-     * @return the full file content to write, using {@link Task#toFileFormat()}
+     * @param tasks the tasks to format, in save order.
+     * @return the full file content to write, using {@link Task#toFileFormat()}.
      */
     private static String buildFileContent(List<Task> tasks) {
         StringBuilder content = new StringBuilder();
@@ -206,7 +206,7 @@ public class Storage {
             throw new IllegalArgumentException("Task record has no fields");
         }
 
-        int expectedFieldCount = expectedFieldCountFor(fields[TYPE_FIELD]);
+        int expectedFieldCount = determineExpectedFieldCount(fields[TYPE_FIELD]);
         if (fields.length != expectedFieldCount) {
             throw new IllegalArgumentException("Unexpected task field count");
         }
@@ -223,11 +223,11 @@ public class Storage {
      * Returns the number of fields a save-file record of the given task type
      * must have.
      *
-     * @param type the task type letter ({@code T}, {@code D}, or {@code E})
-     * @return the expected field count for that type
-     * @throws IllegalArgumentException if the type letter is not recognized
+     * @param type the task type letter ({@code T}, {@code D}, or {@code E}).
+     * @return the expected field count for that type.
+     * @throws IllegalArgumentException if the type letter is not recognized.
      */
-    private static int expectedFieldCountFor(String type) {
+    private static int determineExpectedFieldCount(String type) {
         switch (type) {
             case TODO_TYPE:
                 return TODO_FIELD_COUNT;
