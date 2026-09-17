@@ -45,6 +45,11 @@ still be on the menu the next time you open Noms.
 Words in angle brackets, such as `<description>`, are placeholders. Replace
 them with your own value and do not type the angle brackets.
 
+Noms accepts leading and trailing whitespace, as well as repeated spaces or
+tabs around `/by`, `/from`, and `/to`. Whitespace within a task description is
+kept as part of the description. The `list` and `bye` commands do not accept
+arguments.
+
 ## Adding tasks
 
 Noms supports three kinds of tasks:
@@ -72,13 +77,18 @@ deadline submit report /by 2026-09-20
 ### Adding an event
 
 Use `event <description> /from yyyy-mm-dd /to yyyy-mm-dd` for an activity
-with a start and end date.
+with a start and end date. The end date must be later than the start date;
+same-day and backwards date ranges are rejected.
 
 ```text
 event project retreat /from 2026-10-03 /to 2026-10-05
 ```
 
-New tasks are added to the end of the task list and saved automatically.
+New tasks are added to the end of the task list and saved automatically. Noms
+rejects a task if another task has exactly the same type, description, and
+date or date range. Completion status is ignored when checking for duplicates,
+so marking an existing task as done does not allow an identical copy to be
+added.
 
 ## Viewing tasks
 
@@ -167,6 +177,9 @@ To replace both an event's start and end dates:
 snooze 3 /from 2026-10-10 /to 2026-10-12
 ```
 
+When both event dates are replaced, the new end date must be later than the
+new start date.
+
 Todos cannot be snoozed because they do not have dates.
 
 ## Deleting tasks
@@ -192,6 +205,9 @@ All changes to the task list are saved as they are made. Noms loads the saved
 list automatically the next time it starts. The tasks are stored in
 `data/noms.txt`, relative to the folder from which you launched Noms.
 
+If Noms cannot save a change, it reports the error and does not apply that
+change. The previous save file is preserved.
+
 ## Troubleshooting
 
 - If Noms rejects a date, check that it is a real calendar date in
@@ -201,3 +217,11 @@ list automatically the next time it starts. The tasks are stored in
 - If a command is not understood, compare it with the formats in the
   [command summary](#command-summary). Keep `/by`, `/from`, and `/to` in the
   positions shown.
+- If Noms reports a spoiled save-file entry, that entry was malformed or
+  duplicated and has been skipped. Other valid entries are still loaded.
+  Invalid entries include records with missing or extra fields, invalid
+  completion flags or dates, and empty descriptions. Avoid editing
+  `data/noms.txt` manually.
+- If Noms cannot load or save the menu, check that `data/noms.txt` and its
+  containing `data` folder are accessible and writable. A failed change is not
+  applied, and the previous save file remains intact.
