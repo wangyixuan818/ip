@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.junit.jupiter.api.AfterEach;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import noms.exception.NomsException;
+import noms.exception.StorageException;
 import noms.storage.Storage;
 import noms.task.Task;
 import noms.task.TaskList;
@@ -86,5 +88,18 @@ public class DeleteCommandTest {
 
         assertThrows(NomsException.class,
                 () -> new DeleteCommand("delete 1").execute(emptyTasks, ui, storage));
+    }
+
+    @Test
+    public void execute_saveFails_throwsAndRestoresTaskOrder() throws IOException {
+        Path blockedDirectory = tempDir.resolve("blocked-directory");
+        Files.writeString(blockedDirectory, "not a directory");
+        Storage blockedStorage = new Storage(blockedDirectory.toString(), "noms.txt");
+
+        assertThrows(StorageException.class,
+                () -> new DeleteCommand("delete 1").execute(tasks, ui, blockedStorage));
+        assertEquals(2, tasks.size());
+        assertSame(first, tasks.get(0));
+        assertSame(second, tasks.get(1));
     }
 }

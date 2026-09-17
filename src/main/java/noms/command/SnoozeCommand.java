@@ -1,5 +1,7 @@
 package noms.command;
 
+import java.time.LocalDate;
+
 import noms.exception.InvalidSnoozeException;
 import noms.exception.NomsException;
 import noms.parser.Parser;
@@ -32,16 +34,22 @@ public class SnoozeCommand extends Command {
         Task task = tasks.get(taskNumber - 1);
 
         if (task instanceof Deadline deadline) {
-            deadline.rescheduleTo(Parser.parseDeadlineSnoozeDate(command));
+            LocalDate originalDueDate = deadline.getDueDate();
+            LocalDate newDueDate = Parser.parseDeadlineSnoozeDate(command);
+            deadline.rescheduleTo(newDueDate);
+            save(tasks, storage, () -> deadline.rescheduleTo(originalDueDate));
         } else if (task instanceof Event event) {
+            LocalDate originalStartDate = event.getStartDate();
+            LocalDate originalEndDate = event.getEndDate();
             rescheduleEvent(event);
+            save(tasks, storage,
+                    () -> event.reschedule(originalStartDate, originalEndDate));
         } else {
             throw new InvalidSnoozeException(
                     "Noms can only snooze deadlines and events.\n"
                             + "Try choosing a task that has a date.");
         }
 
-        save(tasks, ui, storage);
         ui.showTaskSnoozed(task);
     }
 

@@ -8,6 +8,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
 
@@ -18,6 +19,7 @@ import org.junit.jupiter.api.io.TempDir;
 
 import noms.exception.InvalidSnoozeException;
 import noms.exception.NomsException;
+import noms.exception.StorageException;
 import noms.storage.Storage;
 import noms.task.Deadline;
 import noms.task.Event;
@@ -171,5 +173,21 @@ public class SnoozeCommandTest {
                 () -> new SnoozeCommand("snooze 1 /by tomorrow")
                         .execute(tasks, ui, storage));
         assertEquals("[D][ ] submit report (by: Sep 15 2026)", deadline.toString());
+    }
+
+    @Test
+    public void execute_saveFails_throwsAndRestoresEventDates() throws IOException {
+        Path blockedDirectory = tempDir.resolve("blocked-directory");
+        Files.writeString(blockedDirectory, "not a directory");
+        Storage blockedStorage = new Storage(blockedDirectory.toString(), "noms.txt");
+        Event event = new Event("conference",
+                LocalDate.of(2026, 9, 10), LocalDate.of(2026, 9, 12));
+        TaskList tasks = new TaskList(event);
+
+        assertThrows(StorageException.class,
+                () -> new SnoozeCommand("snooze 1 /from 2026-10-01 /to 2026-10-05")
+                        .execute(tasks, ui, blockedStorage));
+        assertEquals("[E][ ] conference (from: Sep 10 2026 to: Sep 12 2026)",
+                event.toString());
     }
 }

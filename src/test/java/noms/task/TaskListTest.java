@@ -156,6 +156,17 @@ public class TaskListTest {
         assertSame(chore, list.get(0));
     }
 
+    @Test
+    public void add_atIndex_insertsAndShiftsLaterTasks() {
+        TaskList list = new TaskList(chore, conference);
+
+        list.add(1, returnBook);
+
+        assertSame(chore, list.get(0));
+        assertSame(returnBook, list.get(1));
+        assertSame(conference, list.get(2));
+    }
+
     // --- defensive copying ---
 
     @Test

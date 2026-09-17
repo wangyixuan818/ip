@@ -87,6 +87,8 @@ public class NomsTest {
         NomsResponse response = nomsWithBlockedStorage.getResponse("todo read book");
 
         assertEquals(ResponseType.ERROR, response.type());
+        assertFalse(response.text().contains("gobbled up"));
+        assertTrue(nomsWithBlockedStorage.getResponse("list").text().contains("menu is empty"));
     }
 
     @Test

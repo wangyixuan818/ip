@@ -1,5 +1,6 @@
 package noms.command;
 
+import noms.exception.NomsException;
 import noms.parser.Parser;
 import noms.storage.Storage;
 import noms.task.Task;
@@ -24,9 +25,9 @@ public class AddCommand extends Command {
     }
 
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) {
+    public void execute(TaskList tasks, Ui ui, Storage storage) throws NomsException {
         tasks.add(task);
-        save(tasks, ui, storage);
+        save(tasks, storage, () -> tasks.delete(tasks.size() - 1));
         ui.showTaskAdded(task, tasks.size());
     }
 }

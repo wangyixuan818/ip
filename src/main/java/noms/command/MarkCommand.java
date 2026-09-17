@@ -30,7 +30,9 @@ public class MarkCommand extends Command {
                 : "Parser returned an invalid task number";
         Task task = tasks.get(taskNumber - 1);
         boolean changed = task.markAsDone();
-        save(tasks, ui, storage);
+        if (changed) {
+            save(tasks, storage, task::markAsNotDone);
+        }
         ui.showTaskMarked(task, changed);
     }
 }

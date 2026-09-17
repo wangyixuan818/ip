@@ -40,6 +40,16 @@ public class Event extends Task {
         return !date.isBefore(startDate) && !date.isAfter(endDate);
     }
 
+    /** Returns this event's start date. */
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    /** Returns this event's end date. */
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
     /**
      * Replaces this event's start date and moves its end date by the same
      * number of days, preserving the original duration.

@@ -30,7 +30,9 @@ public class UnmarkCommand extends Command {
                 : "Parser returned an invalid task number";
         Task task = tasks.get(taskNumber - 1);
         boolean changed = task.markAsNotDone();
-        save(tasks, ui, storage);
+        if (changed) {
+            save(tasks, storage, task::markAsDone);
+        }
         ui.showTaskUnmarked(task, changed);
     }
 }
