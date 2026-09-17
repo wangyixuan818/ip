@@ -133,6 +133,45 @@ clear meaning throughout.
 - Do not reuse a variable or parameter for a different purpose.
 - Include a `default` branch in switches to handle unexpected values or report
   an error.
+- Never leave a `catch` block empty. Either handle the exception, or at minimum
+  log/comment why it is safe to ignore — a silently swallowed exception hides
+  failures from both the user and future maintainers.
+
+  ```java
+  } catch (IOException e) {
+      // Save file is optional; app still works with in-memory data only.
+      logger.warning("Could not load save file: " + e.getMessage());
+  }
+  ```
+
+- Treat a final `else` (or a `default` case, per above) as meaning "everything
+  else I haven't anticipated," not just "the last option I happened to think
+  of." Do not write a final `else` whose body only makes sense for one specific
+  remaining case — if the branches are meant to be exhaustive alternatives
+  rather than a genuine catch-all, use explicit `else if` conditions instead
+  and let the true final `else` handle the truly-unexpected case (e.g. by
+  throwing or reporting an error).
+- Use explicit type conversions rather than relying on implicit/automatic
+  ones. Casts and conversions should be visible in the code, not hidden by
+  language coercion rules.
+
+  ```java
+  int total = (int) Math.round(average);   // explicit
+  int total = average;                      // avoid: silent narrowing
+  ```
+
+- Watch for reader "trip hazards" that make code easy to misread:
+  - **Unused parameters or variables** — remove them, or if a parameter must
+    stay (e.g. to satisfy an interface), make clear it is intentionally unused.
+  - **Confusingly similar code** — two blocks that look almost identical but
+    differ in one subtle spot invite copy-paste bugs; either unify them or
+    make the difference obvious.
+  - **Multiple statements per line** — one statement per line (see
+    [seedu-java-coding-standard](../seedu-java-coding-standard/SKILL.md)) so
+    nothing is hidden on a shared line.
+  - **Data-flow anomalies** — e.g. defining a variable and reassigning it
+    before it is ever read, or reading a variable that no branch has
+    initialized on some path. These usually indicate a bug or dead code.
 
 ## 3. Comments
 
@@ -141,6 +180,11 @@ clear meaning throughout.
   cannot communicate by itself.
 - Explain WHAT the code is intended to do and WHY the approach is needed, not
   HOW the statements operate line by line.
+- A comment must not be used to compensate for unclear code. If a reader needs
+  a comment to understand what a piece of code does, first try to make the
+  code itself clearer (better names, extracted method, simpler expression);
+  add a comment only for information the code still cannot express on its own
+  (e.g. WHY a workaround is needed).
 
 ---
 
@@ -170,5 +214,14 @@ Before considering a change done, confirm every new or renamed identifier:
       premature optimization (§2).
 - [ ] Variables have one purpose and the smallest practical scope (§2).
 - [ ] Switches include a meaningful `default` branch (§2).
+- [ ] No empty `catch` blocks; each either handles or explains why it's safe
+      to ignore (§2).
+- [ ] A final `else`/`default` means "everything else," not just "the last
+      case I thought of" (§2).
+- [ ] Type conversions are explicit, not left to implicit coercion (§2).
+- [ ] No unused parameters/variables, no confusingly similar duplicated code,
+      no multiple statements per line, no data-flow anomalies (§2).
 - [ ] Comments add non-obvious WHAT/WHY information and do not explain HOW or
       restate the code (§3).
+- [ ] Comments are not a substitute for clearer code — unclear code was
+      simplified first (§3).
