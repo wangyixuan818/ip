@@ -26,6 +26,7 @@ import noms.exception.InvalidEventException;
 import noms.exception.InvalidSnoozeException;
 import noms.exception.InvalidTaskNumberException;
 import noms.exception.NomsException;
+import noms.exception.UnexpectedArgumentException;
 import noms.exception.UnknownCommandException;
 import noms.task.Deadline;
 import noms.task.Event;
@@ -87,8 +88,10 @@ public class Parser {
 
         switch (commandType) {
             case BYE:
+                validateNoArguments(normalizedCommand, "bye");
                 return new ExitCommand();
             case LIST:
+                validateNoArguments(normalizedCommand, "list");
                 return new ListCommand();
             case MARK:
                 return new MarkCommand(normalizedCommand);
@@ -362,6 +365,14 @@ public class Parser {
     /** Removes whitespace surrounding a command without altering its contents. */
     private static String normalizeCommand(String command) {
         return command.strip();
+    }
+
+    /** Rejects arguments supplied to a command that does not accept any. */
+    private static void validateNoArguments(String command, String commandWord)
+            throws UnexpectedArgumentException {
+        if (command.split("\\s+").length > 1) {
+            throw new UnexpectedArgumentException(commandWord);
+        }
     }
 
     /** Holds the parsed dates for an event snooze command. */

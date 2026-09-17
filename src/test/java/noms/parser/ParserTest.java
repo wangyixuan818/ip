@@ -31,6 +31,7 @@ import noms.exception.InvalidEventDateRangeException;
 import noms.exception.InvalidSnoozeException;
 import noms.exception.InvalidTaskNumberException;
 import noms.exception.NomsException;
+import noms.exception.UnexpectedArgumentException;
 import noms.exception.UnknownCommandException;
 import noms.task.Deadline;
 import noms.task.Event;
@@ -403,6 +404,25 @@ public class ParserTest {
     @Test
     public void parse_blankCommand_throwsEmptyCommandException() {
         assertThrows(EmptyCommandException.class, () -> Parser.parse("   "));
+    }
+
+    @Test
+    public void parse_listWithArguments_throwsUnexpectedArgumentException() {
+        assertThrows(UnexpectedArgumentException.class,
+                () -> Parser.parse("list extra"));
+    }
+
+    @Test
+    public void parse_byeWithArguments_throwsUnexpectedArgumentException() {
+        assertThrows(UnexpectedArgumentException.class,
+                () -> Parser.parse("bye now"));
+    }
+
+    @Test
+    public void parse_parameterlessCommandsWithSurroundingWhitespace_returnCommands()
+            throws NomsException {
+        assertInstanceOf(ListCommand.class, Parser.parse("  LIST  "));
+        assertInstanceOf(ExitCommand.class, Parser.parse("  BYE  "));
     }
 
     @Test

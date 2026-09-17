@@ -1365,3 +1365,49 @@ ____________________________________________________________
 All done! Noms is full for now. See you next time!
 ____________________________________________________________
 ```
+
+### TC-027: Reject arguments for parameterless commands
+
+**Aim:**
+
+Verify that `list` and `bye` reject extra arguments, that malformed `bye`
+does not exit, and that valid forms continue to work afterwards.
+
+**Inputs:**
+
+```text
+todo keep working
+list extra
+bye now
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ _   _  ___  __  __  ____
+| \ | |/ _ \|  \/  |/ ___|
+|  \| | | | | |\/| | \___ \
+| |\  | |_| | |  | |  ___) |
+|_| \_|\___/|_|  |_| |____/
+____________________________________________________________
+Hi! I'm Noms, your hungry little task monster. What's on the menu today?
+____________________________________________________________
+ Yum! Noms has gobbled up your new task:
+   [T][ ] keep working
+ Your menu now has 1 task.
+____________________________________________________________
+ Oops! Noms doesn't need extra ingredients for the list command.
+Try: list
+____________________________________________________________
+ Oops! Noms doesn't need extra ingredients for the bye command.
+Try: bye
+____________________________________________________________
+ Here's what Noms has on the menu:
+ 1.[T][ ] keep working
+____________________________________________________________
+All done! Noms is full for now. See you next time!
+____________________________________________________________
+```
