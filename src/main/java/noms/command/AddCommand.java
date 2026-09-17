@@ -1,5 +1,6 @@
 package noms.command;
 
+import noms.exception.DuplicateTaskException;
 import noms.exception.NomsException;
 import noms.parser.Parser;
 import noms.storage.Storage;
@@ -26,6 +27,9 @@ public class AddCommand extends Command {
 
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws NomsException {
+        if (tasks.hasMatchingTask(task)) {
+            throw new DuplicateTaskException();
+        }
         tasks.add(task);
         save(tasks, storage, () -> tasks.delete(tasks.size() - 1));
         ui.showTaskAdded(task, tasks.size());

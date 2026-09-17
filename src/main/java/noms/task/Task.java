@@ -60,6 +60,20 @@ public class Task {
         return description;
     }
 
+    /**
+     * Returns whether another task has the same user-defined details.
+     * Completion status is deliberately excluded because marking a task does
+     * not turn it into a distinct task.
+     *
+     * @param other the task to compare with
+     * @return {@code true} if both tasks have the same type and description
+     */
+    public boolean hasSameDetailsAs(Task other) {
+        return other != null
+                && getClass().equals(other.getClass())
+                && description.equals(other.description);
+    }
+
     @Override
     public String toString() {
         return "[" + getStatusIcon() + "] " + description;

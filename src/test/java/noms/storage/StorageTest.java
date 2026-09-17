@@ -193,6 +193,20 @@ public class StorageTest {
     }
 
     @Test
+    public void load_duplicateDetails_skipsLaterRecordIgnoringCompletion() throws IOException {
+        Path file = tempDir.resolve("noms.txt");
+        String duplicateTask = "T | 1 | read book";
+        Files.writeString(file, "T | 0 | read book\n" + duplicateTask + "\n");
+        Storage storage = storageIn(tempDir);
+
+        List<Task> loaded = storage.load();
+
+        assertEquals(1, loaded.size());
+        assertEquals(" ", loaded.get(0).getStatusIcon());
+        assertEquals(List.of(duplicateTask), storage.getSkippedLines());
+    }
+
+    @Test
     public void load_invalidDate_skipsAndRecordsLine() throws IOException {
         Path file = tempDir.resolve("noms.txt");
         String invalidDeadline = "D | 0 | submit report | tomorrow";

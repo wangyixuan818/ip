@@ -74,6 +74,13 @@ public class Event extends Task {
         endDate = newEndDate;
     }
 
+    @Override
+    public boolean hasSameDetailsAs(Task other) {
+        return super.hasSameDetailsAs(other)
+                && startDate.equals(((Event) other).startDate)
+                && endDate.equals(((Event) other).endDate);
+    }
+
     /** Rejects a date range that cannot represent a positive-duration event. */
     private static void requireValidDateRange(LocalDate startDate, LocalDate endDate) {
         if (!isValidDateRange(startDate, endDate)) {

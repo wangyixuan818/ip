@@ -1417,3 +1417,61 @@ ____________________________________________________________
 All done! Noms is full for now. See you next time!
 ____________________________________________________________
 ```
+
+### TC-028: Reject tasks with duplicate details
+
+**Aim:**
+
+Verify that Noms rejects repeated task details, keeps the original task, and
+still permits the same description when the task type or date differs.
+
+**Inputs:**
+
+```text
+todo read book
+todo read book
+deadline read book /by 2019-06-06
+deadline read book /by 2019-06-06
+deadline read book /by 2019-06-07
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ _   _  ___  __  __  ____
+| \ | |/ _ \|  \/  |/ ___|
+|  \| | | | | |\/| | \___ \
+| |\  | |_| | |  | |  ___) |
+|_| \_|\___/|_|  |_| |____/
+____________________________________________________________
+Hi! I'm Noms, your hungry little task monster. What's on the menu today?
+____________________________________________________________
+ Yum! Noms has gobbled up your new task:
+   [T][ ] read book
+ Your menu now has 1 task.
+____________________________________________________________
+ Oops! Noms already has that task on the menu.
+Try adding a task with different details.
+____________________________________________________________
+ Yum! Noms has gobbled up your new task:
+   [D][ ] read book (by: Jun 06 2019)
+ Your menu now has 2 tasks.
+____________________________________________________________
+ Oops! Noms already has that task on the menu.
+Try adding a task with different details.
+____________________________________________________________
+ Yum! Noms has gobbled up your new task:
+   [D][ ] read book (by: Jun 07 2019)
+ Your menu now has 3 tasks.
+____________________________________________________________
+ Here's what Noms has on the menu:
+ 1.[T][ ] read book
+ 2.[D][ ] read book (by: Jun 06 2019)
+ 3.[D][ ] read book (by: Jun 07 2019)
+____________________________________________________________
+All done! Noms is full for now. See you next time!
+____________________________________________________________
+```

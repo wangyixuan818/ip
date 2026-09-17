@@ -16,6 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import noms.exception.DuplicateTaskException;
 import noms.exception.NomsException;
 import noms.exception.StorageException;
 import noms.storage.Storage;
@@ -86,6 +87,20 @@ public class AddCommandTest {
                 () -> new AddCommand(new ToDo("read book"))
                         .execute(tasks, ui, blockedStorage));
         assertEquals(0, tasks.size());
+    }
+
+    @Test
+    public void execute_duplicateTask_throwsWithoutChangingListOrStorage()
+            throws IOException, NomsException {
+        ToDo existingTask = new ToDo("read book");
+        existingTask.markAsDone();
+        TaskList tasks = new TaskList(existingTask);
+        storage.save(tasks.asList());
+
+        assertThrows(DuplicateTaskException.class,
+                () -> new AddCommand(new ToDo("read book")).execute(tasks, ui, storage));
+        assertEquals(1, tasks.size());
+        assertEquals(1, storage.load().size());
     }
 
     @Test

@@ -40,6 +40,12 @@ public class Deadline extends Task {
     }
 
     @Override
+    public boolean hasSameDetailsAs(Task other) {
+        return super.hasSameDetailsAs(other)
+                && dueDate.equals(((Deadline) other).dueDate);
+    }
+
+    @Override
     public String toString() {
         return "[D]" + super.toString() + " (by: " + DateUtil.format(dueDate) + ")";
     }

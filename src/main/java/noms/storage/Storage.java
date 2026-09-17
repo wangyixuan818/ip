@@ -125,7 +125,14 @@ public class Storage {
             }
 
             try {
-                tasks.add(parseLine(line));
+                Task task = parseLine(line);
+                boolean isDuplicate = tasks.stream()
+                        .anyMatch(existingTask -> existingTask.hasSameDetailsAs(task));
+                if (isDuplicate) {
+                    skippedLines.add(line);
+                } else {
+                    tasks.add(task);
+                }
             } catch (RuntimeException e) {
                 skippedLines.add(line);
             }

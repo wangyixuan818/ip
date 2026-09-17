@@ -1,6 +1,8 @@
 package noms.task;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
@@ -165,6 +167,25 @@ public class TaskListTest {
         assertSame(chore, list.get(0));
         assertSame(returnBook, list.get(1));
         assertSame(conference, list.get(2));
+    }
+
+    // --- duplicate details ---
+
+    @Test
+    public void hasMatchingTask_sameDetailsIgnoringCompletion_returnsTrue() {
+        Deadline completedCopy = new Deadline("return book", LocalDate.of(2019, 12, 1));
+        completedCopy.markAsDone();
+
+        assertTrue(populatedList().hasMatchingTask(completedCopy));
+    }
+
+    @Test
+    public void hasMatchingTask_differentTaskTypeOrDate_returnsFalse() {
+        TaskList list = populatedList();
+
+        assertFalse(list.hasMatchingTask(new ToDo("return book")));
+        assertFalse(list.hasMatchingTask(
+                new Deadline("return book", LocalDate.of(2019, 12, 2))));
     }
 
     // --- defensive copying ---
