@@ -27,6 +27,7 @@ import noms.exception.EmptyKeywordException;
 import noms.exception.InvalidDateException;
 import noms.exception.InvalidDeadlineException;
 import noms.exception.InvalidEventException;
+import noms.exception.InvalidEventDateRangeException;
 import noms.exception.InvalidSnoozeException;
 import noms.exception.InvalidTaskNumberException;
 import noms.exception.NomsException;
@@ -170,6 +171,18 @@ public class ParserTest {
     }
 
     @Test
+    public void parseTask_eventEndsBeforeStart_throwsInvalidEventDateRangeException() {
+        assertThrows(InvalidEventDateRangeException.class,
+                () -> Parser.parseTask("event trip /from 2026-10-05 /to 2026-10-01"));
+    }
+
+    @Test
+    public void parseTask_eventStartsAndEndsSameDay_throwsInvalidEventDateRangeException() {
+        assertThrows(InvalidEventDateRangeException.class,
+                () -> Parser.parseTask("event trip /from 2026-10-05 /to 2026-10-05"));
+    }
+
+    @Test
     public void parseTask_unknownCommand_throwsUnknownCommandException() {
         assertThrows(UnknownCommandException.class, () -> Parser.parseTask("cook dinner"));
     }
@@ -296,6 +309,13 @@ public class ParserTest {
     public void parseEventSnoozeDates_invalidSyntax_throwsInvalidSnoozeException() {
         assertThrows(InvalidSnoozeException.class,
                 () -> Parser.parseEventSnoozeDates("snooze 1 /to 2026-09-22"));
+    }
+
+    @Test
+    public void parseEventSnoozeDates_invalidRange_throwsInvalidEventDateRangeException() {
+        assertThrows(InvalidEventDateRangeException.class,
+                () -> Parser.parseEventSnoozeDates(
+                        "snooze 1 /from 2026-10-05 /to 2026-10-01"));
     }
 
     // --- parseOnDate ---

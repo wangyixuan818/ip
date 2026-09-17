@@ -65,6 +65,7 @@ ____________________________________________________________
 All done! Noms is full for now. See you next time!
 ____________________________________________________________
 ```
+
 ### TC-002: Mark and unmark a typed task
 
 **Aim:**
@@ -1264,6 +1265,52 @@ Choose a task number from 1 to 1.
 ____________________________________________________________
  Here's what Noms has on the menu:
  1.[D][ ] submit report (by: Sep 15 2026)
+____________________________________________________________
+All done! Noms is full for now. See you next time!
+____________________________________________________________
+```
+
+### TC-025: Reject invalid event date ranges
+
+**Aim:**
+
+Verify that an event and an event snooze require an end date strictly after
+the start date, and that rejected ranges do not add or change a task.
+
+**Inputs:**
+
+```text
+event trip /from 2026-10-05 /to 2026-10-01
+event conference /from 2026-10-01 /to 2026-10-03
+snooze 1 /from 2026-10-05 /to 2026-10-05
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ _   _  ___  __  __  ____
+| \ | |/ _ \|  \/  |/ ___|
+|  \| | | | | |\/| | \___ \
+| |\  | |_| | |  | |  ___) |
+|_| \_|\___/|_|  |_| |____/
+____________________________________________________________
+Hi! I'm Noms, your hungry little task monster. What's on the menu today?
+____________________________________________________________
+ Oops! This event's end date must be after its start date.
+Try an end date later than the start date.
+____________________________________________________________
+ Yum! Noms has gobbled up your new task:
+   [E][ ] conference (from: Oct 01 2026 to: Oct 03 2026)
+ Your menu now has 1 task.
+____________________________________________________________
+ Oops! This event's end date must be after its start date.
+Try an end date later than the start date.
+____________________________________________________________
+ Here's what Noms has on the menu:
+ 1.[E][ ] conference (from: Oct 01 2026 to: Oct 03 2026)
 ____________________________________________________________
 All done! Noms is full for now. See you next time!
 ____________________________________________________________

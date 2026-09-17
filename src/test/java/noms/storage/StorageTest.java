@@ -147,6 +147,17 @@ public class StorageTest {
     }
 
     @Test
+    public void load_eventWithInvalidDateRange_skipsAndRecordsLine() throws IOException {
+        Path file = tempDir.resolve("noms.txt");
+        String invalidEvent = "E | 0 | trip | 2026-10-05 | 2026-10-01";
+        Files.writeString(file, invalidEvent);
+        Storage storage = storageIn(tempDir);
+
+        assertEquals(List.of(), storage.load());
+        assertEquals(List.of(invalidEvent), storage.getSkippedLines());
+    }
+
+    @Test
     public void load_malformedEscapedDescription_skipsAndRecordsLine() throws IOException {
         Path file = tempDir.resolve("noms.txt");
         String malformedTask = "T | 0 | bad\\qescape";

@@ -21,6 +21,7 @@ import noms.exception.EmptyDescriptionException;
 import noms.exception.EmptyKeywordException;
 import noms.exception.InvalidDateException;
 import noms.exception.InvalidDeadlineException;
+import noms.exception.InvalidEventDateRangeException;
 import noms.exception.InvalidEventException;
 import noms.exception.InvalidSnoozeException;
 import noms.exception.InvalidTaskNumberException;
@@ -233,7 +234,10 @@ public class Parser {
         if (startDate.isEmpty() || endDate.isEmpty()) {
             throw new InvalidEventException(EVENT_FORMAT);
         }
-        return new Event(description, DateUtil.parse(startDate), DateUtil.parse(endDate));
+        LocalDate parsedStartDate = DateUtil.parse(startDate);
+        LocalDate parsedEndDate = DateUtil.parse(endDate);
+        validateEventDateRange(parsedStartDate, parsedEndDate);
+        return new Event(description, parsedStartDate, parsedEndDate);
     }
 
     /**
@@ -339,7 +343,18 @@ public class Parser {
         Optional<LocalDate> endDate = endDateText == null
                 ? Optional.empty()
                 : Optional.of(DateUtil.parse(endDateText));
+        if (endDate.isPresent()) {
+            validateEventDateRange(startDate, endDate.get());
+        }
         return new EventSnoozeDates(startDate, endDate);
+    }
+
+    /** Rejects an event date range that does not have a positive duration. */
+    private static void validateEventDateRange(LocalDate startDate, LocalDate endDate)
+            throws InvalidEventDateRangeException {
+        if (!Event.isValidDateRange(startDate, endDate)) {
+            throw new InvalidEventDateRangeException();
+        }
     }
 
     /** Holds the parsed dates for an event snooze command. */
