@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import noms.command.Command;
@@ -55,14 +56,24 @@ public class Noms {
         TaskList loaded;
         try {
             loaded = new TaskList(storage.load());
-            for (String spoiledLine : storage.getSkippedLines()) {
-                ui.showError("Noms found a spoiled entry in the save file and skipped it: " + spoiledLine);
-            }
+            reportSkippedLines(storage.getSkippedLines());
         } catch (IOException e) {
             loaded = new TaskList();
             ui.showError("Noms couldn't load the saved menu, starting with an empty plate: " + e.getMessage());
         }
         tasks = loaded;
+    }
+
+    /**
+     * Reports each save-file line skipped while loading, so the user knows
+     * their data was not silently dropped.
+     *
+     * @param skippedLines the raw lines that could not be parsed, in load order
+     */
+    private void reportSkippedLines(List<String> skippedLines) {
+        for (String spoiledLine : skippedLines) {
+            ui.showError("Noms found a spoiled entry in the save file and skipped it: " + spoiledLine);
+        }
     }
 
     /**
