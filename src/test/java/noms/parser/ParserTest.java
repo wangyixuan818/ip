@@ -92,6 +92,20 @@ public class ParserTest {
         assertEquals("[E][ ] project meeting (from: Aug 06 2019 to: Aug 07 2019)", task.toString());
     }
 
+    @Test
+    public void parseTask_surroundingWhitespace_preservesTaskDetails() throws NomsException {
+        Task todo = Parser.parseTask("  todo read book  ");
+        Task deadline = Parser.parseTask(
+                "  deadline return book /by 2019-06-06  ");
+        Task event = Parser.parseTask(
+                "  event meeting /from 2019-08-06 /to 2019-08-07  ");
+
+        assertEquals("read book", todo.getDescription());
+        assertEquals("[D][ ] return book (by: Jun 06 2019)", deadline.toString());
+        assertEquals("[E][ ] meeting (from: Aug 06 2019 to: Aug 07 2019)",
+                event.toString());
+    }
+
     // --- parseTask: invalid input ---
 
     @Test

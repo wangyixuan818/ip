@@ -79,7 +79,8 @@ public class Parser {
      * @throws NomsException if the command is blank, unrecognized, or malformed
      */
     public static Command parse(String fullCommand) throws NomsException {
-        CommandType commandType = getCommandType(fullCommand);
+        String normalizedCommand = normalizeCommand(fullCommand);
+        CommandType commandType = getCommandType(normalizedCommand);
         if (commandType == null) {
             throw new UnknownCommandException();
         }
@@ -90,21 +91,21 @@ public class Parser {
             case LIST:
                 return new ListCommand();
             case MARK:
-                return new MarkCommand(fullCommand);
+                return new MarkCommand(normalizedCommand);
             case UNMARK:
-                return new UnmarkCommand(fullCommand);
+                return new UnmarkCommand(normalizedCommand);
             case DELETE:
-                return new DeleteCommand(fullCommand);
+                return new DeleteCommand(normalizedCommand);
             case SNOOZE:
-                return new SnoozeCommand(fullCommand);
+                return new SnoozeCommand(normalizedCommand);
             case ON:
-                return new OnCommand(parseOnDate(fullCommand));
+                return new OnCommand(parseOnDate(normalizedCommand));
             case FIND:
-                return new FindCommand(parseKeyword(fullCommand));
+                return new FindCommand(parseKeyword(normalizedCommand));
             case TODO:
             case DEADLINE:
             case EVENT:
-                return new AddCommand(parseTask(fullCommand));
+                return new AddCommand(parseTask(normalizedCommand));
             default:
                 assert false : "Unhandled command type";
                 throw new UnknownCommandException();
@@ -119,12 +120,12 @@ public class Parser {
      * @throws EmptyCommandException if the command is blank
      */
     public static CommandType getCommandType(String command) throws EmptyCommandException {
-        String trimmedCommand = command.trim();
-        if (trimmedCommand.isEmpty()) {
+        String normalizedCommand = normalizeCommand(command);
+        if (normalizedCommand.isEmpty()) {
             throw new EmptyCommandException();
         }
 
-        String commandWord = trimmedCommand.split("\\s+")[0];
+        String commandWord = normalizedCommand.split("\\s+")[0];
         try {
             return CommandType.valueOf(commandWord.toUpperCase());
         } catch (IllegalArgumentException e) {
@@ -141,7 +142,8 @@ public class Parser {
      * @throws NomsException if the command is unknown or missing required parts
      */
     public static Task parseTask(String command) throws NomsException {
-        CommandType commandType = getCommandType(command);
+        String normalizedCommand = normalizeCommand(command);
+        CommandType commandType = getCommandType(normalizedCommand);
 
         if (commandType == null) {
             throw new UnknownCommandException();
@@ -149,11 +151,11 @@ public class Parser {
 
         switch (commandType) {
             case TODO:
-                return parseTodo(command);
+                return parseTodo(normalizedCommand);
             case DEADLINE:
-                return parseDeadline(command);
+                return parseDeadline(normalizedCommand);
             case EVENT:
-                return parseEvent(command);
+                return parseEvent(normalizedCommand);
             default:
                 throw new UnknownCommandException();
         }
@@ -355,6 +357,11 @@ public class Parser {
         if (!Event.isValidDateRange(startDate, endDate)) {
             throw new InvalidEventDateRangeException();
         }
+    }
+
+    /** Removes whitespace surrounding a command without altering its contents. */
+    private static String normalizeCommand(String command) {
+        return command.strip();
     }
 
     /** Holds the parsed dates for an event snooze command. */

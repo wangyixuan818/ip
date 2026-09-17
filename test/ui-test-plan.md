@@ -1315,3 +1315,53 @@ ____________________________________________________________
 All done! Noms is full for now. See you next time!
 ____________________________________________________________
 ```
+
+### TC-026: Normalize surrounding command whitespace
+
+**Aim:**
+
+Verify that leading whitespace does not corrupt task descriptions or dates,
+while the task contents remain unchanged. JUnit covers trailing whitespace.
+
+**Inputs:**
+
+```text
+  todo read book
+  deadline return book /by 2019-06-06
+  event conference /from 2019-08-06 /to 2019-08-07
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ _   _  ___  __  __  ____
+| \ | |/ _ \|  \/  |/ ___|
+|  \| | | | | |\/| | \___ \
+| |\  | |_| | |  | |  ___) |
+|_| \_|\___/|_|  |_| |____/
+____________________________________________________________
+Hi! I'm Noms, your hungry little task monster. What's on the menu today?
+____________________________________________________________
+ Yum! Noms has gobbled up your new task:
+   [T][ ] read book
+ Your menu now has 1 task.
+____________________________________________________________
+ Yum! Noms has gobbled up your new task:
+   [D][ ] return book (by: Jun 06 2019)
+ Your menu now has 2 tasks.
+____________________________________________________________
+ Yum! Noms has gobbled up your new task:
+   [E][ ] conference (from: Aug 06 2019 to: Aug 07 2019)
+ Your menu now has 3 tasks.
+____________________________________________________________
+ Here's what Noms has on the menu:
+ 1.[T][ ] read book
+ 2.[D][ ] return book (by: Jun 06 2019)
+ 3.[E][ ] conference (from: Aug 06 2019 to: Aug 07 2019)
+____________________________________________________________
+All done! Noms is full for now. See you next time!
+____________________________________________________________
+```
