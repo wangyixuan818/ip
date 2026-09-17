@@ -48,10 +48,6 @@ public class Parser {
     private static final String TODO_COMMAND = "todo";
     private static final String DEADLINE_COMMAND = "deadline";
     private static final String EVENT_COMMAND = "event";
-    private static final String DEADLINE_DATE_SEPARATOR = " /by ";
-    private static final String EVENT_START_DATE_SEPARATOR = " /from ";
-    private static final String EVENT_END_DATE_SEPARATOR = " /to ";
-
     private static final String TODO_FORMAT = TODO_COMMAND + " <description>";
     private static final String DEADLINE_FORMAT =
             DEADLINE_COMMAND + " <description> /by yyyy-mm-dd";
@@ -68,6 +64,9 @@ public class Parser {
     private static final Pattern EVENT_SNOOZE_PATTERN = Pattern.compile(
             "^\\s*(?i:snooze)\\s+-?\\d+\\s+/from\\s+([^\\s/]+)"
                     + "(?:\\s+/to\\s+([^\\s/]+))?\\s*$");
+    private static final Pattern DEADLINE_DATE_SEPARATOR_PATTERN = Pattern.compile("\\s+/by\\s+");
+    private static final Pattern EVENT_START_DATE_SEPARATOR_PATTERN = Pattern.compile("\\s+/from\\s+");
+    private static final Pattern EVENT_END_DATE_SEPARATOR_PATTERN = Pattern.compile("\\s+/to\\s+");
 
     /**
      * Turns a full command line into the {@link Command} that carries it
@@ -191,13 +190,12 @@ public class Parser {
             throw new EmptyDescriptionException(DEADLINE_COMMAND, DEADLINE_FORMAT);
         }
         String remainder = command.substring(DEADLINE_COMMAND.length());
-        int byIndex = remainder.indexOf(DEADLINE_DATE_SEPARATOR);
-        if (byIndex < 1) {
+        Matcher separatorMatcher = DEADLINE_DATE_SEPARATOR_PATTERN.matcher(remainder);
+        if (!separatorMatcher.find()) {
             throw new InvalidDeadlineException(DEADLINE_FORMAT);
         }
-        String description = remainder.substring(0, byIndex).trim();
-        String dueDate = remainder.substring(
-                byIndex + DEADLINE_DATE_SEPARATOR.length()).trim();
+        String description = remainder.substring(0, separatorMatcher.start()).trim();
+        String dueDate = remainder.substring(separatorMatcher.end()).trim();
         if (description.isEmpty()) {
             throw new EmptyDescriptionException(DEADLINE_COMMAND, DEADLINE_FORMAT);
         }
@@ -219,20 +217,17 @@ public class Parser {
             throw new EmptyDescriptionException(EVENT_COMMAND, EVENT_FORMAT);
         }
         String remainder = command.substring(EVENT_COMMAND.length());
-        int fromIndex = remainder.indexOf(EVENT_START_DATE_SEPARATOR);
-        if (fromIndex < 1) {
+        Matcher fromMatcher = EVENT_START_DATE_SEPARATOR_PATTERN.matcher(remainder);
+        if (!fromMatcher.find()) {
             throw new InvalidEventException(EVENT_FORMAT);
         }
-        int toIndex = remainder.indexOf(EVENT_END_DATE_SEPARATOR,
-                fromIndex + EVENT_START_DATE_SEPARATOR.length());
-        if (toIndex < 0) {
+        Matcher toMatcher = EVENT_END_DATE_SEPARATOR_PATTERN.matcher(remainder);
+        if (!toMatcher.find(fromMatcher.end())) {
             throw new InvalidEventException(EVENT_FORMAT);
         }
-        String description = remainder.substring(0, fromIndex).trim();
-        String startDate = remainder.substring(
-                fromIndex + EVENT_START_DATE_SEPARATOR.length(), toIndex).trim();
-        String endDate = remainder.substring(
-                toIndex + EVENT_END_DATE_SEPARATOR.length()).trim();
+        String description = remainder.substring(0, fromMatcher.start()).trim();
+        String startDate = remainder.substring(fromMatcher.end(), toMatcher.start()).trim();
+        String endDate = remainder.substring(toMatcher.end()).trim();
         if (description.isEmpty()) {
             throw new EmptyDescriptionException(EVENT_COMMAND, EVENT_FORMAT);
         }

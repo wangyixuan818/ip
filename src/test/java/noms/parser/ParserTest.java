@@ -107,6 +107,18 @@ public class ParserTest {
                 event.toString());
     }
 
+    @Test
+    public void parseTask_flexibleStructuralWhitespace_returnsTasks() throws NomsException {
+        Task deadline = Parser.parseTask(
+                "deadline\t\treturn book   /by\t2019-06-06");
+        Task event = Parser.parseTask(
+                "event   meeting\t/from   2019-08-06\t/to\t\t2019-08-07");
+
+        assertEquals("[D][ ] return book (by: Jun 06 2019)", deadline.toString());
+        assertEquals("[E][ ] meeting (from: Aug 06 2019 to: Aug 07 2019)",
+                event.toString());
+    }
+
     // --- parseTask: invalid input ---
 
     @Test

@@ -1326,15 +1326,16 @@ ____________________________________________________________
 
 **Aim:**
 
-Verify that leading whitespace does not corrupt task descriptions or dates,
-while the task contents remain unchanged. JUnit covers trailing whitespace.
+Verify that leading whitespace and repeated whitespace around structural
+markers do not corrupt task descriptions or dates. JUnit also covers tabs and
+trailing whitespace.
 
 **Inputs:**
 
 ```text
   todo read book
-  deadline return book /by 2019-06-06
-  event conference /from 2019-08-06 /to 2019-08-07
+  deadline   return book   /by   2019-06-06
+  event   conference   /from   2019-08-06   /to   2019-08-07
 list
 bye
 ```
