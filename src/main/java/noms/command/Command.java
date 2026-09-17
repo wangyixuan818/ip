@@ -3,6 +3,7 @@ package noms.command;
 import java.io.IOException;
 
 import noms.exception.NomsException;
+import noms.exception.StorageException;
 import noms.storage.Storage;
 import noms.task.TaskList;
 import noms.ui.Ui;
@@ -40,19 +41,22 @@ public abstract class Command {
     }
 
     /**
-     * Saves the current task list to disk, reporting a Noms-style error if
-     * the save fails instead of crashing the program. Shared here so that
-     * every task-changing command saves in exactly the same way.
+     * Saves the current task list to disk and rolls back its pending change
+     * if persistence fails. Shared here so every task-changing command keeps
+     * memory and disk consistent through the same transaction boundary.
      *
      * @param tasks the task list to save
-     * @param ui the ui used to report a save failure
      * @param storage the storage to save to
+     * @param rollbackAction the action that restores the task list before the change
+     * @throws StorageException if the task list cannot be saved
      */
-    protected void save(TaskList tasks, Ui ui, Storage storage) {
+    protected void save(TaskList tasks, Storage storage, Runnable rollbackAction)
+            throws StorageException {
         try {
             storage.save(tasks.asList());
         } catch (IOException e) {
-            ui.showError("Noms couldn't save the menu to disk: " + e.getMessage());
+            rollbackAction.run();
+            throw new StorageException(e);
         }
     }
 }

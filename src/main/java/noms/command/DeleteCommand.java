@@ -29,7 +29,7 @@ public class DeleteCommand extends Command {
         assert taskNumber >= 1 && taskNumber <= tasks.size()
                 : "Parser returned an invalid task number";
         Task deletedTask = tasks.delete(taskNumber - 1);
-        save(tasks, ui, storage);
+        save(tasks, storage, () -> tasks.add(taskNumber - 1, deletedTask));
         ui.showTaskDeleted(deletedTask, tasks.size());
     }
 }

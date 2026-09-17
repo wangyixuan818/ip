@@ -8,6 +8,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.junit.jupiter.api.AfterEach;
@@ -16,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import noms.exception.NomsException;
+import noms.exception.StorageException;
 import noms.storage.Storage;
 import noms.task.TaskList;
 import noms.task.ToDo;
@@ -96,5 +98,16 @@ public class UnmarkCommandTest {
     public void execute_outOfRangeNumber_throwsNomsException() {
         assertThrows(NomsException.class,
                 () -> new UnmarkCommand("unmark 2").execute(tasks, ui, storage));
+    }
+
+    @Test
+    public void execute_saveFails_throwsAndRestoresMarkedState() throws IOException {
+        Path blockedDirectory = tempDir.resolve("blocked-directory");
+        Files.writeString(blockedDirectory, "not a directory");
+        Storage blockedStorage = new Storage(blockedDirectory.toString(), "noms.txt");
+
+        assertThrows(StorageException.class,
+                () -> new UnmarkCommand("unmark 1").execute(tasks, ui, blockedStorage));
+        assertEquals("X", tasks.get(0).getStatusIcon());
     }
 }

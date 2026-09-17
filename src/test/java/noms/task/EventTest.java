@@ -3,6 +3,7 @@ package noms.task;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
 
@@ -45,11 +46,10 @@ public class EventTest {
     }
 
     @Test
-    public void occursOn_singleDayEvent_matchesOnlyThatDay() {
-        Event singleDay = new Event("standup",
-                LocalDate.of(2019, 8, 6), LocalDate.of(2019, 8, 6));
-        assertTrue(singleDay.occursOn(LocalDate.of(2019, 8, 6)));
-        assertFalse(singleDay.occursOn(LocalDate.of(2019, 8, 7)));
+    public void constructor_sameStartAndEndDate_throwsIllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new Event("standup",
+                        LocalDate.of(2019, 8, 6), LocalDate.of(2019, 8, 6)));
     }
 
     @Test
@@ -65,6 +65,22 @@ public class EventTest {
         event.reschedule(LocalDate.of(2026, 9, 20), LocalDate.of(2026, 10, 1));
 
         assertEquals("[E][ ] conference (from: Sep 20 2026 to: Oct 01 2026)",
+                event.toString());
+    }
+
+    @Test
+    public void constructor_invalidDateRange_throwsIllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new Event("conference",
+                        LocalDate.of(2026, 10, 5), LocalDate.of(2026, 10, 1)));
+    }
+
+    @Test
+    public void reschedule_invalidDateRange_throwsAndPreservesDates() {
+        assertThrows(IllegalArgumentException.class,
+                () -> event.reschedule(
+                        LocalDate.of(2026, 10, 5), LocalDate.of(2026, 10, 5)));
+        assertEquals("[E][ ] conference (from: Aug 06 2019 to: Aug 08 2019)",
                 event.toString());
     }
 }

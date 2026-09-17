@@ -25,6 +25,11 @@ public class Deadline extends Task {
         return dueDate.equals(date);
     }
 
+    /** Returns this deadline's due date. */
+    public LocalDate getDueDate() {
+        return dueDate;
+    }
+
     /**
      * Replaces this deadline's due date without changing its other details.
      *
@@ -32,6 +37,12 @@ public class Deadline extends Task {
      */
     public void rescheduleTo(LocalDate newDueDate) {
         dueDate = newDueDate;
+    }
+
+    @Override
+    public boolean hasSameDetailsAs(Task other) {
+        return super.hasSameDetailsAs(other)
+                && dueDate.equals(((Deadline) other).dueDate);
     }
 
     @Override

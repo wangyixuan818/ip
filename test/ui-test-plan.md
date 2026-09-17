@@ -65,6 +65,7 @@ ____________________________________________________________
 All done! Noms is full for now. See you next time!
 ____________________________________________________________
 ```
+
 ### TC-002: Mark and unmark a typed task
 
 **Aim:**
@@ -957,10 +958,12 @@ reports it with the standard error message. This exercises the path where
 
 **Note:** unlike the other cases, this case **pre-seeds** `./data/noms.txt`
 before the run instead of deleting it. Create `./data/noms.txt` with
-exactly these three lines, then start Noms:
+exactly these five lines, then start Noms:
 
 ```text
 T | 0 | good task
+T | 2 | invalid completion flag
+T | 0 | unexpected field | extra
 GARBAGE LINE
 D | 1 | pay rent | 2019-12-15
 ```
@@ -978,6 +981,10 @@ bye
 **Expected output:**
 
 ```text
+ Oops! Noms found a spoiled entry in the save file and skipped it: T | 2 | invalid completion flag
+____________________________________________________________
+ Oops! Noms found a spoiled entry in the save file and skipped it: T | 0 | unexpected field | extra
+____________________________________________________________
  Oops! Noms found a spoiled entry in the save file and skipped it: GARBAGE LINE
 ____________________________________________________________
 ____________________________________________________________
@@ -1264,6 +1271,207 @@ Choose a task number from 1 to 1.
 ____________________________________________________________
  Here's what Noms has on the menu:
  1.[D][ ] submit report (by: Sep 15 2026)
+____________________________________________________________
+All done! Noms is full for now. See you next time!
+____________________________________________________________
+```
+
+### TC-025: Reject invalid event date ranges
+
+**Aim:**
+
+Verify that an event and an event snooze require an end date strictly after
+the start date, and that rejected ranges do not add or change a task.
+
+**Inputs:**
+
+```text
+event trip /from 2026-10-05 /to 2026-10-01
+event conference /from 2026-10-01 /to 2026-10-03
+snooze 1 /from 2026-10-05 /to 2026-10-05
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ _   _  ___  __  __  ____
+| \ | |/ _ \|  \/  |/ ___|
+|  \| | | | | |\/| | \___ \
+| |\  | |_| | |  | |  ___) |
+|_| \_|\___/|_|  |_| |____/
+____________________________________________________________
+Hi! I'm Noms, your hungry little task monster. What's on the menu today?
+____________________________________________________________
+ Oops! This event's end date must be after its start date.
+Try an end date later than the start date.
+____________________________________________________________
+ Yum! Noms has gobbled up your new task:
+   [E][ ] conference (from: Oct 01 2026 to: Oct 03 2026)
+ Your menu now has 1 task.
+____________________________________________________________
+ Oops! This event's end date must be after its start date.
+Try an end date later than the start date.
+____________________________________________________________
+ Here's what Noms has on the menu:
+ 1.[E][ ] conference (from: Oct 01 2026 to: Oct 03 2026)
+____________________________________________________________
+All done! Noms is full for now. See you next time!
+____________________________________________________________
+```
+
+### TC-026: Normalize surrounding command whitespace
+
+**Aim:**
+
+Verify that leading whitespace and repeated whitespace around structural
+markers do not corrupt task descriptions or dates. JUnit also covers tabs and
+trailing whitespace.
+
+**Inputs:**
+
+```text
+  todo read book
+  deadline   return book   /by   2019-06-06
+  event   conference   /from   2019-08-06   /to   2019-08-07
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ _   _  ___  __  __  ____
+| \ | |/ _ \|  \/  |/ ___|
+|  \| | | | | |\/| | \___ \
+| |\  | |_| | |  | |  ___) |
+|_| \_|\___/|_|  |_| |____/
+____________________________________________________________
+Hi! I'm Noms, your hungry little task monster. What's on the menu today?
+____________________________________________________________
+ Yum! Noms has gobbled up your new task:
+   [T][ ] read book
+ Your menu now has 1 task.
+____________________________________________________________
+ Yum! Noms has gobbled up your new task:
+   [D][ ] return book (by: Jun 06 2019)
+ Your menu now has 2 tasks.
+____________________________________________________________
+ Yum! Noms has gobbled up your new task:
+   [E][ ] conference (from: Aug 06 2019 to: Aug 07 2019)
+ Your menu now has 3 tasks.
+____________________________________________________________
+ Here's what Noms has on the menu:
+ 1.[T][ ] read book
+ 2.[D][ ] return book (by: Jun 06 2019)
+ 3.[E][ ] conference (from: Aug 06 2019 to: Aug 07 2019)
+____________________________________________________________
+All done! Noms is full for now. See you next time!
+____________________________________________________________
+```
+
+### TC-027: Reject arguments for parameterless commands
+
+**Aim:**
+
+Verify that `list` and `bye` reject extra arguments, that malformed `bye`
+does not exit, and that valid forms continue to work afterwards.
+
+**Inputs:**
+
+```text
+todo keep working
+list extra
+bye now
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ _   _  ___  __  __  ____
+| \ | |/ _ \|  \/  |/ ___|
+|  \| | | | | |\/| | \___ \
+| |\  | |_| | |  | |  ___) |
+|_| \_|\___/|_|  |_| |____/
+____________________________________________________________
+Hi! I'm Noms, your hungry little task monster. What's on the menu today?
+____________________________________________________________
+ Yum! Noms has gobbled up your new task:
+   [T][ ] keep working
+ Your menu now has 1 task.
+____________________________________________________________
+ Oops! Noms doesn't need extra ingredients for the list command.
+Try: list
+____________________________________________________________
+ Oops! Noms doesn't need extra ingredients for the bye command.
+Try: bye
+____________________________________________________________
+ Here's what Noms has on the menu:
+ 1.[T][ ] keep working
+____________________________________________________________
+All done! Noms is full for now. See you next time!
+____________________________________________________________
+```
+
+### TC-028: Reject tasks with duplicate details
+
+**Aim:**
+
+Verify that Noms rejects repeated task details, keeps the original task, and
+still permits the same description when the task type or date differs.
+
+**Inputs:**
+
+```text
+todo read book
+todo read book
+deadline read book /by 2019-06-06
+deadline read book /by 2019-06-06
+deadline read book /by 2019-06-07
+list
+bye
+```
+
+**Expected output:**
+
+```text
+____________________________________________________________
+ _   _  ___  __  __  ____
+| \ | |/ _ \|  \/  |/ ___|
+|  \| | | | | |\/| | \___ \
+| |\  | |_| | |  | |  ___) |
+|_| \_|\___/|_|  |_| |____/
+____________________________________________________________
+Hi! I'm Noms, your hungry little task monster. What's on the menu today?
+____________________________________________________________
+ Yum! Noms has gobbled up your new task:
+   [T][ ] read book
+ Your menu now has 1 task.
+____________________________________________________________
+ Oops! Noms already has that task on the menu.
+Try adding a task with different details.
+____________________________________________________________
+ Yum! Noms has gobbled up your new task:
+   [D][ ] read book (by: Jun 06 2019)
+ Your menu now has 2 tasks.
+____________________________________________________________
+ Oops! Noms already has that task on the menu.
+Try adding a task with different details.
+____________________________________________________________
+ Yum! Noms has gobbled up your new task:
+   [D][ ] read book (by: Jun 07 2019)
+ Your menu now has 3 tasks.
+____________________________________________________________
+ Here's what Noms has on the menu:
+ 1.[T][ ] read book
+ 2.[D][ ] read book (by: Jun 06 2019)
+ 3.[D][ ] read book (by: Jun 07 2019)
 ____________________________________________________________
 All done! Noms is full for now. See you next time!
 ____________________________________________________________

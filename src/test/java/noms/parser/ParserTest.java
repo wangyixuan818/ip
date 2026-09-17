@@ -27,9 +27,11 @@ import noms.exception.EmptyKeywordException;
 import noms.exception.InvalidDateException;
 import noms.exception.InvalidDeadlineException;
 import noms.exception.InvalidEventException;
+import noms.exception.InvalidEventDateRangeException;
 import noms.exception.InvalidSnoozeException;
 import noms.exception.InvalidTaskNumberException;
 import noms.exception.NomsException;
+import noms.exception.UnexpectedArgumentException;
 import noms.exception.UnknownCommandException;
 import noms.task.Deadline;
 import noms.task.Event;
@@ -89,6 +91,32 @@ public class ParserTest {
         assertInstanceOf(Event.class, task);
         assertEquals("project meeting", task.getDescription());
         assertEquals("[E][ ] project meeting (from: Aug 06 2019 to: Aug 07 2019)", task.toString());
+    }
+
+    @Test
+    public void parseTask_surroundingWhitespace_preservesTaskDetails() throws NomsException {
+        Task todo = Parser.parseTask("  todo read book  ");
+        Task deadline = Parser.parseTask(
+                "  deadline return book /by 2019-06-06  ");
+        Task event = Parser.parseTask(
+                "  event meeting /from 2019-08-06 /to 2019-08-07  ");
+
+        assertEquals("read book", todo.getDescription());
+        assertEquals("[D][ ] return book (by: Jun 06 2019)", deadline.toString());
+        assertEquals("[E][ ] meeting (from: Aug 06 2019 to: Aug 07 2019)",
+                event.toString());
+    }
+
+    @Test
+    public void parseTask_flexibleStructuralWhitespace_returnsTasks() throws NomsException {
+        Task deadline = Parser.parseTask(
+                "deadline\t\treturn book   /by\t2019-06-06");
+        Task event = Parser.parseTask(
+                "event   meeting\t/from   2019-08-06\t/to\t\t2019-08-07");
+
+        assertEquals("[D][ ] return book (by: Jun 06 2019)", deadline.toString());
+        assertEquals("[E][ ] meeting (from: Aug 06 2019 to: Aug 07 2019)",
+                event.toString());
     }
 
     // --- parseTask: invalid input ---
@@ -167,6 +195,18 @@ public class ParserTest {
     public void parseTask_eventWithEmptyEndDate_throwsInvalidEventException() {
         assertThrows(InvalidEventException.class,
                 () -> Parser.parseTask("event meeting /from 2019-08-06 /to   "));
+    }
+
+    @Test
+    public void parseTask_eventEndsBeforeStart_throwsInvalidEventDateRangeException() {
+        assertThrows(InvalidEventDateRangeException.class,
+                () -> Parser.parseTask("event trip /from 2026-10-05 /to 2026-10-01"));
+    }
+
+    @Test
+    public void parseTask_eventStartsAndEndsSameDay_throwsInvalidEventDateRangeException() {
+        assertThrows(InvalidEventDateRangeException.class,
+                () -> Parser.parseTask("event trip /from 2026-10-05 /to 2026-10-05"));
     }
 
     @Test
@@ -298,6 +338,13 @@ public class ParserTest {
                 () -> Parser.parseEventSnoozeDates("snooze 1 /to 2026-09-22"));
     }
 
+    @Test
+    public void parseEventSnoozeDates_invalidRange_throwsInvalidEventDateRangeException() {
+        assertThrows(InvalidEventDateRangeException.class,
+                () -> Parser.parseEventSnoozeDates(
+                        "snooze 1 /from 2026-10-05 /to 2026-10-01"));
+    }
+
     // --- parseOnDate ---
 
     @Test
@@ -369,6 +416,25 @@ public class ParserTest {
     @Test
     public void parse_blankCommand_throwsEmptyCommandException() {
         assertThrows(EmptyCommandException.class, () -> Parser.parse("   "));
+    }
+
+    @Test
+    public void parse_listWithArguments_throwsUnexpectedArgumentException() {
+        assertThrows(UnexpectedArgumentException.class,
+                () -> Parser.parse("list extra"));
+    }
+
+    @Test
+    public void parse_byeWithArguments_throwsUnexpectedArgumentException() {
+        assertThrows(UnexpectedArgumentException.class,
+                () -> Parser.parse("bye now"));
+    }
+
+    @Test
+    public void parse_parameterlessCommandsWithSurroundingWhitespace_returnCommands()
+            throws NomsException {
+        assertInstanceOf(ListCommand.class, Parser.parse("  LIST  "));
+        assertInstanceOf(ExitCommand.class, Parser.parse("  BYE  "));
     }
 
     @Test

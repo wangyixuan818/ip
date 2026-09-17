@@ -1,8 +1,10 @@
 package noms.storage;
 
 import java.io.IOException;
+import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +22,7 @@ import noms.ui.Ui;
 public class Storage {
     private static final String FIELD_SEPARATOR_REGEX = " \\| ";
     private static final String COMPLETED_FLAG = "1";
+    private static final String INCOMPLETE_FLAG = "0";
     private static final String TODO_TYPE = "T";
     private static final String DEADLINE_TYPE = "D";
     private static final String EVENT_TYPE = "E";
@@ -29,6 +32,9 @@ public class Storage {
     private static final int DESCRIPTION_FIELD = 2;
     private static final int DATE_FIELD = 3;
     private static final int EVENT_END_DATE_FIELD = 4;
+    private static final int TODO_FIELD_COUNT = 3;
+    private static final int DEADLINE_FIELD_COUNT = 4;
+    private static final int EVENT_FIELD_COUNT = 5;
 
     private final Path filePath;
     private final List<String> skippedLines = new ArrayList<>();
@@ -47,25 +53,47 @@ public class Storage {
     }
 
     /**
-     * Writes the given tasks to disk, one per line, overwriting any
-     * previous contents of the save file. Creates the parent directory
-     * first if it does not already exist.
+     * Writes the given tasks to a temporary sibling file before replacing
+     * the save file. This keeps the previous file intact if content writing
+     * fails and uses an atomic replacement when the filesystem supports it.
      *
      * @param tasks the current task list to save
      * @throws IOException if the file or its parent directory cannot be written
      */
     public void save(List<Task> tasks) throws IOException {
-        Path parent = filePath.getParent();
-        if (parent != null) {
-            Files.createDirectories(parent);
-        }
+        Path absoluteFilePath = filePath.toAbsolutePath();
+        Path parent = absoluteFilePath.getParent();
+        Files.createDirectories(parent);
 
         StringBuilder content = new StringBuilder();
         for (Task task : tasks) {
             content.append(task.toFileFormat()).append(System.lineSeparator());
         }
 
-        Files.writeString(filePath, content.toString());
+        Path temporaryFile = Files.createTempFile(
+                parent, absoluteFilePath.getFileName().toString() + ".", ".tmp");
+        try {
+            Files.writeString(temporaryFile, content.toString());
+            replaceSaveFile(temporaryFile, absoluteFilePath);
+        } finally {
+            Files.deleteIfExists(temporaryFile);
+        }
+    }
+
+    /**
+     * Replaces the save file with a completed temporary file.
+     *
+     * @param temporaryFile the fully written temporary file
+     * @param targetFile the live save file to replace
+     * @throws IOException if neither atomic nor normal replacement succeeds
+     */
+    protected void replaceSaveFile(Path temporaryFile, Path targetFile) throws IOException {
+        try {
+            Files.move(temporaryFile, targetFile,
+                    StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+        } catch (AtomicMoveNotSupportedException e) {
+            Files.move(temporaryFile, targetFile, StandardCopyOption.REPLACE_EXISTING);
+        }
     }
 
     /**
@@ -97,7 +125,14 @@ public class Storage {
             }
 
             try {
-                tasks.add(parseLine(line));
+                Task task = parseLine(line);
+                boolean isDuplicate = tasks.stream()
+                        .anyMatch(existingTask -> existingTask.hasSameDetailsAs(task));
+                if (isDuplicate) {
+                    skippedLines.add(line);
+                } else {
+                    tasks.add(task);
+                }
             } catch (RuntimeException e) {
                 skippedLines.add(line);
             }
@@ -124,7 +159,8 @@ public class Storage {
      * @throws RuntimeException if the line is missing fields or has an unrecognized type letter
      */
     private Task parseLine(String line) {
-        String[] fields = line.split(FIELD_SEPARATOR_REGEX);
+        String[] fields = line.split(FIELD_SEPARATOR_REGEX, -1);
+        validateFields(fields);
         String type = fields[TYPE_FIELD];
         boolean isDone = fields[COMPLETION_FIELD].equals(COMPLETED_FLAG);
         String description = Task.unescape(fields[DESCRIPTION_FIELD]);
@@ -151,5 +187,38 @@ public class Storage {
             task.markAsDone();
         }
         return task;
+    }
+
+    /** Rejects a persisted record that does not match its task type's schema. */
+    private static void validateFields(String[] fields) {
+        if (fields.length == 0) {
+            throw new IllegalArgumentException("Task record has no fields");
+        }
+
+        int expectedFieldCount;
+        switch (fields[TYPE_FIELD]) {
+            case TODO_TYPE:
+                expectedFieldCount = TODO_FIELD_COUNT;
+                break;
+            case DEADLINE_TYPE:
+                expectedFieldCount = DEADLINE_FIELD_COUNT;
+                break;
+            case EVENT_TYPE:
+                expectedFieldCount = EVENT_FIELD_COUNT;
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown task type: " + fields[TYPE_FIELD]);
+        }
+
+        if (fields.length != expectedFieldCount) {
+            throw new IllegalArgumentException("Unexpected task field count");
+        }
+        if (!fields[COMPLETION_FIELD].equals(COMPLETED_FLAG)
+                && !fields[COMPLETION_FIELD].equals(INCOMPLETE_FLAG)) {
+            throw new IllegalArgumentException("Invalid completion flag");
+        }
+        if (fields[DESCRIPTION_FIELD].isEmpty()) {
+            throw new IllegalArgumentException("Task description is empty");
+        }
     }
 }

@@ -21,10 +21,12 @@ import noms.exception.EmptyDescriptionException;
 import noms.exception.EmptyKeywordException;
 import noms.exception.InvalidDateException;
 import noms.exception.InvalidDeadlineException;
+import noms.exception.InvalidEventDateRangeException;
 import noms.exception.InvalidEventException;
 import noms.exception.InvalidSnoozeException;
 import noms.exception.InvalidTaskNumberException;
 import noms.exception.NomsException;
+import noms.exception.UnexpectedArgumentException;
 import noms.exception.UnknownCommandException;
 import noms.task.Deadline;
 import noms.task.Event;
@@ -46,10 +48,6 @@ public class Parser {
     private static final String TODO_COMMAND = "todo";
     private static final String DEADLINE_COMMAND = "deadline";
     private static final String EVENT_COMMAND = "event";
-    private static final String DEADLINE_DATE_SEPARATOR = " /by ";
-    private static final String EVENT_START_DATE_SEPARATOR = " /from ";
-    private static final String EVENT_END_DATE_SEPARATOR = " /to ";
-
     private static final String TODO_FORMAT = TODO_COMMAND + " <description>";
     private static final String DEADLINE_FORMAT =
             DEADLINE_COMMAND + " <description> /by yyyy-mm-dd";
@@ -66,6 +64,9 @@ public class Parser {
     private static final Pattern EVENT_SNOOZE_PATTERN = Pattern.compile(
             "^\\s*(?i:snooze)\\s+-?\\d+\\s+/from\\s+([^\\s/]+)"
                     + "(?:\\s+/to\\s+([^\\s/]+))?\\s*$");
+    private static final Pattern DEADLINE_DATE_SEPARATOR_PATTERN = Pattern.compile("\\s+/by\\s+");
+    private static final Pattern EVENT_START_DATE_SEPARATOR_PATTERN = Pattern.compile("\\s+/from\\s+");
+    private static final Pattern EVENT_END_DATE_SEPARATOR_PATTERN = Pattern.compile("\\s+/to\\s+");
 
     /**
      * Turns a full command line into the {@link Command} that carries it
@@ -78,32 +79,35 @@ public class Parser {
      * @throws NomsException if the command is blank, unrecognized, or malformed
      */
     public static Command parse(String fullCommand) throws NomsException {
-        CommandType commandType = getCommandType(fullCommand);
+        String normalizedCommand = normalizeCommand(fullCommand);
+        CommandType commandType = getCommandType(normalizedCommand);
         if (commandType == null) {
             throw new UnknownCommandException();
         }
 
         switch (commandType) {
             case BYE:
+                validateNoArguments(normalizedCommand, "bye");
                 return new ExitCommand();
             case LIST:
+                validateNoArguments(normalizedCommand, "list");
                 return new ListCommand();
             case MARK:
-                return new MarkCommand(fullCommand);
+                return new MarkCommand(normalizedCommand);
             case UNMARK:
-                return new UnmarkCommand(fullCommand);
+                return new UnmarkCommand(normalizedCommand);
             case DELETE:
-                return new DeleteCommand(fullCommand);
+                return new DeleteCommand(normalizedCommand);
             case SNOOZE:
-                return new SnoozeCommand(fullCommand);
+                return new SnoozeCommand(normalizedCommand);
             case ON:
-                return new OnCommand(parseOnDate(fullCommand));
+                return new OnCommand(parseOnDate(normalizedCommand));
             case FIND:
-                return new FindCommand(parseKeyword(fullCommand));
+                return new FindCommand(parseKeyword(normalizedCommand));
             case TODO:
             case DEADLINE:
             case EVENT:
-                return new AddCommand(parseTask(fullCommand));
+                return new AddCommand(parseTask(normalizedCommand));
             default:
                 assert false : "Unhandled command type";
                 throw new UnknownCommandException();
@@ -118,12 +122,12 @@ public class Parser {
      * @throws EmptyCommandException if the command is blank
      */
     public static CommandType getCommandType(String command) throws EmptyCommandException {
-        String trimmedCommand = command.trim();
-        if (trimmedCommand.isEmpty()) {
+        String normalizedCommand = normalizeCommand(command);
+        if (normalizedCommand.isEmpty()) {
             throw new EmptyCommandException();
         }
 
-        String commandWord = trimmedCommand.split("\\s+")[0];
+        String commandWord = normalizedCommand.split("\\s+")[0];
         try {
             return CommandType.valueOf(commandWord.toUpperCase());
         } catch (IllegalArgumentException e) {
@@ -140,7 +144,8 @@ public class Parser {
      * @throws NomsException if the command is unknown or missing required parts
      */
     public static Task parseTask(String command) throws NomsException {
-        CommandType commandType = getCommandType(command);
+        String normalizedCommand = normalizeCommand(command);
+        CommandType commandType = getCommandType(normalizedCommand);
 
         if (commandType == null) {
             throw new UnknownCommandException();
@@ -148,11 +153,11 @@ public class Parser {
 
         switch (commandType) {
             case TODO:
-                return parseTodo(command);
+                return parseTodo(normalizedCommand);
             case DEADLINE:
-                return parseDeadline(command);
+                return parseDeadline(normalizedCommand);
             case EVENT:
-                return parseEvent(command);
+                return parseEvent(normalizedCommand);
             default:
                 throw new UnknownCommandException();
         }
@@ -185,13 +190,12 @@ public class Parser {
             throw new EmptyDescriptionException(DEADLINE_COMMAND, DEADLINE_FORMAT);
         }
         String remainder = command.substring(DEADLINE_COMMAND.length());
-        int byIndex = remainder.indexOf(DEADLINE_DATE_SEPARATOR);
-        if (byIndex < 1) {
+        Matcher separatorMatcher = DEADLINE_DATE_SEPARATOR_PATTERN.matcher(remainder);
+        if (!separatorMatcher.find()) {
             throw new InvalidDeadlineException(DEADLINE_FORMAT);
         }
-        String description = remainder.substring(0, byIndex).trim();
-        String dueDate = remainder.substring(
-                byIndex + DEADLINE_DATE_SEPARATOR.length()).trim();
+        String description = remainder.substring(0, separatorMatcher.start()).trim();
+        String dueDate = remainder.substring(separatorMatcher.end()).trim();
         if (description.isEmpty()) {
             throw new EmptyDescriptionException(DEADLINE_COMMAND, DEADLINE_FORMAT);
         }
@@ -213,27 +217,27 @@ public class Parser {
             throw new EmptyDescriptionException(EVENT_COMMAND, EVENT_FORMAT);
         }
         String remainder = command.substring(EVENT_COMMAND.length());
-        int fromIndex = remainder.indexOf(EVENT_START_DATE_SEPARATOR);
-        if (fromIndex < 1) {
+        Matcher fromMatcher = EVENT_START_DATE_SEPARATOR_PATTERN.matcher(remainder);
+        if (!fromMatcher.find()) {
             throw new InvalidEventException(EVENT_FORMAT);
         }
-        int toIndex = remainder.indexOf(EVENT_END_DATE_SEPARATOR,
-                fromIndex + EVENT_START_DATE_SEPARATOR.length());
-        if (toIndex < 0) {
+        Matcher toMatcher = EVENT_END_DATE_SEPARATOR_PATTERN.matcher(remainder);
+        if (!toMatcher.find(fromMatcher.end())) {
             throw new InvalidEventException(EVENT_FORMAT);
         }
-        String description = remainder.substring(0, fromIndex).trim();
-        String startDate = remainder.substring(
-                fromIndex + EVENT_START_DATE_SEPARATOR.length(), toIndex).trim();
-        String endDate = remainder.substring(
-                toIndex + EVENT_END_DATE_SEPARATOR.length()).trim();
+        String description = remainder.substring(0, fromMatcher.start()).trim();
+        String startDate = remainder.substring(fromMatcher.end(), toMatcher.start()).trim();
+        String endDate = remainder.substring(toMatcher.end()).trim();
         if (description.isEmpty()) {
             throw new EmptyDescriptionException(EVENT_COMMAND, EVENT_FORMAT);
         }
         if (startDate.isEmpty() || endDate.isEmpty()) {
             throw new InvalidEventException(EVENT_FORMAT);
         }
-        return new Event(description, DateUtil.parse(startDate), DateUtil.parse(endDate));
+        LocalDate parsedStartDate = DateUtil.parse(startDate);
+        LocalDate parsedEndDate = DateUtil.parse(endDate);
+        validateEventDateRange(parsedStartDate, parsedEndDate);
+        return new Event(description, parsedStartDate, parsedEndDate);
     }
 
     /**
@@ -339,7 +343,31 @@ public class Parser {
         Optional<LocalDate> endDate = endDateText == null
                 ? Optional.empty()
                 : Optional.of(DateUtil.parse(endDateText));
+        if (endDate.isPresent()) {
+            validateEventDateRange(startDate, endDate.get());
+        }
         return new EventSnoozeDates(startDate, endDate);
+    }
+
+    /** Rejects an event date range that does not have a positive duration. */
+    private static void validateEventDateRange(LocalDate startDate, LocalDate endDate)
+            throws InvalidEventDateRangeException {
+        if (!Event.isValidDateRange(startDate, endDate)) {
+            throw new InvalidEventDateRangeException();
+        }
+    }
+
+    /** Removes whitespace surrounding a command without altering its contents. */
+    private static String normalizeCommand(String command) {
+        return command.strip();
+    }
+
+    /** Rejects arguments supplied to a command that does not accept any. */
+    private static void validateNoArguments(String command, String commandWord)
+            throws UnexpectedArgumentException {
+        if (command.split("\\s+").length > 1) {
+            throw new UnexpectedArgumentException(commandWord);
+        }
     }
 
     /** Holds the parsed dates for an event snooze command. */

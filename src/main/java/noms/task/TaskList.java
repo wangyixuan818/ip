@@ -70,6 +70,30 @@ public class TaskList {
     }
 
     /**
+     * Adds a task at the given zero-based index, shifting later tasks right.
+     *
+     * @param index position at which to insert the task
+     * @param task the task to insert
+     */
+    public void add(int index, Task task) {
+        assert index >= 0 && index <= tasks.size() : "Task index is out of range";
+        assert task != null : "Task being added must not be null";
+        tasks.add(index, task);
+    }
+
+    /**
+     * Returns whether this list contains a task with the same user-defined
+     * details as the given task.
+     *
+     * @param task the proposed task to compare against the list
+     * @return {@code true} if a matching task is already present
+     */
+    public boolean hasMatchingTask(Task task) {
+        assert task != null : "Task being matched must not be null";
+        return tasks.stream().anyMatch(existingTask -> existingTask.hasSameDetailsAs(task));
+    }
+
+    /**
      * Removes and returns the task at the given zero-based index. Tasks
      * after it shift down to fill the gap, renumbering the list.
      *
