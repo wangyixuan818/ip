@@ -22,6 +22,7 @@ import noms.ui.Ui;
 public class Storage {
     private static final String FIELD_SEPARATOR_REGEX = " \\| ";
     private static final String COMPLETED_FLAG = "1";
+    private static final String INCOMPLETE_FLAG = "0";
     private static final String TODO_TYPE = "T";
     private static final String DEADLINE_TYPE = "D";
     private static final String EVENT_TYPE = "E";
@@ -31,6 +32,9 @@ public class Storage {
     private static final int DESCRIPTION_FIELD = 2;
     private static final int DATE_FIELD = 3;
     private static final int EVENT_END_DATE_FIELD = 4;
+    private static final int TODO_FIELD_COUNT = 3;
+    private static final int DEADLINE_FIELD_COUNT = 4;
+    private static final int EVENT_FIELD_COUNT = 5;
 
     private final Path filePath;
     private final List<String> skippedLines = new ArrayList<>();
@@ -148,7 +152,8 @@ public class Storage {
      * @throws RuntimeException if the line is missing fields or has an unrecognized type letter
      */
     private Task parseLine(String line) {
-        String[] fields = line.split(FIELD_SEPARATOR_REGEX);
+        String[] fields = line.split(FIELD_SEPARATOR_REGEX, -1);
+        validateFields(fields);
         String type = fields[TYPE_FIELD];
         boolean isDone = fields[COMPLETION_FIELD].equals(COMPLETED_FLAG);
         String description = Task.unescape(fields[DESCRIPTION_FIELD]);
@@ -175,5 +180,38 @@ public class Storage {
             task.markAsDone();
         }
         return task;
+    }
+
+    /** Rejects a persisted record that does not match its task type's schema. */
+    private static void validateFields(String[] fields) {
+        if (fields.length == 0) {
+            throw new IllegalArgumentException("Task record has no fields");
+        }
+
+        int expectedFieldCount;
+        switch (fields[TYPE_FIELD]) {
+            case TODO_TYPE:
+                expectedFieldCount = TODO_FIELD_COUNT;
+                break;
+            case DEADLINE_TYPE:
+                expectedFieldCount = DEADLINE_FIELD_COUNT;
+                break;
+            case EVENT_TYPE:
+                expectedFieldCount = EVENT_FIELD_COUNT;
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown task type: " + fields[TYPE_FIELD]);
+        }
+
+        if (fields.length != expectedFieldCount) {
+            throw new IllegalArgumentException("Unexpected task field count");
+        }
+        if (!fields[COMPLETION_FIELD].equals(COMPLETED_FLAG)
+                && !fields[COMPLETION_FIELD].equals(INCOMPLETE_FLAG)) {
+            throw new IllegalArgumentException("Invalid completion flag");
+        }
+        if (fields[DESCRIPTION_FIELD].isEmpty()) {
+            throw new IllegalArgumentException("Task description is empty");
+        }
     }
 }

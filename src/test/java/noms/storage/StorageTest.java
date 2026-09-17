@@ -160,6 +160,39 @@ public class StorageTest {
     }
 
     @Test
+    public void load_invalidCompletionFlag_skipsAndRecordsLine() throws IOException {
+        Path file = tempDir.resolve("noms.txt");
+        String invalidTask = "T | 2 | read book";
+        Files.writeString(file, invalidTask);
+        Storage storage = storageIn(tempDir);
+
+        assertEquals(List.of(), storage.load());
+        assertEquals(List.of(invalidTask), storage.getSkippedLines());
+    }
+
+    @Test
+    public void load_unexpectedExtraField_skipsAndRecordsLine() throws IOException {
+        Path file = tempDir.resolve("noms.txt");
+        String invalidTask = "T | 0 | read book | unexpected";
+        Files.writeString(file, invalidTask);
+        Storage storage = storageIn(tempDir);
+
+        assertEquals(List.of(), storage.load());
+        assertEquals(List.of(invalidTask), storage.getSkippedLines());
+    }
+
+    @Test
+    public void load_emptyDescription_skipsAndRecordsLine() throws IOException {
+        Path file = tempDir.resolve("noms.txt");
+        String invalidTask = "T | 0 | ";
+        Files.writeString(file, invalidTask);
+        Storage storage = storageIn(tempDir);
+
+        assertEquals(List.of(), storage.load());
+        assertEquals(List.of(invalidTask), storage.getSkippedLines());
+    }
+
+    @Test
     public void load_invalidDate_skipsAndRecordsLine() throws IOException {
         Path file = tempDir.resolve("noms.txt");
         String invalidDeadline = "D | 0 | submit report | tomorrow";

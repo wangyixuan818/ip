@@ -958,10 +958,12 @@ reports it with the standard error message. This exercises the path where
 
 **Note:** unlike the other cases, this case **pre-seeds** `./data/noms.txt`
 before the run instead of deleting it. Create `./data/noms.txt` with
-exactly these three lines, then start Noms:
+exactly these five lines, then start Noms:
 
 ```text
 T | 0 | good task
+T | 2 | invalid completion flag
+T | 0 | unexpected field | extra
 GARBAGE LINE
 D | 1 | pay rent | 2019-12-15
 ```
@@ -979,6 +981,10 @@ bye
 **Expected output:**
 
 ```text
+ Oops! Noms found a spoiled entry in the save file and skipped it: T | 2 | invalid completion flag
+____________________________________________________________
+ Oops! Noms found a spoiled entry in the save file and skipped it: T | 0 | unexpected field | extra
+____________________________________________________________
  Oops! Noms found a spoiled entry in the save file and skipped it: GARBAGE LINE
 ____________________________________________________________
 ____________________________________________________________
