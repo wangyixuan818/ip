@@ -65,19 +65,30 @@ public class Storage {
         Path parent = absoluteFilePath.getParent();
         Files.createDirectories(parent);
 
-        StringBuilder content = new StringBuilder();
-        for (Task task : tasks) {
-            content.append(task.toFileFormat()).append(System.lineSeparator());
-        }
+        String content = buildFileContent(tasks);
 
         Path temporaryFile = Files.createTempFile(
                 parent, absoluteFilePath.getFileName().toString() + ".", ".tmp");
         try {
-            Files.writeString(temporaryFile, content.toString());
+            Files.writeString(temporaryFile, content);
             replaceSaveFile(temporaryFile, absoluteFilePath);
         } finally {
             Files.deleteIfExists(temporaryFile);
         }
+    }
+
+    /**
+     * Builds the save-file text for the given tasks, one per line.
+     *
+     * @param tasks the tasks to format, in save order
+     * @return the full file content to write, using {@link Task#toFileFormat()}
+     */
+    private static String buildFileContent(List<Task> tasks) {
+        StringBuilder content = new StringBuilder();
+        for (Task task : tasks) {
+            content.append(task.toFileFormat()).append(System.lineSeparator());
+        }
+        return content.toString();
     }
 
     /**
