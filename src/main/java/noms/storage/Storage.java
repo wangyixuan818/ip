@@ -1,8 +1,10 @@
 package noms.storage;
 
 import java.io.IOException;
+import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,25 +49,47 @@ public class Storage {
     }
 
     /**
-     * Writes the given tasks to disk, one per line, overwriting any
-     * previous contents of the save file. Creates the parent directory
-     * first if it does not already exist.
+     * Writes the given tasks to a temporary sibling file before replacing
+     * the save file. This keeps the previous file intact if content writing
+     * fails and uses an atomic replacement when the filesystem supports it.
      *
      * @param tasks the current task list to save
      * @throws IOException if the file or its parent directory cannot be written
      */
     public void save(List<Task> tasks) throws IOException {
-        Path parent = filePath.getParent();
-        if (parent != null) {
-            Files.createDirectories(parent);
-        }
+        Path absoluteFilePath = filePath.toAbsolutePath();
+        Path parent = absoluteFilePath.getParent();
+        Files.createDirectories(parent);
 
         StringBuilder content = new StringBuilder();
         for (Task task : tasks) {
             content.append(task.toFileFormat()).append(System.lineSeparator());
         }
 
-        Files.writeString(filePath, content.toString());
+        Path temporaryFile = Files.createTempFile(
+                parent, absoluteFilePath.getFileName().toString() + ".", ".tmp");
+        try {
+            Files.writeString(temporaryFile, content.toString());
+            replaceSaveFile(temporaryFile, absoluteFilePath);
+        } finally {
+            Files.deleteIfExists(temporaryFile);
+        }
+    }
+
+    /**
+     * Replaces the save file with a completed temporary file.
+     *
+     * @param temporaryFile the fully written temporary file
+     * @param targetFile the live save file to replace
+     * @throws IOException if neither atomic nor normal replacement succeeds
+     */
+    protected void replaceSaveFile(Path temporaryFile, Path targetFile) throws IOException {
+        try {
+            Files.move(temporaryFile, targetFile,
+                    StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+        } catch (AtomicMoveNotSupportedException e) {
+            Files.move(temporaryFile, targetFile, StandardCopyOption.REPLACE_EXISTING);
+        }
     }
 
     /**
