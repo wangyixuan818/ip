@@ -206,21 +206,7 @@ public class Storage {
             throw new IllegalArgumentException("Task record has no fields");
         }
 
-        int expectedFieldCount;
-        switch (fields[TYPE_FIELD]) {
-            case TODO_TYPE:
-                expectedFieldCount = TODO_FIELD_COUNT;
-                break;
-            case DEADLINE_TYPE:
-                expectedFieldCount = DEADLINE_FIELD_COUNT;
-                break;
-            case EVENT_TYPE:
-                expectedFieldCount = EVENT_FIELD_COUNT;
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown task type: " + fields[TYPE_FIELD]);
-        }
-
+        int expectedFieldCount = expectedFieldCountFor(fields[TYPE_FIELD]);
         if (fields.length != expectedFieldCount) {
             throw new IllegalArgumentException("Unexpected task field count");
         }
@@ -230,6 +216,27 @@ public class Storage {
         }
         if (fields[DESCRIPTION_FIELD].isEmpty()) {
             throw new IllegalArgumentException("Task description is empty");
+        }
+    }
+
+    /**
+     * Returns the number of fields a save-file record of the given task type
+     * must have.
+     *
+     * @param type the task type letter ({@code T}, {@code D}, or {@code E})
+     * @return the expected field count for that type
+     * @throws IllegalArgumentException if the type letter is not recognized
+     */
+    private static int expectedFieldCountFor(String type) {
+        switch (type) {
+            case TODO_TYPE:
+                return TODO_FIELD_COUNT;
+            case DEADLINE_TYPE:
+                return DEADLINE_FIELD_COUNT;
+            case EVENT_TYPE:
+                return EVENT_FIELD_COUNT;
+            default:
+                throw new IllegalArgumentException("Unknown task type: " + type);
         }
     }
 }
