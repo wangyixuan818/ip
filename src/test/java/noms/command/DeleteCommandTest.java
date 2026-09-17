@@ -79,4 +79,12 @@ public class DeleteCommandTest {
                 () -> new DeleteCommand("delete 5").execute(tasks, ui, storage));
         assertEquals(2, tasks.size());
     }
+
+    @Test
+    public void execute_emptyList_throwsNomsException() {
+        TaskList emptyTasks = new TaskList();
+
+        assertThrows(NomsException.class,
+                () -> new DeleteCommand("delete 1").execute(emptyTasks, ui, storage));
+    }
 }

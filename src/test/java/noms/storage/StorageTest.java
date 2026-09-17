@@ -101,6 +101,101 @@ public class StorageTest {
         assertEquals(List.of(), storage.getSkippedLines());
     }
 
+    @Test
+    public void save_emptyList_overwritesExistingFileWithEmptyContent() throws IOException {
+        Storage storage = storageIn(tempDir);
+        storage.save(List.of(new ToDo("read book")));
+
+        storage.save(List.of());
+
+        assertEquals("", Files.readString(tempDir.resolve("noms.txt")));
+        assertEquals(List.of(), storage.load());
+    }
+
+    @Test
+    public void save_existingFile_replacesOldTasks() throws IOException {
+        Storage storage = storageIn(tempDir);
+        storage.save(List.of(new ToDo("old task")));
+
+        storage.save(List.of(new ToDo("replacement task")));
+
+        List<Task> loaded = storage.load();
+        assertEquals(1, loaded.size());
+        assertEquals("replacement task", loaded.get(0).getDescription());
+    }
+
+    @Test
+    public void load_unknownTaskType_skipsAndRecordsLine() throws IOException {
+        Path file = tempDir.resolve("noms.txt");
+        String unknownTask = "X | 0 | mysterious task";
+        Files.writeString(file, unknownTask);
+        Storage storage = storageIn(tempDir);
+
+        assertEquals(List.of(), storage.load());
+        assertEquals(List.of(unknownTask), storage.getSkippedLines());
+    }
+
+    @Test
+    public void load_invalidDate_skipsAndRecordsLine() throws IOException {
+        Path file = tempDir.resolve("noms.txt");
+        String invalidDeadline = "D | 0 | submit report | tomorrow";
+        Files.writeString(file, invalidDeadline);
+        Storage storage = storageIn(tempDir);
+
+        assertEquals(List.of(), storage.load());
+        assertEquals(List.of(invalidDeadline), storage.getSkippedLines());
+    }
+
+    @Test
+    public void load_malformedEscapedDescription_skipsAndRecordsLine() throws IOException {
+        Path file = tempDir.resolve("noms.txt");
+        String malformedTask = "T | 0 | bad\\qescape";
+        Files.writeString(file, malformedTask);
+        Storage storage = storageIn(tempDir);
+
+        assertEquals(List.of(), storage.load());
+        assertEquals(List.of(malformedTask), storage.getSkippedLines());
+    }
+
+    @Test
+    public void load_multipleSpoiledLines_recordsThemInOrder() throws IOException {
+        Path file = tempDir.resolve("noms.txt");
+        String unknownTask = "X | 0 | mysterious task";
+        String invalidDeadline = "D | 0 | submit report | tomorrow";
+        Files.writeString(file, unknownTask + "\n" + invalidDeadline + "\n");
+        Storage storage = storageIn(tempDir);
+
+        storage.load();
+
+        assertEquals(List.of(unknownTask, invalidDeadline), storage.getSkippedLines());
+    }
+
+    @Test
+    public void load_secondTime_clearsPreviouslySkippedLines() throws IOException {
+        Path file = tempDir.resolve("noms.txt");
+        Storage storage = storageIn(tempDir);
+        Files.writeString(file, "GARBAGE LINE");
+        storage.load();
+        Files.writeString(file, "T | 0 | valid task");
+
+        storage.load();
+
+        assertEquals(List.of(), storage.getSkippedLines());
+    }
+
+    @Test
+    public void getSkippedLines_returnedListCannotModifyInternalState() throws IOException {
+        Path file = tempDir.resolve("noms.txt");
+        Files.writeString(file, "GARBAGE LINE");
+        Storage storage = storageIn(tempDir);
+        storage.load();
+
+        List<String> skippedLines = storage.getSkippedLines();
+        skippedLines.clear();
+
+        assertEquals(List.of("GARBAGE LINE"), storage.getSkippedLines());
+    }
+
     /** Maps tasks to their save-file lines, for comparing task lists by content. */
     private static List<String> fileForms(List<Task> tasks) {
         return tasks.stream().map(Task::toFileFormat).toList();
